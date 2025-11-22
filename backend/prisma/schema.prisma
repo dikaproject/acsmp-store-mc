@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  VISITOR
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  COMPLETED
+  FAILED
+  EXPIRED
+}
+
+enum ProductType {
+  COIN
+  RANK
+  BATTLEPASS
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      UserRole @default(VISITOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  orders    Order[]
+  
+  @@map("users")
+}
+
+model ServerType {
+  id          String    @id @default(cuid())
+  name        String    @unique 
+  description String?   @db.Text
+  imageUrl    String?  
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  products    Product[]
+  orders      Order[]
+  
+  @@map("server_types")
+}
+
+model Product {
+  id           String      @id @default(cuid())
+  name         String
+  description  String?     @db.Text
+  type         ProductType 
+  price        Int         
+  amount       Int       
+  groupName    String?    
+  imageUrl     String?
+  isActive     Boolean     @default(true)
+
+  benefits     Json?       
+  commands     Json?       
+  
+  serverTypeId String
+  serverType   ServerType  @relation(fields: [serverTypeId], references: [id], onDelete: Cascade)
+  
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  
+  orderItems   OrderItem[]
+  
+  @@map("products")
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderCode       String      @unique
+  minecraftName   String     
+  email           String?
+  whatsapp        String?
+  totalAmount     Int
+  status          OrderStatus @default(PENDING)
+  
+  tripayReference String?     @unique
+  tripayMethod    String?
+  paymentUrl      String?     @db.Text
+  qrUrl           String?     @db.Text
+  expiredAt       DateTime?
+  paidAt          DateTime?
+  
+  serverTypeId    String
+  serverType      ServerType  @relation(fields: [serverTypeId], references: [id])
+  
+  userId          String?
+  user            User?       @relation(fields: [userId], references: [id])
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  items           OrderItem[]
+  
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  
+  quantity  Int      @default(1)
+  price     Int    
+  subtotal  Int     
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("order_items")
+}
+
+model Gallery {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  imageUrl    String
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("galleries")
+}
+
+model Guide {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String   @db.Text 
+  imageUrl    String? 
+  order       Int      @default(0) 
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("guides")
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("settings")
+}
