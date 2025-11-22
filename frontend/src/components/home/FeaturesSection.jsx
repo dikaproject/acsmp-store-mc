@@ -3,7 +3,7 @@ import { Shield, Users, Trophy, Zap, Headphones, Sparkles } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import SpotlightCard from "../ui/SpotlightCard";
 import panelImg from "../../assets/panel.png";
-import communityImg from "../../assets/community.png";
+import communityImg from "/foto-highlight.webp";
 import rankedImg from "../../assets/ranked.png";
 import customPluginImg from "../../assets/costum-plugin.png";
 import support from "../../assets/support-dc.png";
