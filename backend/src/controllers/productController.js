@@ -85,7 +85,7 @@ exports.getById = async (req, res, next) => {
 exports.create = async (req, res, next) => {
   try {
     const { 
-      name, description, type, price, amount, groupName, 
+      name, description, type, price, discount, amount, groupName, 
       serverTypeId, imageUrl, isActive,
       benefits, commands 
     } = req.body;
@@ -96,6 +96,7 @@ exports.create = async (req, res, next) => {
         description,
         type,
         price: parseInt(price),
+        discount: discount ? parseInt(discount) : 0,
         amount: parseInt(amount),
         groupName: type === 'RANK' ? groupName : null,
         serverTypeId,
@@ -127,7 +128,7 @@ exports.update = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { 
-      name, description, type, price, amount, groupName, 
+      name, description, type, price, discount, amount, groupName, 
       serverTypeId, imageUrl, isActive,
       benefits, commands 
     } = req.body;
@@ -148,6 +149,7 @@ exports.update = async (req, res, next) => {
     if (description !== undefined) updateData.description = description;
     if (type !== undefined) updateData.type = type;
     if (price !== undefined) updateData.price = parseInt(price);
+    if (discount !== undefined) updateData.discount = parseInt(discount);
     if (amount !== undefined) updateData.amount = parseInt(amount);
     if (groupName !== undefined) updateData.groupName = groupName;
     if (serverTypeId !== undefined) updateData.serverTypeId = serverTypeId;

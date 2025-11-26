@@ -202,12 +202,33 @@ const CartPage = () => {
                               </Button>
                             </div>
                             <div className="text-right">
-                              <p className="text-xs text-gray-500 mb-1">
-                                {formatCurrency(item.price)} x {item.quantity}
-                              </p>
-                              <p className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-violet-400 bg-clip-text text-transparent">
-                                {formatCurrency(item.price * item.quantity)}
-                              </p>
+                              {item.discount > 0 ? (
+                                <div className="space-y-1">
+                                  <div className="flex items-center justify-end gap-2">
+                                    <span className="text-xs text-gray-500 line-through">
+                                      {formatCurrency(item.price * item.quantity)}
+                                    </span>
+                                    <Badge className="bg-green-500/20 text-green-400 border-0 text-xs px-1.5 py-0">
+                                      -{item.discount}%
+                                    </Badge>
+                                  </div>
+                                  <p className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                                    {formatCurrency(Math.floor((item.price - (item.price * item.discount / 100)) * item.quantity))}
+                                  </p>
+                                  <p className="text-xs text-green-400">
+                                    Hemat {formatCurrency(Math.floor(item.price * item.discount / 100 * item.quantity))}
+                                  </p>
+                                </div>
+                              ) : (
+                                <>
+                                  <p className="text-xs text-gray-500 mb-1">
+                                    {formatCurrency(item.price)} x {item.quantity}
+                                  </p>
+                                  <p className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-violet-400 bg-clip-text text-transparent">
+                                    {formatCurrency(item.price * item.quantity)}
+                                  </p>
+                                </>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -253,16 +274,35 @@ const CartPage = () => {
 
                   {/* Items Summary */}
                   <div className="space-y-3 mb-6 max-h-60 overflow-y-auto custom-scrollbar">
-                    {items.map((item) => (
-                      <div key={item.id} className="flex justify-between text-sm p-3 rounded-lg bg-black/40 border border-purple-500/10">
-                        <span className="text-gray-400">
-                          {item.name} <span className="text-purple-400">x{item.quantity}</span>
-                        </span>
-                        <span className="font-medium text-white">
-                          {formatCurrency(item.price * item.quantity)}
-                        </span>
-                      </div>
-                    ))}
+                    {items.map((item) => {
+                      const finalPrice = item.discount > 0 
+                        ? Math.floor(item.price - (item.price * item.discount / 100))
+                        : item.price;
+                      const subtotal = finalPrice * item.quantity;
+                      
+                      return (
+                        <div key={item.id} className="p-3 rounded-lg bg-black/40 border border-purple-500/10">
+                          <div className="flex justify-between items-start mb-1">
+                            <span className="text-sm text-gray-400 flex-1">
+                              {item.name} <span className="text-purple-400">x{item.quantity}</span>
+                            </span>
+                            <span className="font-medium text-white ml-2">
+                              {formatCurrency(subtotal)}
+                            </span>
+                          </div>
+                          {item.discount > 0 && (
+                            <div className="flex items-center gap-1.5 mt-1">
+                              <Badge className="bg-green-500/20 text-green-400 border-0 text-xs px-1.5 py-0">
+                                -{item.discount}%
+                              </Badge>
+                              <span className="text-xs text-gray-500 line-through">
+                                {formatCurrency(item.price * item.quantity)}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
 
                   <div className="border-t border-purple-500/10 pt-4 space-y-3">

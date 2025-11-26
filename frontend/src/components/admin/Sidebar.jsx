@@ -46,18 +46,6 @@ const Sidebar = ({ isOpen, onClose }) => {
       description: "View all orders"
     },
     { 
-      icon: BookOpen, 
-      label: "Guides", 
-      path: "/admin/guides",
-      description: "Manage guides"
-    },
-    { 
-      icon: Image, 
-      label: "Gallery", 
-      path: "/admin/gallery",
-      description: "Media gallery"
-    },
-    { 
       icon: Users, 
       label: "Users", 
       path: "/admin/users",
@@ -100,7 +88,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               <div className="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <div>
-              <h1 className="font-bold text-lg text-white">Nexus SMP</h1>
+              <h1 className="font-bold text-lg text-white">Amazing Craft</h1>
               <p className="text-xs text-gray-400">Admin Panel</p>
             </div>
           </Link>

@@ -407,21 +407,43 @@ const CheckoutPage = () => {
                     </h3>
                     {/* Items */}
                     <div className="space-y-3 max-h-60 overflow-y-auto custom-scrollbar mb-6">
-                      {items.map((item) => (
-                        <div key={item.id} className="flex gap-3 p-3 rounded-lg bg-black/40 border border-purple-500/10">
-                          <img
-                            src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${item.imageUrl}`}
-                            alt={item.name}
-                            className="w-14 h-14 rounded-lg object-cover border border-purple-500/20"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-white truncate">{item.name}</p>
-                            <p className="text-xs text-gray-400">
-                              {item.quantity}x • {formatCurrency(item.price)}
-                            </p>
+                      {items.map((item) => {
+                        const finalPrice = item.discount > 0 
+                          ? Math.floor(item.price - (item.price * item.discount / 100))
+                          : item.price;
+                        
+                        return (
+                          <div key={item.id} className="flex gap-3 p-3 rounded-lg bg-black/40 border border-purple-500/10">
+                            <img
+                              src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${item.imageUrl}`}
+                              alt={item.name}
+                              className="w-14 h-14 rounded-lg object-cover border border-purple-500/20"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-white truncate">{item.name}</p>
+                              {item.discount > 0 ? (
+                                <div className="space-y-0.5">
+                                  <div className="flex items-center gap-1.5">
+                                    <Badge className="bg-green-500/20 text-green-400 border-0 text-xs px-1.5 py-0">
+                                      -{item.discount}%
+                                    </Badge>
+                                    <span className="text-xs text-gray-500 line-through">
+                                      {formatCurrency(item.price)}
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-green-400">
+                                    {item.quantity}x • {formatCurrency(finalPrice)}
+                                  </p>
+                                </div>
+                              ) : (
+                                <p className="text-xs text-gray-400">
+                                  {item.quantity}x • {formatCurrency(item.price)}
+                                </p>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
 
                     {/* Price Summary */}

@@ -61,7 +61,8 @@ model Product {
   name         String
   description  String?     @db.Text
   type         ProductType 
-  price        Int         
+  price        Int   
+  discount     Int        @default(0)      
   amount       Int       
   groupName    String?    
   imageUrl     String?

@@ -182,9 +182,28 @@ const RankDetailModal = ({ product, isOpen, onClose }) => {
                   <div className="flex items-center justify-between gap-4">
                     <div>
                       <p className="text-xs text-gray-500 mb-1">Price</p>
-                      <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400">
-                        {formatCurrency(product.price)}
-                      </p>
+                      {product.discount > 0 ? (
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-gray-500 line-through">
+                              {formatCurrency(product.price)}
+                            </span>
+                            <Badge className="bg-green-500/20 text-green-400 border-0">
+                              -{product.discount}%
+                            </Badge>
+                          </div>
+                          <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+                            {formatCurrency(Math.floor(product.price - (product.price * product.discount / 100)))}
+                          </p>
+                          <p className="text-xs text-green-400">
+                            Hemat {formatCurrency(Math.floor(product.price * product.discount / 100))}
+                          </p>
+                        </div>
+                      ) : (
+                        <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400">
+                          {formatCurrency(product.price)}
+                        </p>
+                      )}
                     </div>
                     
                     <Button
@@ -326,11 +345,11 @@ const ShopPage = () => {
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: linear-gradient(to bottom, rgba(139, 92, 246, 0.5), rgba(168, 85, 247, 0.5));
+          background: linear-gradient(to bottom, rgba(139,92,246,0.5), rgba(168, 85, 247, 0.5));
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(to bottom, rgba(139, 92, 246, 0.7), rgba(168, 85, 247, 0.7));
+          background: linear-gradient(to bottom, rgba(139,92,246,0.7), rgba(168, 85, 247, 0.7));
         }
       `}</style>
 
@@ -523,7 +542,7 @@ const ShopPage = () => {
                   </div>
 
                   {/* Product Info */}
-                  <div className="p-5">
+                  <div className="p-5 flex flex-col min-h-[280px]">
                     <h3 className="text-lg font-bold text-white mb-2 line-clamp-1">
                       {product.name}
                     </h3>
@@ -531,14 +550,36 @@ const ShopPage = () => {
                       {product.description}
                     </p>
 
-                    {/* Price */}
-                    <div className="mb-4">
-                      <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400">
-                        {formatCurrency(product.price)}
-                      </p>
+                    {/* Price with Discount */}
+                    <div className="mb-4 flex-grow flex flex-col justify-end">
+                      {product.discount > 0 ? (
+                        <div className="space-y-2">
+                          {/* Discount Badge */}
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 w-fit">
+                            <Tag className="w-3.5 h-3.5 text-green-400" />
+                            <span className="text-xs font-bold text-green-400">
+                              {product.discount}% OFF
+                            </span>
+                          </div>
+                          
+                          {/* Prices */}
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm text-gray-500 line-through">
+                              {formatCurrency(product.price)}
+                            </p>
+                            <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+                              {formatCurrency(Math.floor(product.price - (product.price * product.discount / 100)))}
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400">
+                          {formatCurrency(product.price)}
+                        </p>
+                      )}
                     </div>
 
-                    {/* Add to Cart Button */}
+                    {/* Add to Cart Button - Always at Same Position */}
                     <button
                       onClick={() => handleAddToCart(product)}
                       disabled={!product.isActive}
@@ -552,6 +593,7 @@ const ShopPage = () => {
                       {product.isActive ? "Add to Cart" : "Out of Stock"}
                     </button>
                   </div>
+
                 </motion.div>
               ))}
             </motion.div>

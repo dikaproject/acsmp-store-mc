@@ -6,138 +6,258 @@ class TripayService {
     this.apiKey = process.env.TRIPAY_API_KEY;
     this.privateKey = process.env.TRIPAY_PRIVATE_KEY;
     this.merchantCode = process.env.TRIPAY_MERCHANT_CODE;
-    this.baseUrl = process.env.TRIPAY_MODE === 'production' 
-      ? 'https://tripay.co.id/api' 
-      : 'https://tripay.co.id/api-sandbox';
+    this.mode = process.env.TRIPAY_MODE || 'sandbox';
+    this.baseURL = this.mode === 'production' 
+      ? 'https://tripay.co.id/api'
+      : 'https://tripay.co.id/api-sandbox'
+    this.client = axios.create({
+      baseURL: this.baseURL,
+      timeout: 30000, // 30 seconds
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      httpAgent: require('http').Agent({ keepAlive: true }),
+      httpsAgent: require('https').Agent({ keepAlive: true })
+    });
+
+    console.log('[TRIPAY] Initialized:', {
+      mode: this.mode,
+      baseURL: this.baseURL,
+      merchantCode: this.merchantCode
+    });
   }
 
-  generateSignature(merchantRef, amount) {
-    const string = `${this.merchantCode}${merchantRef}${amount}`;
-    return crypto
-      .createHmac('sha256', this.privateKey)
-      .update(string)
-      .digest('hex');
-  }
+  // ✅ Retry wrapper for API calls
+  async retryRequest(fn, retries = 3, delay = 1000) {
+    for (let i = 0; i < retries; i++) {
+      try {
+        return await fn();
+      } catch (error) {
+        const isLastRetry = i === retries - 1;
+        const shouldRetry = error.code === 'ECONNRESET' || 
+                           error.code === 'ETIMEDOUT' ||
+                           error.code === 'ENOTFOUND' ||
+                           error.response?.status >= 500;
 
-  validateCallbackSignature(callbackSignature, json) {
-    const calculatedSignature = crypto
-      .createHmac('sha256', this.privateKey)
-      .update(json)
-      .digest('hex');
-    
-    return callbackSignature === calculatedSignature;
+        if (isLastRetry || !shouldRetry) {
+          throw error;
+        }
+
+        console.log(`[TRIPAY] Retry ${i + 1}/${retries} after ${delay}ms`);
+        await new Promise(resolve => setTimeout(resolve, delay * (i + 1)));
+      }
+    }
   }
 
   async getPaymentChannels() {
     try {
-      const response = await axios.get(`${this.baseUrl}/merchant/payment-channel`, {
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`
-        }
+      console.log('[TRIPAY] Fetching payment channels...');
+      
+      const response = await this.retryRequest(async () => {
+        return await this.client.get('/merchant/payment-channel');
       });
+
+      console.log('[TRIPAY] Channels fetched successfully:', response.data.data?.length || 0);
+      
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Failed to get payment channels');
+      }
 
       return response.data.data;
     } catch (error) {
-      console.error('[TRIPAY] Get channels error:', error.response?.data || error.message);
-      throw new Error(`Failed to get payment channels: ${error.message}`);
+      console.error('[TRIPAY] Get channels error:', error.message);
+      console.error('[TRIPAY] Error details:', {
+        code: error.code,
+        status: error.response?.status,
+        message: error.response?.data?.message
+      });
+      
+      // ✅ Return cached/fallback channels instead of throwing
+      return this.getFallbackChannels();
     }
   }
 
-  async createPayment({ 
-    orderId, 
-    orderCode, 
-    amount, 
-    customerName, 
-    customerEmail, 
-    customerPhone, 
-    paymentMethod 
-  }) {
+  // ✅ Fallback payment channels (most common Indonesian methods)
+  getFallbackChannels() {
+    console.log('[TRIPAY] Using fallback payment channels');
+    return [
+      {
+        code: 'BRIVA',
+        name: 'BRI Virtual Account',
+        group: 'Virtual Account',
+        fee_merchant: { flat: 0, percent: 0 },
+        fee_customer: { flat: 4000, percent: 0 },
+        total_fee: { flat: 4000, percent: 0 },
+        minimum_fee: 0,
+        maximum_fee: 0,
+        icon_url: 'https://tripay.co.id/images/payment_icon/BRIVA.png',
+        active: true
+      },
+      {
+        code: 'BNIVA',
+        name: 'BNI Virtual Account',
+        group: 'Virtual Account',
+        fee_merchant: { flat: 0, percent: 0 },
+        fee_customer: { flat: 4000, percent: 0 },
+        total_fee: { flat: 4000, percent: 0 },
+        minimum_fee: 0,
+        maximum_fee: 0,
+        icon_url: 'https://tripay.co.id/images/payment_icon/BNIVA.png',
+        active: true
+      },
+      {
+        code: 'MANDIRIVA',
+        name: 'Mandiri Virtual Account',
+        group: 'Virtual Account',
+        fee_merchant: { flat: 0, percent: 0 },
+        fee_customer: { flat: 4000, percent: 0 },
+        total_fee: { flat: 4000, percent: 0 },
+        minimum_fee: 0,
+        maximum_fee: 0,
+        icon_url: 'https://tripay.co.id/images/payment_icon/MANDIRIVA.png',
+        active: true
+      },
+      {
+        code: 'BCAVA',
+        name: 'BCA Virtual Account',
+        group: 'Virtual Account',
+        fee_merchant: { flat: 0, percent: 0 },
+        fee_customer: { flat: 4000, percent: 0 },
+        total_fee: { flat: 4000, percent: 0 },
+        minimum_fee: 0,
+        maximum_fee: 0,
+        icon_url: 'https://tripay.co.id/images/payment_icon/BCAVA.png',
+        active: true
+      },
+      {
+        code: 'PERMATAVA',
+        name: 'Permata Virtual Account',
+        group: 'Virtual Account',
+        fee_merchant: { flat: 0, percent: 0 },
+        fee_customer: { flat: 4000, percent: 0 },
+        total_fee: { flat: 4000, percent: 0 },
+        minimum_fee: 0,
+        maximum_fee: 0,
+        icon_url: 'https://tripay.co.id/images/payment_icon/PERMATAVA.png',
+        active: true
+      },
+      {
+        code: 'QRIS',
+        name: 'QRIS',
+        group: 'E-Wallet',
+        fee_merchant: { flat: 0, percent: 0.7 },
+        fee_customer: { flat: 0, percent: 0 },
+        total_fee: { flat: 0, percent: 0.7 },
+        minimum_fee: 0,
+        maximum_fee: 0,
+        icon_url: 'https://tripay.co.id/images/payment_icon/QRIS.png',
+        active: true
+      }
+    ];
+  }
+
+  async createPayment(data) {
     try {
-      const merchantRef = orderCode;
-      const signature = this.generateSignature(merchantRef, amount);
+      const {
+        orderId,
+        orderCode,
+        amount,
+        customerName,
+        customerEmail,
+        customerPhone,
+        paymentMethod
+      } = data;
 
-      // ✅ Get URLs from env or use defaults
-      const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+      const expiryTime = Math.floor(Date.now() / 1000) + (24 * 60 * 60); // 24 hours
+      
+      const signature = crypto
+        .createHmac('sha256', this.privateKey)
+        .update(`${this.merchantCode}${orderCode}${amount}`)
+        .digest('hex');
 
-      console.log('[TRIPAY] Using URLs:', {
-        callback: `${baseUrl}/api/orders/webhook`,
-        return: `${frontendUrl}/track?code=${orderCode}`
-      });
-
-      // ✅ Ensure proper data formatting
       const payload = {
         method: paymentMethod,
-        merchant_ref: merchantRef,
-        amount: parseInt(amount),
-        customer_name: customerName || 'Customer',
-        customer_email: customerEmail || 'noreply@sssmc.com',
-        customer_phone: customerPhone?.replace(/^0/, '62') || '628123456789', // ✅ Format to +62
+        merchant_ref: orderCode,
+        amount: amount,
+        customer_name: customerName,
+        customer_email: customerEmail || 'noreply@example.com',
+        customer_phone: customerPhone || '081234567890',
         order_items: [
           {
+            sku: orderId,
             name: `Order ${orderCode}`,
-            price: parseInt(amount),
+            price: amount,
             quantity: 1
           }
         ],
-        callback_url: `${baseUrl}/api/orders/webhook`,
-        return_url: `${frontendUrl}/track?code=${orderCode}`,
-        expired_time: Math.floor(Date.now() / 1000) + (24 * 60 * 60), // 24 hours
+        return_url: `${process.env.FRONTEND_URL}/track/${orderCode}`,
+        expired_time: expiryTime,
         signature: signature
       };
 
       console.log('[TRIPAY] Creating payment:', {
         method: paymentMethod,
-        amount,
-        merchant_ref: merchantRef,
-        callback_url: payload.callback_url,
-        return_url: payload.return_url
+        amount: amount,
+        reference: orderCode
       });
 
-      const response = await axios.post(
-        `${this.baseUrl}/transaction/create`,
-        payload,
-        {
-          headers: {
-            'Authorization': `Bearer ${this.apiKey}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+      const response = await this.retryRequest(async () => {
+        return await this.client.post('/transaction/create', payload);
+      });
 
-      if (response.data.success) {
-        console.log('[TRIPAY] Payment created:', response.data.data.reference);
-        return response.data.data;
-      } else {
+      console.log('[TRIPAY] Payment created:', {
+        reference: response.data.data?.reference,
+        checkout_url: response.data.data?.checkout_url
+      });
+
+      if (!response.data.success) {
         throw new Error(response.data.message || 'Failed to create payment');
       }
+
+      return response.data.data;
     } catch (error) {
-      console.error('[TRIPAY] Create payment error:', error.response?.data || error.message);
-      if (error.response?.data) {
-        const errorMsg = error.response.data.message || 'Failed to create payment';
-        throw new Error(errorMsg);
-      }
+      console.error('[TRIPAY] Create payment error:', error.message);
+      console.error('[TRIPAY] Error details:', {
+        code: error.code,
+        status: error.response?.status,
+        message: error.response?.data?.message,
+        errors: error.response?.data?.errors
+      });
       throw new Error(`Failed to create payment: ${error.message}`);
     }
   }
 
   async checkPaymentStatus(reference) {
     try {
-      const response = await axios.get(
-        `${this.baseUrl}/transaction/detail`,
-        {
-          params: { reference },
-          headers: {
-            'Authorization': `Bearer ${this.apiKey}`
-          }
-        }
-      );
+      console.log('[TRIPAY] Checking payment status:', reference);
+      
+      const response = await this.retryRequest(async () => {
+        return await this.client.get(`/transaction/detail`, {
+          params: { reference }
+        });
+      });
+
+      console.log('[TRIPAY] Payment status:', response.data.data?.status);
+
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Failed to check payment status');
+      }
 
       return response.data.data;
     } catch (error) {
-      console.error('[TRIPAY] Check status error:', error.response?.data || error.message);
+      console.error('[TRIPAY] Check status error:', error.message);
       throw new Error(`Failed to check payment status: ${error.message}`);
     }
+  }
+
+  validateCallbackSignature(receivedSignature, json) {
+    const signature = crypto
+      .createHmac('sha256', this.privateKey)
+      .update(json)
+      .digest('hex');
+
+    return signature === receivedSignature;
   }
 }
 

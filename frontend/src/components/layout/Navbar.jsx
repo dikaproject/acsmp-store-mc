@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, ShoppingCart, User, LogOut } from "lucide-react";
+import { Menu, X, ShoppingCart, User, LogOut, Home, Store, Heart, Package } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "../../store/useCartStore";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -30,10 +30,10 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Shop", path: "/shop" },
-    { name: "Vote", path: "/vote" },
-    { name: "Track Order", path: "/track" },
+    { name: "Home", path: "/", icon: Home },
+    { name: "Shop", path: "/shop", icon: Store },
+    { name: "Vote", path: "/vote", icon: Heart },
+    { name: "Track Order", path: "/track", icon: Package },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -105,12 +105,13 @@ const Navbar = () => {
                       <Link key={link.path} to={link.path} className="relative group">
                         <div
                           className={cn(
-                            "px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 relative overflow-hidden whitespace-nowrap",
+                            "px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 relative overflow-hidden whitespace-nowrap flex items-center gap-2",
                             isActive(link.path)
                               ? "text-black bg-white"
                               : "text-gray-400 hover:text-white hover:bg-white/5"
                           )}
                         >
+                          <link.icon className="w-4 h-4" />
                           <span className="relative z-10">{link.name}</span>
                         </div>
                       </Link>
@@ -203,12 +204,13 @@ const Navbar = () => {
                     to={link.path}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={cn(
-                      "block px-4 py-3 rounded-2xl text-sm font-semibold transition-all",
+                      "flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all",
                       isActive(link.path)
                         ? "bg-white text-black"
                         : "text-gray-400 hover:text-white hover:bg-white/5"
                     )}
                   >
+                    <link.icon className="w-5 h-5" />
                     {link.name}
                   </Link>
                 ))}

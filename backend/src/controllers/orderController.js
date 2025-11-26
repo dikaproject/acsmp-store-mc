@@ -115,14 +115,13 @@ exports.create = async (req, res, next) => {
   try {
     const { 
       minecraftName, 
-      email,        // ✅ Optional, from checkout form
-      whatsapp,     // ✅ Optional, from checkout form
+      email,
+      whatsapp,
       serverTypeId, 
       items, 
       paymentMethod 
     } = req.body;
 
-    // Validate minecraft name (already authenticated, but double check)
     if (!minecraftName || minecraftName !== req.user.minecraftName) {
       return res.status(400).json({
         success: false,
@@ -148,11 +147,17 @@ exports.create = async (req, res, next) => {
     const orderItems = items.map(item => {
       const product = products.find(p => p.id === item.productId);
       const quantity = item.quantity || 1;
+      
+      // ✅ Calculate price with discount
+      const originalPrice = product.price;
+      const discount = product.discount || 0;
+      const finalPrice = Math.floor(originalPrice - (originalPrice * discount / 100));
+      
       return {
         productId: product.id,
         quantity,
-        price: product.price,
-        subtotal: product.price * quantity
+        price: finalPrice, // ✅ Use discounted price
+        subtotal: finalPrice * quantity
       };
     });
 
@@ -164,8 +169,8 @@ exports.create = async (req, res, next) => {
       data: {
         orderCode,
         minecraftName,
-        email: email || null,      // ✅ Save if provided
-        whatsapp: whatsapp || null, // ✅ Save if provided
+        email: email || null,
+        whatsapp: whatsapp || null,
         totalAmount,
         serverTypeId,
         status: 'PENDING',

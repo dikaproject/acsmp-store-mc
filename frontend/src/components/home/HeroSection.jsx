@@ -231,7 +231,7 @@ const HeroSection = () => {
                   variants={itemVariants}
                   className="flex flex-wrap gap-3 pt-2"
                 >
-                  <Link to="/shop">
+                  <a href={`minecraft://?addExternalServer=${encodeURIComponent('AmazingCraft')}|${SERVER_IP}:${SERVER_PORT}`}>
                     <motion.button
                       className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-purple-600 via-violet-600 to-purple-600 text-white font-black text-base uppercase tracking-wider overflow-hidden shadow-lg shadow-purple-500/30 border border-purple-400/30"
                       whileHover={{ scale: 1.05 }}
@@ -254,9 +254,9 @@ const HeroSection = () => {
                       {/* Glow effect */}
                       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/10 blur-xl" />
                     </motion.button>
-                  </Link>
+                  </a>
 
-                  <Link to="/guides">
+                  <Link to="/shop">
                     <motion.button
                       className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-transparent text-white font-black text-base uppercase tracking-wider overflow-hidden border-2 border-purple-500/50 hover:border-purple-400 transition-colors"
                       whileHover={{ scale: 1.05 }}
@@ -272,7 +272,7 @@ const HeroSection = () => {
                       />
                       
                       <span className="relative z-10 bg-gradient-to-r from-purple-400 to-violet-400 bg-clip-text text-transparent group-hover:from-white group-hover:to-white transition-all">
-                        EXPLORE
+                        EXPLORE SHOP
                       </span>
                     </motion.button>
                   </Link>

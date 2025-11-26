@@ -201,6 +201,21 @@ const LoginPage = () => {
                   </p>
                 </div>
 
+                {/* Bedrock Info */}
+                <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/20">
+                  <div className="flex items-start gap-2">
+                    <Info className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs text-gray-400 leading-relaxed">
+                        <span className="font-semibold text-blue-400">Bedrock Player:</span> Tambahkan titik (.) di depan username
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Contoh: <span className="font-mono text-blue-400">.Steve123</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Info Alert */}
                 <div className="p-4 rounded-xl bg-purple-500/5 border border-purple-500/20">
                   <div className="flex items-start gap-3">

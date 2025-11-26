@@ -9,7 +9,8 @@ import {
   Coins,
   Crown,
   Server,
-  Calendar
+  Calendar,
+  Percent
 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
@@ -25,6 +26,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
     description: '',
     type: 'COIN',
     price: '',
+    discount: '0',
     amount: '',
     groupName: '',
     serverTypeId: '',
@@ -33,6 +35,13 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
+  // Calculate discounted price
+  const getDiscountedPrice = () => {
+    const price = parseInt(formData.price) || 0;
+    const discount = parseInt(formData.discount) || 0;
+    return price - (price * discount / 100);
+  };
+
   useEffect(() => {
     if (product && (mode === 'edit' || mode === 'view')) {
       setFormData({
@@ -40,6 +49,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
         description: product.description || '',
         type: product.type || 'COIN',
         price: product.price?.toString() || '',
+        discount: product.discount?.toString() || '0',
         amount: product.amount?.toString() || '',
         groupName: product.groupName || '',
         serverTypeId: product.serverTypeId || '',
@@ -54,6 +64,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
         description: '',
         type: 'COIN',
         price: '',
+        discount: '0',
         amount: '',
         groupName: '',
         serverTypeId: serverTypes[0]?.id || '',
@@ -92,11 +103,11 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
       formDataToSend.append('description', formData.description);
       formDataToSend.append('type', formData.type);
       formDataToSend.append('price', formData.price);
-      formDataToSend.append('amount', formData.amount); // ✅ Always send amount
+      formDataToSend.append('discount', formData.discount);
+      formDataToSend.append('amount', formData.amount);
       formDataToSend.append('serverTypeId', formData.serverTypeId);
       formDataToSend.append('isActive', formData.isActive);
       
-      // ✅ Only send groupName if type is RANK
       if (formData.type === 'RANK') {
         formDataToSend.append('groupName', formData.groupName);
       }
@@ -144,6 +155,8 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
   if (!isOpen) return null;
 
   const isViewMode = mode === 'view';
+  const discountedPrice = getDiscountedPrice();
+  const hasDiscount = parseInt(formData.discount) > 0;
 
   return (
     <AnimatePresence>
@@ -326,24 +339,65 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                     />
                   </div>
 
-                  {/* Price */}
-                  <div>
-                    <label className="text-sm font-medium text-gray-300 mb-2 block">
-                      Price (IDR) <span className="text-red-400">*</span>
-                    </label>
-                    <Input
-                      type="number"
-                      value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                      placeholder="10000"
-                      min="0"
-                      className="bg-gray-800/50 border-gray-700 focus:border-purple-500"
-                      required
-                      disabled={isViewMode}
-                    />
+                  {/* Price & Discount */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-300 mb-2 block">
+                        Price (IDR) <span className="text-red-400">*</span>
+                      </label>
+                      <Input
+                        type="number"
+                        value={formData.price}
+                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                        placeholder="10000"
+                        min="0"
+                        className="bg-gray-800/50 border-gray-700 focus:border-purple-500"
+                        required
+                        disabled={isViewMode}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                        <Percent className="w-4 h-4 text-green-400" />
+                        Discount (%)
+                      </label>
+                      <Input
+                        type="number"
+                        value={formData.discount}
+                        onChange={(e) => {
+                          const val = Math.min(100, Math.max(0, parseInt(e.target.value) || 0));
+                          setFormData({ ...formData, discount: val.toString() });
+                        }}
+                        placeholder="0"
+                        min="0"
+                        max="100"
+                        className="bg-gray-800/50 border-gray-700 focus:border-purple-500"
+                        disabled={isViewMode}
+                      />
+                    </div>
                   </div>
 
-                  {/* ✅ Group Name (for RANK only) */}
+                  {/* Price Preview */}
+                  {hasDiscount && (
+                    <div className="p-3 rounded-xl bg-green-500/10 border border-green-500/30">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-400">Final Price:</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-500 line-through">
+                            Rp {parseInt(formData.price || 0).toLocaleString('id-ID')}
+                          </span>
+                          <span className="text-lg font-bold text-green-400">
+                            Rp {Math.floor(discountedPrice).toLocaleString('id-ID')}
+                          </span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-green-400 mt-1">
+                        💰 Hemat Rp {(parseInt(formData.price || 0) - Math.floor(discountedPrice)).toLocaleString('id-ID')}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Group Name (for RANK only) */}
                   {formData.type === 'RANK' && (
                     <div>
                       <label className="text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
@@ -365,7 +419,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                     </div>
                   )}
 
-                  {/* ✅ Amount Field - Different for COIN and RANK */}
+                  {/* Amount Field */}
                   <div>
                     <label className="text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
                       {formData.type === 'COIN' ? (

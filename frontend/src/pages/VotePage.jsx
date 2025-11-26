@@ -122,7 +122,7 @@ const VotePage = () => {
       />
 
       {/* Hero Section with Photo Highlight */}
-      <section className="relative pt-24 pb-16">
+      <section className="relative pt-24 pb-16 overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
             
@@ -145,21 +145,21 @@ const VotePage = () => {
                 <Sparkles className="w-4 h-4 text-purple-400" />
               </motion.div>
               
-              <h1 className="text-5xl md:text-6xl font-black mb-6 leading-tight">
-                <span className="block text-white mb-2">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 leading-tight md:leading-[1.2] overflow-visible">
+                <span className="block text-white ">
                   Vote & Get
                 </span>
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-purple-400">
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-purple-400 py-2 pb-3">
                   Amazing Rewards
                 </span>
               </h1>
               
-              <p className="text-lg text-gray-400 mb-8 leading-relaxed">
+              <p className="text-base md:text-lg text-gray-400 mb-8 leading-relaxed">
                 Dukung server kami dan dapatkan hadiah eksklusif! Setiap vote sangat berarti untuk perkembangan komunitas.
               </p>
 
               {/* Stats Mini */}
-              <div className="grid grid-cols-3 gap-4 mb-8">
+              <div className="grid grid-cols-3 gap-3 md:gap-4 mb-8">
                 {stats.map((stat, index) => {
                   const Icon = stat.icon;
                   return (
@@ -168,10 +168,10 @@ const VotePage = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 + 0.3 }}
-                      className="text-center p-4 rounded-xl bg-black/40 backdrop-blur-xl border border-purple-500/10"
+                      className="text-center p-3 md:p-4 rounded-xl bg-black/40 backdrop-blur-xl border border-purple-500/10"
                     >
-                      <Icon className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-                      <p className="text-2xl font-bold text-white mb-1">
+                      <Icon className="w-5 h-5 md:w-6 md:h-6 text-purple-400 mx-auto mb-2" />
+                      <p className="text-xl md:text-2xl font-bold text-white mb-1">
                         {stat.value}
                       </p>
                       <p className="text-xs text-gray-500">{stat.label}</p>
@@ -181,16 +181,16 @@ const VotePage = () => {
               </div>
 
               {/* CTA Buttons */}
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-3 md:gap-4">
                 <motion.a
                   href="#vote-section"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button className="bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 shadow-lg shadow-purple-500/20 px-8 py-6 text-base font-bold">
-                    <Heart className="w-5 h-5 mr-2" />
+                  <Button className="bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 shadow-lg shadow-purple-500/20 px-6 md:px-8 py-5 md:py-6 text-sm md:text-base font-bold">
+                    <Heart className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                     Vote Sekarang
-                    <ChevronRight className="w-5 h-5 ml-2" />
+                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5 ml-2" />
                   </Button>
                 </motion.a>
                 
@@ -198,8 +198,8 @@ const VotePage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button variant="outline" className="border-purple-500/20 hover:bg-purple-500/5 px-8 py-6 text-base font-semibold text-gray-300">
-                    <Trophy className="w-5 h-5 mr-2" />
+                  <Button variant="outline" className="border-purple-500/20 hover:bg-purple-500/5 px-6 md:px-8 py-5 md:py-6 text-sm md:text-base font-semibold text-gray-300">
+                    <Trophy className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                     Lihat Rewards
                   </Button>
                 </motion.div>
@@ -237,8 +237,8 @@ const VotePage = () => {
                       transition={{ delay: 0.5 }}
                       className="absolute top-4 left-4"
                     >
-                      <Badge className="bg-black/60 backdrop-blur-xl border-purple-500/30 text-white px-4 py-2">
-                        <Camera className="w-4 h-4 mr-2" />
+                      <Badge className="bg-black/60 backdrop-blur-xl border-purple-500/30 text-white px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm">
+                        <Camera className="w-3 h-3 md:w-4 md:h-4 mr-1.5 md:mr-2" />
                         Community Highlight
                       </Badge>
                     </motion.div>
@@ -249,30 +249,30 @@ const VotePage = () => {
                       transition={{ delay: 0.6 }}
                       className="absolute top-4 right-4"
                     >
-                      <Badge className="bg-purple-500/20 backdrop-blur-xl border-purple-500/30 text-purple-400 px-4 py-2">
-                        <Users className="w-4 h-4 mr-2" />
+                      <Badge className="bg-purple-500/20 backdrop-blur-xl border-purple-500/30 text-purple-400 px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm">
+                        <Users className="w-3 h-3 md:w-4 md:h-4 mr-1.5 md:mr-2" />
                         850+ Players
                       </Badge>
                     </motion.div>
                   </div>
 
                   {/* Caption */}
-                  <div className="p-6 bg-gradient-to-b from-black/80 to-black/95 backdrop-blur-xl border-t border-purple-500/10">
-                    <div className="flex items-start justify-between gap-4">
+                  <div className="p-4 md:p-6 bg-gradient-to-b from-black/80 to-black/95 backdrop-blur-xl border-t border-purple-500/10">
+                    <div className="flex items-start justify-between gap-3 md:gap-4">
                       <div className="flex-1">
-                        <h3 className="text-lg font-bold text-white mb-2">
+                        <h3 className="text-base md:text-lg font-bold text-white mb-2">
                           Join Our Amazing Community! 🎮
                         </h3>
-                        <p className="text-sm text-gray-400 leading-relaxed">
+                        <p className="text-xs md:text-sm text-gray-400 leading-relaxed">
                           Ratusan player berkumpul bersama membangun dunia yang luar biasa. Vote dan jadilah bagian dari keluarga besar kami!
                         </p>
                       </div>
                       <motion.button
                         whileHover={{ scale: 1.1, rotate: 5 }}
                         whileTap={{ scale: 0.9 }}
-                        className="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center flex-shrink-0 hover:bg-purple-500/30 transition-colors"
+                        className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center flex-shrink-0 hover:bg-purple-500/30 transition-colors"
                       >
-                        <Heart className="w-5 h-5 text-purple-400" />
+                        <Heart className="w-4 h-4 md:w-5 md:h-5 text-purple-400" />
                       </motion.button>
                     </div>
                   </div>
@@ -284,13 +284,13 @@ const VotePage = () => {
       </section>
 
       {/* Rewards Section */}
-      <section className="py-16 relative overflow-hidden">
+      <section className="py-12 md:py-16 relative overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-10 md:mb-12"
           >
             <motion.div 
               className="inline-flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-xl border border-purple-500/20 rounded-full mb-6"
@@ -303,18 +303,18 @@ const VotePage = () => {
               <span className="text-sm text-purple-400 font-semibold">Rewards</span>
             </motion.div>
 
-            <h2 className="text-3xl md:text-5xl font-black text-white mb-4 px-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 px-4 overflow-visible leading-tight">
               Dapatkan{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400 inline-block">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400 inline-block py-1">
                 Hadiah Menarik
               </span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto text-lg px-4">
+            <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg px-4">
               Setiap vote memberikan keuntungan langsung untuk karaktermu
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto">
             {rewards.map((reward, index) => {
               const Icon = reward.icon;
               return (
@@ -326,18 +326,18 @@ const VotePage = () => {
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ y: -5 }}
                 >
-                  <div className="relative p-6 rounded-2xl bg-black/60 backdrop-blur-xl border border-purple-500/10 hover:border-purple-500/30 transition-all group">
+                  <div className="relative p-5 md:p-6 rounded-2xl bg-black/60 backdrop-blur-xl border border-purple-500/10 hover:border-purple-500/30 transition-all group">
                     {/* Glow on hover */}
                     <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
                     
                     <div className="relative">
-                      <div className={`w-14 h-14 rounded-xl bg-gradient-to-br from-${reward.color}-500/20 to-${reward.color}-600/20 border border-${reward.color}-500/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                        <Icon className={`w-7 h-7 text-${reward.color}-400`} />
+                      <div className={`w-12 h-12 md:w-14 md:h-14 rounded-xl bg-gradient-to-br from-${reward.color}-500/20 to-${reward.color}-600/20 border border-${reward.color}-500/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                        <Icon className={`w-6 h-6 md:w-7 md:h-7 text-${reward.color}-400`} />
                       </div>
-                      <h3 className="text-lg font-bold text-white mb-2">
+                      <h3 className="text-base md:text-lg font-bold text-white mb-2">
                         {reward.title}
                       </h3>
-                      <p className="text-sm text-gray-400 leading-relaxed">
+                      <p className="text-xs md:text-sm text-gray-400 leading-relaxed">
                         {reward.description}
                       </p>
                     </div>
@@ -350,13 +350,13 @@ const VotePage = () => {
       </section>
 
       {/* Vote Links Section */}
-      <section id="vote-section" className="py-16 pb-24 relative">
+      <section id="vote-section" className="py-12 md:py-16 pb-20 md:pb-24 relative">
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-10 md:mb-12"
           >
             <motion.div 
               className="inline-flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-xl border border-purple-500/20 rounded-full mb-6"
@@ -369,13 +369,13 @@ const VotePage = () => {
               <span className="text-sm text-purple-400 font-semibold">Vote Links</span>
             </motion.div>
             
-            <h2 className="text-3xl md:text-5xl font-black text-white mb-4 px-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 px-4 overflow-visible leading-tight">
               Dukung{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400 inline-block">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400 inline-block py-1">
                 Server Kami
               </span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto text-lg px-4">
+            <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg px-4">
               Vote setiap 24 jam dan kumpulkan rewards menarik!
             </p>
           </motion.div>
@@ -386,18 +386,18 @@ const VotePage = () => {
               animate={{ opacity: 1 }}
               className="text-center py-16"
             >
-              <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-purple-500/5 border border-purple-500/20 flex items-center justify-center">
-                <ExternalLink className="w-12 h-12 text-gray-600" />
+              <div className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 rounded-2xl bg-purple-500/5 border border-purple-500/20 flex items-center justify-center">
+                <ExternalLink className="w-10 h-10 md:w-12 md:h-12 text-gray-600" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">
+              <h3 className="text-lg md:text-xl font-bold text-white mb-2">
                 Belum Ada Vote Links
               </h3>
-              <p className="text-gray-400">
+              <p className="text-sm md:text-base text-gray-400">
                 Vote links akan segera tersedia
               </p>
             </motion.div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
               {voteLinks.map((link, index) => (
                 <motion.div
                   key={index}
@@ -407,7 +407,7 @@ const VotePage = () => {
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ y: -5 }}
                 >
-                  <div className="relative p-8 rounded-2xl bg-black/60 backdrop-blur-xl border border-purple-500/20 hover:border-purple-500/40 transition-all group overflow-hidden">
+                  <div className="relative p-6 md:p-8 rounded-2xl bg-black/60 backdrop-blur-xl border border-purple-500/20 hover:border-purple-500/40 transition-all group overflow-hidden">
                     {/* Subtle glow */}
                     <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     
@@ -415,10 +415,10 @@ const VotePage = () => {
                       {/* Header */}
                       <div className="flex items-start justify-between mb-6">
                         <div className="flex-1">
-                          <h3 className="font-bold text-white text-xl mb-3 group-hover:text-purple-300 transition-colors">
+                          <h3 className="font-bold text-white text-lg md:text-xl mb-3 group-hover:text-purple-300 transition-colors">
                             {link.name}
                           </h3>
-                          <div className="flex items-center gap-4 text-xs text-gray-500">
+                          <div className="flex items-center gap-3 md:gap-4 text-xs text-gray-500">
                             <span className="flex items-center gap-1.5">
                               <Clock className="w-3.5 h-3.5" />
                               Setiap 24 jam
@@ -429,8 +429,8 @@ const VotePage = () => {
                             </span>
                           </div>
                         </div>
-                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500/20 to-violet-500/20 border border-purple-500/30 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                          <ExternalLink className="w-6 h-6 text-purple-400" />
+                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-gradient-to-br from-purple-500/20 to-violet-500/20 border border-purple-500/30 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                          <ExternalLink className="w-5 h-5 md:w-6 md:h-6 text-purple-400" />
                         </div>
                       </div>
                       
@@ -442,10 +442,10 @@ const VotePage = () => {
                         className="block"
                       >
                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                          <Button className="w-full bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 shadow-lg shadow-purple-500/20 py-6 font-bold text-base">
-                            <Heart className="w-5 h-5 mr-2" />
+                          <Button className="w-full bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 shadow-lg shadow-purple-500/20 py-5 md:py-6 font-bold text-sm md:text-base">
+                            <Heart className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                             Vote Sekarang
-                            <ChevronRight className="w-5 h-5 ml-2" />
+                            <ChevronRight className="w-4 h-4 md:w-5 md:h-5 ml-2" />
                           </Button>
                         </motion.div>
                       </a>

@@ -18,7 +18,7 @@ const AboutSection = () => {
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   const stats = [
-    { icon: Users, value: "15K+", label: "Active Players", color: "purple" },
+    { icon: Users, value: "1K+", label: "Active Players", color: "purple" },
     { icon: Trophy, value: "156", label: "Events Held", color: "violet" },
     { icon: Shield, value: "99.9%", label: "Uptime", color: "fuchsia" },
     { icon: Star, value: "4.9", label: "Rating", color: "purple" }

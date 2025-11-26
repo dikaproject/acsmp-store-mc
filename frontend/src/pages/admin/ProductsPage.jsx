@@ -449,9 +449,27 @@ const ProductsPage = () => {
                     <div className="space-y-2 mb-4 pb-4 border-b border-gray-800">
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-gray-400">Price</span>
-                        <span className="text-sm font-bold text-purple-400">
-                          {formatCurrency(product.price)}
-                        </span>
+                        <div className="text-right">
+                          {product.discount > 0 ? (
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-gray-500 line-through">
+                                  {formatCurrency(product.price)}
+                                </span>
+                                <Badge className="bg-green-500/20 text-green-400 border-green-500/30 text-[10px] px-1.5 py-0">
+                                  -{product.discount}%
+                                </Badge>
+                              </div>
+                              <span className="text-sm font-bold text-green-400 block">
+                                {formatCurrency(Math.floor(product.price - (product.price * product.discount / 100)))}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-sm font-bold text-purple-400">
+                              {formatCurrency(product.price)}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-gray-400">
@@ -566,7 +584,25 @@ const ProductsPage = () => {
                         </Badge>
                       </td>
                       <td className="p-4">
-                        <p className="font-bold text-purple-400">{formatCurrency(product.price)}</p>
+                        <div className="text-left">
+                          {product.discount > 0 ? (
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm text-gray-500 line-through">
+                                  {formatCurrency(product.price)}
+                                </span>
+                                <Badge className="bg-green-500/20 text-green-400 border-green-500/30 text-xs">
+                                  -{product.discount}%
+                                </Badge>
+                              </div>
+                              <p className="font-bold text-green-400">
+                                {formatCurrency(Math.floor(product.price - (product.price * product.discount / 100)))}
+                              </p>
+                            </div>
+                          ) : (
+                            <p className="font-bold text-purple-400">{formatCurrency(product.price)}</p>
+                          )}
+                        </div>
                       </td>
                       <td className="p-4">
                         <p className="text-sm text-white">
