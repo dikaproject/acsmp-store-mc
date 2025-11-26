@@ -13,6 +13,9 @@ import {
   Target
 } from "lucide-react";
 
+const SERVER_IP = 'play.acsmp.xyz';
+const SERVER_PORT = 19132;
+
 const AboutSection = () => {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
@@ -253,27 +256,29 @@ const AboutSection = () => {
               Be part of our growing community and experience Minecraft like never before
             </p>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="group relative inline-flex items-center gap-3 px-10 py-4 rounded-xl bg-gradient-to-r from-purple-600 via-violet-600 to-purple-600 text-white font-black text-base uppercase tracking-wider overflow-hidden shadow-lg shadow-purple-500/30 border border-purple-400/30"
-              style={{ fontFamily: "'Rajdhani', 'Inter', sans-serif" }}
-            >
-              {/* Animated background */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-violet-600"
-                initial={{ x: '-100%' }}
-                whileHover={{ x: '100%' }}
-                transition={{ duration: 0.6 }}
-              />
-              
-              <Sparkles className="w-5 h-5 relative z-10" />
-              <span className="relative z-10">JOIN NOW</span>
-              <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-              
-              {/* Glow effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/10 blur-xl" />
-            </motion.button>
+            <a href={`minecraft://?addExternalServer=${encodeURIComponent('Amazing Craft')}|${SERVER_IP}:${SERVER_PORT}`}>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative inline-flex items-center gap-3 px-10 py-4 rounded-xl bg-gradient-to-r from-purple-600 via-violet-600 to-purple-600 text-white font-black text-base uppercase tracking-wider overflow-hidden shadow-lg shadow-purple-500/30 border border-purple-400/30"
+                style={{ fontFamily: "'Rajdhani', 'Inter', sans-serif" }}
+              >
+                {/* Animated background */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-violet-600"
+                  initial={{ x: '-100%' }}
+                  whileHover={{ x: '100%' }}
+                  transition={{ duration: 0.6 }}
+                />
+                
+                <Sparkles className="w-5 h-5 relative z-10" />
+                <span className="relative z-10">JOIN NOW</span>
+                <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
+                
+                {/* Glow effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/10 blur-xl" />
+              </motion.button>
+            </a>
           </div>
         </motion.div>
       </div>

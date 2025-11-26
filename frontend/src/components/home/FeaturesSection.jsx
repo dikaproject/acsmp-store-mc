@@ -75,6 +75,10 @@ export function FeaturesSection() {
     }
   };
 
+  const MCSRVSTAT_API = 'https://api.mcsrvstat.us/3/';
+  const SERVER_IP = 'play.acsmp.xyz';
+  const SERVER_PORT = 19132;
+
   return (
     <section 
       ref={sectionRef}
@@ -219,16 +223,18 @@ export function FeaturesSection() {
           <p className="text-gray-400 mb-6">
             Ready to elevate your gaming experience?
           </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="relative px-10 py-4 rounded-xl bg-gradient-to-r from-purple-600 via-violet-600 to-purple-600 text-white font-black text-base uppercase tracking-wider overflow-hidden group shadow-lg shadow-purple-500/30 border border-purple-400/30"
-            style={{ fontFamily: "'Rajdhani', 'Inter', sans-serif" }}
-          >
-            <span className="relative z-10">Start Playing Now</span>
-            {/* Button Shine Effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-          </motion.button>
+          <a href={`minecraft://?addExternalServer=${encodeURIComponent('Amazing Craft')}|${SERVER_IP}:${SERVER_PORT}`}>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative px-10 py-4 rounded-xl bg-gradient-to-r from-purple-600 via-violet-600 to-purple-600 text-white font-black text-base uppercase tracking-wider overflow-hidden group shadow-lg shadow-purple-500/30 border border-purple-400/30"
+              style={{ fontFamily: "'Rajdhani', 'Inter', sans-serif" }}
+            >
+              <span className="relative z-10">Start Playing Now</span>
+              {/* Button Shine Effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+            </motion.button>
+          </a>
         </motion.div>
       </div>
 

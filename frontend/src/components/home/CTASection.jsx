@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sparkles, ArrowRight, Zap, Shield, Trophy, Star } from "lucide-react";
-import { GlowingButton } from "../ui/GlowingButton";
+import { Sparkles, ArrowRight, Zap, Shield, Trophy, Star, Play } from "lucide-react";
 import LiquidEther from "../ui/LiquidEther";
 
 const MCSRVSTAT_API = 'https://api.mcsrvstat.us/3/';
@@ -30,12 +29,10 @@ const CTASection = () => {
         }
       } catch (error) {
         console.error('Error fetching server status:', error);
-        // Keep default values on error
       }
     };
 
     fetchServerStatus();
-    // Auto refresh setiap 30 detik
     const interval = setInterval(fetchServerStatus, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -49,7 +46,7 @@ const CTASection = () => {
 
   return (
     <section className="relative py-32 md:py-40 overflow-hidden" style={{ minHeight: '600px' }}>
-      {/* Liquid Ether Background - Fixed positioning */}
+      {/* Liquid Ether Background */}
       <div className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
         <LiquidEther
           colors={['#5227FF', '#FF9FFC', '#B19EEF']}
@@ -70,7 +67,7 @@ const CTASection = () => {
         />
       </div>
 
-      {/* Dark overlay untuk readability */}
+      {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/40" />
 
       {/* Content */}
@@ -103,6 +100,7 @@ const CTASection = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
             className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
+            style={{ fontFamily: "'Orbitron', 'Rajdhani', 'Inter', sans-serif" }}
           >
             Ready to Start Your
             <span className="block mt-2 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
@@ -124,7 +122,7 @@ const CTASection = () => {
             </span>
           </motion.p>
 
-          {/* CTA Buttons */}
+          {/* CTA Buttons - Matching Hero Style */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -132,19 +130,30 @@ const CTASection = () => {
             transition={{ delay: 0.5 }}
             className="flex flex-wrap gap-4 justify-center mb-12"
           >
-            <Link to="/shop">
-              <GlowingButton variant="primary" className="text-lg px-10 py-5">
-                <Sparkles className="w-5 h-5" />
-                Start Playing Now
-                <ArrowRight className="w-5 h-5" />
-              </GlowingButton>
-            </Link>
-
-            <Link to="/guides">
-              <GlowingButton variant="outline" className="text-lg px-10 py-5">
-                View Guides
-              </GlowingButton>
-            </Link>
+            <a href={`minecraft://?addExternalServer=${encodeURIComponent('Amazing Craft')}|${SERVER_IP}:${SERVER_PORT}`}>
+              <motion.button
+                className="group relative inline-flex items-center gap-2 px-10 py-5 rounded-xl bg-gradient-to-r from-purple-600 via-violet-600 to-purple-600 text-white font-black text-lg uppercase tracking-wider overflow-hidden shadow-lg shadow-purple-500/30 border border-purple-400/30"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                style={{ fontFamily: "'Rajdhani', 'Inter', sans-serif" }}
+              >
+                {/* Animated background */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-violet-600"
+                  initial={{ x: '-100%' }}
+                  whileHover={{ x: '100%' }}
+                  transition={{ duration: 0.6 }}
+                />
+                
+                {/* Button content */}
+                <Play className="w-5 h-5 relative z-10 group-hover:rotate-12 transition-transform" />
+                <span className="relative z-10">Start Playing Now</span>
+                <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
+                
+                {/* Glow effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/10 blur-xl" />
+              </motion.button>
+            </a>
           </motion.div>
 
           {/* Features Grid */}
