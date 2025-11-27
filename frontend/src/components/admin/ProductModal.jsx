@@ -10,7 +10,11 @@ import {
   Crown,
   Server,
   Calendar,
-  Percent
+  Percent,
+  Plus,
+  Trash2,
+  Sparkles,
+  Terminal
 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
@@ -30,10 +34,14 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
     amount: '',
     groupName: '',
     serverTypeId: '',
-    isActive: true
+    isActive: true,
+    benefits: [],
+    commands: []
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [newBenefit, setNewBenefit] = useState('');
+  const [newCommand, setNewCommand] = useState('');
 
   // Calculate discounted price
   const getDiscountedPrice = () => {
@@ -53,7 +61,9 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
         amount: product.amount?.toString() || '',
         groupName: product.groupName || '',
         serverTypeId: product.serverTypeId || '',
-        isActive: product.isActive ?? true
+        isActive: product.isActive ?? true,
+        benefits: product.benefits || [],
+        commands: product.commands || []
       });
       if (product.imageUrl) {
         setImagePreview(`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${product.imageUrl}`);
@@ -68,11 +78,15 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
         amount: '',
         groupName: '',
         serverTypeId: serverTypes[0]?.id || '',
-        isActive: true
+        isActive: true,
+        benefits: [],
+        commands: []
       });
       setImagePreview(null);
       setImageFile(null);
     }
+    setNewBenefit('');
+    setNewCommand('');
   }, [product, mode, isOpen, serverTypes]);
 
   const handleImageChange = (e) => {
@@ -91,6 +105,42 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
     }
   };
 
+  // Benefits handlers
+  const addBenefit = () => {
+    if (newBenefit.trim()) {
+      setFormData({
+        ...formData,
+        benefits: [...formData.benefits, newBenefit.trim()]
+      });
+      setNewBenefit('');
+    }
+  };
+
+  const removeBenefit = (index) => {
+    setFormData({
+      ...formData,
+      benefits: formData.benefits.filter((_, i) => i !== index)
+    });
+  };
+
+  // Commands handlers
+  const addCommand = () => {
+    if (newCommand.trim()) {
+      setFormData({
+        ...formData,
+        commands: [...formData.commands, newCommand.trim()]
+      });
+      setNewCommand('');
+    }
+  };
+
+  const removeCommand = (index) => {
+    setFormData({
+      ...formData,
+      commands: formData.commands.filter((_, i) => i !== index)
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -99,45 +149,47 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
       const token = localStorage.getItem('token');
       const formDataToSend = new FormData();
       
+      // Append basic fields
       formDataToSend.append('name', formData.name);
-      formDataToSend.append('description', formData.description);
+      formDataToSend.append('description', formData.description || '');
       formDataToSend.append('type', formData.type);
-      formDataToSend.append('price', formData.price);
-      formDataToSend.append('discount', formData.discount);
-      formDataToSend.append('amount', formData.amount);
+      formDataToSend.append('price', formData.price || '0');
+      formDataToSend.append('discount', formData.discount || '0');
+      formDataToSend.append('amount', formData.amount || '0');
       formDataToSend.append('serverTypeId', formData.serverTypeId);
-      formDataToSend.append('isActive', formData.isActive);
+      formDataToSend.append('isActive', formData.isActive.toString());
       
+      // Append RANK specific fields
       if (formData.type === 'RANK') {
-        formDataToSend.append('groupName', formData.groupName);
+        formDataToSend.append('groupName', formData.groupName || '');
+        formDataToSend.append('benefits', JSON.stringify(formData.benefits || []));
+        formDataToSend.append('commands', JSON.stringify(formData.commands || []));
       }
       
+      // Append image only if new file selected
       if (imageFile) {
         formDataToSend.append('image', imageFile);
       }
+
+      const config = {
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      };
 
       if (mode === 'create') {
         await axios.post(
           `${import.meta.env.VITE_API_URL}/products`,
           formDataToSend,
-          { 
-            headers: { 
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'multipart/form-data'
-            } 
-          }
+          config
         );
         toast.success("Product berhasil ditambahkan");
       } else {
         await axios.put(
           `${import.meta.env.VITE_API_URL}/products/${product.id}`,
           formDataToSend,
-          { 
-            headers: { 
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'multipart/form-data'
-            } 
-          }
+          config
         );
         toast.success("Product berhasil diupdate");
       }
@@ -145,8 +197,8 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
       onSuccess();
       onClose();
     } catch (error) {
-      console.error("Error saving product:", error);
-      toast.error(error.response?.data?.message || "Gagal menyimpan data");
+      const errorMessage = error.response?.data?.message || "Gagal menyimpan data";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -175,7 +227,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto"
+          className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto"
         >
           <Card className="border-gray-800/50 bg-[#13151a] shadow-2xl">
             {/* Header */}
@@ -300,6 +352,45 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         <div className="flex flex-col items-center gap-2">
                           <Crown className="w-6 h-6 text-orange-400" />
                           <span className="font-medium text-white">Rank</span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Status */}
+                  <div>
+                    <label className="text-sm font-medium text-gray-300 mb-2 block">
+                      Status
+                    </label>
+                    <div className="flex items-center gap-4">
+                      <button
+                        type="button"
+                        onClick={() => !isViewMode && setFormData({ ...formData, isActive: true })}
+                        disabled={isViewMode}
+                        className={`flex-1 p-3 rounded-lg border-2 transition-all ${
+                          formData.isActive
+                            ? 'border-emerald-500 bg-emerald-500/10'
+                            : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                        } ${isViewMode ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                      >
+                        <div className="flex items-center justify-center gap-2">
+                          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                          <span className="font-medium text-white">Active</span>
+                        </div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => !isViewMode && setFormData({ ...formData, isActive: false })}
+                        disabled={isViewMode}
+                        className={`flex-1 p-3 rounded-lg border-2 transition-all ${
+                          !formData.isActive
+                            ? 'border-red-500 bg-red-500/10'
+                            : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                        } ${isViewMode ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                      >
+                        <div className="flex items-center justify-center gap-2">
+                          <X className="w-5 h-5 text-red-400" />
+                          <span className="font-medium text-white">Inactive</span>
                         </div>
                       </button>
                     </div>
@@ -451,47 +542,139 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                       }
                     </p>
                   </div>
-
-                  {/* Status */}
-                  <div>
-                    <label className="text-sm font-medium text-gray-300 mb-2 block">
-                      Status
-                    </label>
-                    <div className="flex items-center gap-4">
-                      <button
-                        type="button"
-                        onClick={() => !isViewMode && setFormData({ ...formData, isActive: true })}
-                        disabled={isViewMode}
-                        className={`flex-1 p-3 rounded-lg border-2 transition-all ${
-                          formData.isActive
-                            ? 'border-emerald-500 bg-emerald-500/10'
-                            : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
-                        } ${isViewMode ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                      >
-                        <div className="flex items-center justify-center gap-2">
-                          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                          <span className="font-medium text-white">Active</span>
-                        </div>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => !isViewMode && setFormData({ ...formData, isActive: false })}
-                        disabled={isViewMode}
-                        className={`flex-1 p-3 rounded-lg border-2 transition-all ${
-                          !formData.isActive
-                            ? 'border-red-500 bg-red-500/10'
-                            : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
-                        } ${isViewMode ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                      >
-                        <div className="flex items-center justify-center gap-2">
-                          <X className="w-5 h-5 text-red-400" />
-                          <span className="font-medium text-white">Inactive</span>
-                        </div>
-                      </button>
-                    </div>
-                  </div>
                 </div>
               </div>
+
+              {/* Benefits & Commands Section (RANK only) */}
+              {formData.type === 'RANK' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-800">
+                  {/* Benefits */}
+                  <div>
+                    <label className="text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-purple-400" />
+                      Benefits
+                    </label>
+                    
+                    {/* Add Benefit Input */}
+                    {!isViewMode && (
+                      <div className="flex gap-2 mb-3">
+                        <Input
+                          type="text"
+                          value={newBenefit}
+                          onChange={(e) => setNewBenefit(e.target.value)}
+                          onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addBenefit())}
+                          placeholder="e.g., Access to /fly command"
+                          className="bg-gray-800/50 border-gray-700 focus:border-purple-500 flex-1"
+                        />
+                        <Button
+                          type="button"
+                          onClick={addBenefit}
+                          className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border border-purple-500/30"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    )}
+
+                    {/* Benefits List */}
+                    <div className="space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
+                      {formData.benefits.length > 0 ? (
+                        formData.benefits.map((benefit, index) => (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="flex items-center gap-2 p-2 rounded-lg bg-purple-500/10 border border-purple-500/20"
+                          >
+                            <Sparkles className="w-3 h-3 text-purple-400 flex-shrink-0" />
+                            <span className="text-sm text-gray-300 flex-1">{benefit}</span>
+                            {!isViewMode && (
+                              <button
+                                type="button"
+                                onClick={() => removeBenefit(index)}
+                                className="p-1 hover:bg-red-500/20 rounded transition-colors"
+                              >
+                                <X className="w-3 h-3 text-red-400" />
+                              </button>
+                            )}
+                          </motion.div>
+                        ))
+                      ) : (
+                        <div className="text-center py-4 text-gray-500 text-sm">
+                          <Sparkles className="w-6 h-6 mx-auto mb-2 opacity-50" />
+                          <p>Belum ada benefits</p>
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-2">
+                      💡 List keuntungan yang didapat player
+                    </p>
+                  </div>
+
+                  {/* Commands */}
+                  <div>
+                    <label className="text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
+                      <Terminal className="w-4 h-4 text-cyan-400" />
+                      Commands
+                    </label>
+                    
+                    {/* Add Command Input */}
+                    {!isViewMode && (
+                      <div className="flex gap-2 mb-3">
+                        <Input
+                          type="text"
+                          value={newCommand}
+                          onChange={(e) => setNewCommand(e.target.value)}
+                          onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCommand())}
+                          placeholder="e.g., lp user {player} parent add vip"
+                          className="bg-gray-800/50 border-gray-700 focus:border-cyan-500 flex-1 font-mono text-sm"
+                        />
+                        <Button
+                          type="button"
+                          onClick={addCommand}
+                          className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    )}
+
+                    {/* Commands List */}
+                    <div className="space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
+                      {formData.commands.length > 0 ? (
+                        formData.commands.map((command, index) => (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="flex items-center gap-2 p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20"
+                          >
+                            <Terminal className="w-3 h-3 text-cyan-400 flex-shrink-0" />
+                            <code className="text-sm text-gray-300 flex-1 font-mono truncate">{command}</code>
+                            {!isViewMode && (
+                              <button
+                                type="button"
+                                onClick={() => removeCommand(index)}
+                                className="p-1 hover:bg-red-500/20 rounded transition-colors"
+                              >
+                                <X className="w-3 h-3 text-red-400" />
+                              </button>
+                            )}
+                          </motion.div>
+                        ))
+                      ) : (
+                        <div className="text-center py-4 text-gray-500 text-sm">
+                          <Terminal className="w-6 h-6 mx-auto mb-2 opacity-50" />
+                          <p>Belum ada commands</p>
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-2">
+                      💡 Gunakan <code className="text-cyan-400">{'{player}'}</code> untuk nama player
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {/* View Mode Additional Info */}
               {isViewMode && product && (

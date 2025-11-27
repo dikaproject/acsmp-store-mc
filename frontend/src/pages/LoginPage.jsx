@@ -1,6 +1,6 @@
 import { useState, memo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   User, 
   CheckCircle2,
@@ -10,7 +10,8 @@ import {
   Shield,
   Sparkles,
   ArrowRight,
-  Home as HomeIcon
+  Monitor,
+  Smartphone
 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
@@ -18,7 +19,6 @@ import { Badge } from "../components/ui/Badge";
 import { useAuthStore } from "../store/useAuthStore";
 import toast from "react-hot-toast";
 import axios from "axios";
-import logo from "../assets/logo.png";
 
 // Simplified background - no animations
 const StaticBackground = memo(() => (
@@ -43,30 +43,65 @@ const LoginPage = () => {
   const { loginUser } = useAuthStore();
   
   const [minecraftName, setMinecraftName] = useState("");
+  const [platform, setPlatform] = useState("java"); // java or bedrock
   const [loading, setLoading] = useState(false);
 
   const from = location.state?.from?.pathname || '/shop';
 
+  // Get the actual username to send (with underscore prefix for bedrock)
+  const getActualUsername = () => {
+    if (platform === 'bedrock') {
+      return `_${minecraftName.trim()}`;
+    }
+    return minecraftName.trim();
+  };
+
+  // Validate username based on platform
+  const validateUsername = () => {
+    const username = minecraftName.trim();
+    
+    if (!username) {
+      toast.error("Masukkan Minecraft name Anda");
+      return false;
+    }
+
+    if (platform === 'java') {
+      // Java: 3-16 characters, alphanumeric & underscore
+      const javaRegex = /^[a-zA-Z0-9_]{3,16}$/;
+      if (!javaRegex.test(username)) {
+        toast.error("Format Java username tidak valid (3-16 karakter, huruf, angka, underscore)");
+        return false;
+      }
+    } else {
+      // Bedrock: 3-16 characters, can include spaces and special chars
+      // We'll add underscore prefix automatically
+      if (username.length < 3 || username.length > 16) {
+        toast.error("Username Bedrock harus 3-16 karakter");
+        return false;
+      }
+      // Check if user accidentally added underscore
+      if (username.startsWith('_')) {
+        toast.error("Tidak perlu menambahkan underscore (_) di awal. Sistem akan menambahkannya otomatis.");
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!minecraftName.trim()) {
-      toast.error("Masukkan Minecraft name Anda");
-      return;
-    }
-
-    const minecraftRegex = /^[a-zA-Z0-9_]{3,16}$/;
-    if (!minecraftRegex.test(minecraftName)) {
-      toast.error("Format Minecraft name tidak valid (3-16 karakter, alphanumeric & underscore)");
-      return;
-    }
+    if (!validateUsername()) return;
 
     setLoading(true);
 
     try {
+      const actualUsername = getActualUsername();
+      
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/auth/login/player`,
-        { minecraftName: minecraftName.trim() }
+        { minecraftName: actualUsername }
       );
 
       const { token, minecraftName: verifiedName, verification } = response.data.data;
@@ -162,25 +197,124 @@ const LoginPage = () => {
                   Sign In
                 </h2>
                 <p className="text-sm text-gray-400">
-                  Masukkan Minecraft username Anda
+                  Pilih platform dan masukkan username
                 </p>
               </div>
               
               <form onSubmit={handleSubmit} className="space-y-5">
+                
+                {/* Platform Selection */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-white mb-3">
+                    <Sparkles className="w-4 h-4 text-purple-400" />
+                    Pilih Platform
+                  </label>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Java Button */}
+                    <motion.button
+                      type="button"
+                      onClick={() => setPlatform('java')}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`relative p-4 rounded-xl border-2 transition-all ${
+                        platform === 'java'
+                          ? 'border-emerald-500 bg-emerald-500/10'
+                          : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                      }`}
+                    >
+                      {platform === 'java' && (
+                        <motion.div
+                          layoutId="platform-indicator"
+                          className="absolute inset-0 border-2 border-emerald-500 rounded-xl"
+                          initial={false}
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        />
+                      )}
+                      <div className="relative flex flex-col items-center gap-2">
+                        <div className={`p-2 rounded-lg ${platform === 'java' ? 'bg-emerald-500/20' : 'bg-gray-700/50'}`}>
+                          <Monitor className={`w-6 h-6 ${platform === 'java' ? 'text-emerald-400' : 'text-gray-400'}`} />
+                        </div>
+                        <span className={`font-bold text-sm ${platform === 'java' ? 'text-emerald-400' : 'text-gray-400'}`}>
+                          Java Edition
+                        </span>
+                        <span className="text-xs text-gray-500">PC / Mac</span>
+                      </div>
+                      {platform === 'java' && (
+                        <div className="absolute top-2 right-2">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        </div>
+                      )}
+                    </motion.button>
+
+                    {/* Bedrock Button */}
+                    <motion.button
+                      type="button"
+                      onClick={() => setPlatform('bedrock')}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`relative p-4 rounded-xl border-2 transition-all ${
+                        platform === 'bedrock'
+                          ? 'border-orange-500 bg-orange-500/10'
+                          : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                      }`}
+                    >
+                      {platform === 'bedrock' && (
+                        <motion.div
+                          layoutId="platform-indicator"
+                          className="absolute inset-0 border-2 border-orange-500 rounded-xl"
+                          initial={false}
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        />
+                      )}
+                      <div className="relative flex flex-col items-center gap-2">
+                        <div className={`p-2 rounded-lg ${platform === 'bedrock' ? 'bg-orange-500/20' : 'bg-gray-700/50'}`}>
+                          <Smartphone className={`w-6 h-6 ${platform === 'bedrock' ? 'text-orange-400' : 'text-gray-400'}`} />
+                        </div>
+                        <span className={`font-bold text-sm ${platform === 'bedrock' ? 'text-orange-400' : 'text-gray-400'}`}>
+                          Bedrock Edition
+                        </span>
+                        <span className="text-xs text-gray-500">Mobile / Console</span>
+                      </div>
+                      {platform === 'bedrock' && (
+                        <div className="absolute top-2 right-2">
+                          <CheckCircle2 className="w-4 h-4 text-orange-400" />
+                        </div>
+                      )}
+                    </motion.button>
+                  </div>
+                </div>
+
                 {/* Username Input */}
                 <div>
                   <label className="flex items-center gap-2 text-sm font-semibold text-white mb-2">
                     <User className="w-4 h-4 text-purple-400" />
-                    Minecraft Username
+                    {platform === 'java' ? 'Java Username' : 'Bedrock Gamertag'}
                   </label>
                   
                   <div className="relative">
+                    {/* Bedrock Prefix Indicator */}
+                    <AnimatePresence>
+                      {platform === 'bedrock' && (
+                        <motion.div
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -10 }}
+                          className="absolute left-3 top-1/2 -translate-y-1/2 z-10"
+                        >
+                          <span className="text-orange-400 font-mono font-bold text-lg">_</span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                    
                     <Input
                       type="text"
-                      placeholder="Contoh: Steve123"
+                      placeholder={platform === 'java' ? 'Contoh: Steve123' : 'Contoh: Steve123'}
                       value={minecraftName}
                       onChange={(e) => setMinecraftName(e.target.value)}
-                      className="bg-black/60 border-purple-500/30 focus:border-purple-500/50 h-12 text-base rounded-xl transition-colors text-white placeholder:text-gray-500"
+                      className={`bg-black/60 border-purple-500/30 focus:border-purple-500/50 h-12 text-base rounded-xl transition-all text-white placeholder:text-gray-500 ${
+                        platform === 'bedrock' ? 'pl-8' : ''
+                      }`}
                       maxLength={16}
                       required
                       autoFocus
@@ -188,7 +322,11 @@ const LoginPage = () => {
                     
                     {minecraftName && (
                       <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                        <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30 text-xs px-2 py-1">
+                        <Badge className={`${
+                          platform === 'java' 
+                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' 
+                            : 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+                        } text-xs px-2 py-1`}>
                           {minecraftName.length}/16
                         </Badge>
                       </div>
@@ -197,24 +335,79 @@ const LoginPage = () => {
                   
                   <p className="text-xs text-gray-500 mt-2 flex items-center gap-1.5">
                     <Info className="w-3.5 h-3.5" />
-                    3-16 karakter (huruf, angka, underscore)
+                    {platform === 'java' 
+                      ? '3-16 karakter (huruf, angka, underscore)'
+                      : '3-16 karakter, underscore (_) akan ditambahkan otomatis'
+                    }
                   </p>
                 </div>
 
-                {/* Bedrock Info */}
-                <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/20">
-                  <div className="flex items-start gap-2">
-                    <Info className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs text-gray-400 leading-relaxed">
-                        <span className="font-semibold text-blue-400">Bedrock Player:</span> Tambahkan titik (.) di depan username
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Contoh: <span className="font-mono text-blue-400">.Steve123</span>
-                      </p>
+                {/* Preview Username */}
+                <AnimatePresence mode="wait">
+                  {minecraftName && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className={`p-3 rounded-xl border ${
+                        platform === 'java'
+                          ? 'bg-emerald-500/5 border-emerald-500/20'
+                          : 'bg-orange-500/5 border-orange-500/20'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-400">Username yang akan digunakan:</span>
+                        <span className={`font-mono font-bold ${
+                          platform === 'java' ? 'text-emerald-400' : 'text-orange-400'
+                        }`}>
+                          {getActualUsername()}
+                        </span>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Platform Info */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={platform}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className={`p-4 rounded-xl border ${
+                      platform === 'java'
+                        ? 'bg-emerald-500/5 border-emerald-500/20'
+                        : 'bg-orange-500/5 border-orange-500/20'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      {platform === 'java' ? (
+                        <>
+                          <Monitor className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="text-sm font-bold text-emerald-400 mb-1">Java Edition</h4>
+                            <p className="text-xs text-gray-400 leading-relaxed">
+                              Masukkan username Minecraft Java Anda seperti biasa. 
+                              Username harus pernah join server minimal 1x.
+                            </p>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <Smartphone className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="text-sm font-bold text-orange-400 mb-1">Bedrock Edition</h4>
+                            <p className="text-xs text-gray-400 leading-relaxed">
+                              Masukkan Gamertag Xbox/PlayStation Anda <span className="font-semibold text-orange-400">tanpa underscore</span>. 
+                              Sistem akan otomatis menambahkan prefix <code className="text-orange-400 font-mono bg-orange-500/10 px-1 rounded">_</code> untuk Bedrock player.
+                            </p>
+                          </div>
+                        </>
+                      )}
                     </div>
-                  </div>
-                </div>
+                  </motion.div>
+                </AnimatePresence>
 
                 {/* Info Alert */}
                 <div className="p-4 rounded-xl bg-purple-500/5 border border-purple-500/20">
@@ -233,7 +426,11 @@ const LoginPage = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-purple-600 via-violet-600 to-purple-600 hover:from-purple-500 hover:via-violet-500 hover:to-purple-500 disabled:from-purple-600/50 disabled:via-violet-600/50 disabled:to-purple-600/50 shadow-lg shadow-purple-500/20 h-12 text-base font-bold rounded-xl transition-all border border-purple-400/30"
+                  className={`w-full h-12 text-base font-bold rounded-xl transition-all border ${
+                    platform === 'java'
+                      ? 'bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 hover:from-emerald-500 hover:via-green-500 hover:to-emerald-500 shadow-lg shadow-emerald-500/20 border-emerald-400/30'
+                      : 'bg-gradient-to-r from-orange-600 via-amber-600 to-orange-600 hover:from-orange-500 hover:via-amber-500 hover:to-orange-500 shadow-lg shadow-orange-500/20 border-orange-400/30'
+                  } disabled:opacity-50`}
                   style={{ fontFamily: "'Rajdhani', sans-serif" }}
                 >
                   {loading ? (
@@ -243,8 +440,12 @@ const LoginPage = () => {
                     </span>
                   ) : (
                     <span className="flex items-center justify-center gap-2">
-                      <CheckCircle2 className="w-5 h-5" />
-                      <span>SIGN IN</span>
+                      {platform === 'java' ? (
+                        <Monitor className="w-5 h-5" />
+                      ) : (
+                        <Smartphone className="w-5 h-5" />
+                      )}
+                      <span>SIGN IN AS {platform === 'java' ? 'JAVA' : 'BEDROCK'}</span>
                       <ArrowRight className="w-5 h-5" />
                     </span>
                   )}

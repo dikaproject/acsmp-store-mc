@@ -1,5 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const fs = require('fs');
+const path = require('path');
 
 exports.getAll = async (req, res, next) => {
   try {
@@ -8,11 +10,9 @@ exports.getAll = async (req, res, next) => {
     const where = {};
     if (serverTypeId) where.serverTypeId = serverTypeId;
     
-    // Support both 'type' and 'category' query params
     if (type) {
       where.type = type.toUpperCase();
     } else if (category && category !== 'all') {
-      // Map category to ProductType enum
       const categoryMap = {
         'coins': 'COIN',
         'ranks': 'RANK',
@@ -34,7 +34,6 @@ exports.getAll = async (req, res, next) => {
       ]
     });
 
-    // Transform data for frontend
     const transformedProducts = products.map(product => ({
       ...product,
       ServerType: product.serverType,
@@ -46,7 +45,6 @@ exports.getAll = async (req, res, next) => {
       data: transformedProducts
     });
   } catch (error) {
-    console.error('Error in getAll products:', error);
     next(error);
   }
 };
@@ -86,24 +84,52 @@ exports.create = async (req, res, next) => {
   try {
     const { 
       name, description, type, price, discount, amount, groupName, 
-      serverTypeId, imageUrl, isActive,
-      benefits, commands 
+      serverTypeId, isActive, benefits, commands 
     } = req.body;
+
+    // Parse isActive properly
+    const activeStatus = isActive === 'true' || isActive === true;
+
+    // Parse benefits and commands
+    let parsedBenefits = null;
+    let parsedCommands = null;
+
+    if (benefits) {
+      try {
+        parsedBenefits = typeof benefits === 'string' ? JSON.parse(benefits) : benefits;
+      } catch (e) {
+        parsedBenefits = [];
+      }
+    }
+
+    if (commands) {
+      try {
+        parsedCommands = typeof commands === 'string' ? JSON.parse(commands) : commands;
+      } catch (e) {
+        parsedCommands = [];
+      }
+    }
+
+    // Build image URL
+    let imageUrl = null;
+    if (req.file) {
+      imageUrl = `/uploads/products/${req.file.filename}`;
+    }
 
     const product = await prisma.product.create({
       data: {
         name,
-        description,
-        type,
-        price: parseInt(price),
-        discount: discount ? parseInt(discount) : 0,
-        amount: parseInt(amount),
-        groupName: type === 'RANK' ? groupName : null,
+        description: description || null,
+        type: type || 'COIN',
+        price: parseInt(price) || 0,
+        discount: parseInt(discount) || 0,
+        amount: parseInt(amount) || 0,
+        groupName: type === 'RANK' ? (groupName || null) : null,
         serverTypeId,
-        imageUrl: req.file ? `/uploads/products/${req.file.filename}` : imageUrl,
-        isActive: isActive !== undefined ? isActive : true,
-        benefits: benefits ? JSON.parse(benefits) : null,
-        commands: commands ? JSON.parse(commands) : null
+        imageUrl,
+        isActive: activeStatus,
+        benefits: parsedBenefits,
+        commands: parsedCommands
       },
       include: {
         serverType: true
@@ -120,6 +146,13 @@ exports.create = async (req, res, next) => {
       }
     });
   } catch (error) {
+    // Delete uploaded file if error occurs
+    if (req.file) {
+      const filePath = path.join('uploads/products', req.file.filename);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
     next(error);
   }
 };
@@ -129,8 +162,7 @@ exports.update = async (req, res, next) => {
     const { id } = req.params;
     const { 
       name, description, type, price, discount, amount, groupName, 
-      serverTypeId, imageUrl, isActive,
-      benefits, commands 
+      serverTypeId, isActive, benefits, commands 
     } = req.body;
 
     const existing = await prisma.product.findUnique({
@@ -138,6 +170,13 @@ exports.update = async (req, res, next) => {
     });
 
     if (!existing) {
+      // Delete uploaded file if product not found
+      if (req.file) {
+        const filePath = path.join('uploads/products', req.file.filename);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      }
       return res.status(404).json({
         success: false,
         message: 'Product not found'
@@ -145,27 +184,48 @@ exports.update = async (req, res, next) => {
     }
 
     const updateData = {};
+    
     if (name !== undefined) updateData.name = name;
-    if (description !== undefined) updateData.description = description;
+    if (description !== undefined) updateData.description = description || null;
     if (type !== undefined) updateData.type = type;
-    if (price !== undefined) updateData.price = parseInt(price);
-    if (discount !== undefined) updateData.discount = parseInt(discount);
-    if (amount !== undefined) updateData.amount = parseInt(amount);
-    if (groupName !== undefined) updateData.groupName = groupName;
+    if (price !== undefined) updateData.price = parseInt(price) || 0;
+    if (discount !== undefined) updateData.discount = parseInt(discount) || 0;
+    if (amount !== undefined) updateData.amount = parseInt(amount) || 0;
+    if (groupName !== undefined) updateData.groupName = groupName || null;
     if (serverTypeId !== undefined) updateData.serverTypeId = serverTypeId;
-    if (isActive !== undefined) updateData.isActive = isActive;
     
+    if (isActive !== undefined) {
+      updateData.isActive = isActive === 'true' || isActive === true;
+    }
+    
+    // Parse benefits
     if (benefits !== undefined) {
-      updateData.benefits = typeof benefits === 'string' ? JSON.parse(benefits) : benefits;
-    }
-    if (commands !== undefined) {
-      updateData.commands = typeof commands === 'string' ? JSON.parse(commands) : commands;
+      try {
+        updateData.benefits = typeof benefits === 'string' ? JSON.parse(benefits) : benefits;
+      } catch (e) {
+        updateData.benefits = [];
+      }
     }
     
+    // Parse commands
+    if (commands !== undefined) {
+      try {
+        updateData.commands = typeof commands === 'string' ? JSON.parse(commands) : commands;
+      } catch (e) {
+        updateData.commands = [];
+      }
+    }
+    
+    // Handle image update
     if (req.file) {
+      // Delete old image if exists
+      if (existing.imageUrl) {
+        const oldImagePath = path.join('.', existing.imageUrl);
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+        }
+      }
       updateData.imageUrl = `/uploads/products/${req.file.filename}`;
-    } else if (imageUrl !== undefined) {
-      updateData.imageUrl = imageUrl;
     }
 
     const product = await prisma.product.update({
@@ -186,6 +246,13 @@ exports.update = async (req, res, next) => {
       }
     });
   } catch (error) {
+    // Delete uploaded file if error occurs
+    if (req.file) {
+      const filePath = path.join('uploads/products', req.file.filename);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
     next(error);
   }
 };
@@ -215,6 +282,14 @@ exports.delete = async (req, res, next) => {
         success: false,
         message: 'Cannot delete product with existing orders'
       });
+    }
+
+    // Delete image file if exists
+    if (existing.imageUrl) {
+      const imagePath = path.join('.', existing.imageUrl);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
     }
 
     await prisma.product.delete({
