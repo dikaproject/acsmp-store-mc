@@ -113,7 +113,7 @@ exports.create = async (req, res, next) => {
     // Build image URL
     let imageUrl = null;
     if (req.file) {
-      imageUrl = `/uploads/products/${req.file.filename}`;
+      imageUrl = `/api/uploads/products/${req.file.filename}`;
     }
 
     const product = await prisma.product.create({
@@ -220,12 +220,12 @@ exports.update = async (req, res, next) => {
     if (req.file) {
       // Delete old image if exists
       if (existing.imageUrl) {
-        const oldImagePath = path.join('.', existing.imageUrl);
+        const oldImagePath = path.join('.', existing.imageUrl.replace('/api', ''));
         if (fs.existsSync(oldImagePath)) {
           fs.unlinkSync(oldImagePath);
         }
       }
-      updateData.imageUrl = `/uploads/products/${req.file.filename}`;
+      updateData.imageUrl = `/api/uploads/products/${req.file.filename}`;
     }
 
     const product = await prisma.product.update({
@@ -286,7 +286,7 @@ exports.delete = async (req, res, next) => {
 
     // Delete image file if exists
     if (existing.imageUrl) {
-      const imagePath = path.join('.', existing.imageUrl);
+      const imagePath = path.join('.', existing.imageUrl.replace('/api', ''));
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
       }

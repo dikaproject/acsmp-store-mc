@@ -28,7 +28,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); 
 app.use(express.json());
+
+// Static files - serve both /uploads and /api/uploads
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+app.use('/api/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 app.get('/', (req, res) => {
   res.json({
     success: true,
