@@ -32,7 +32,7 @@ class CommandService {
   generateCommand(product, minecraftName, quantity = 1) {
     if (product.type === 'COIN') {
       const totalAmount = product.amount * quantity;
-      return `coins give ${minecraftName} ${totalAmount}`;
+      return `points give ${minecraftName} ${totalAmount}`;
     }
 
     if (product.type === 'RANK') {
