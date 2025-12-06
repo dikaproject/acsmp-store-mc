@@ -5,8 +5,8 @@ import { Sparkles, ArrowRight, Zap, Shield, Trophy, Star, Play } from "lucide-re
 import LiquidEther from "../ui/LiquidEther";
 
 const MCSRVSTAT_API = 'https://api.mcsrvstat.us/3/';
-const SERVER_IP = 'play.acsmp.xyz';
-const SERVER_PORT = 19132;
+const SERVER_IP = 'amazingcraft.org';
+const SERVER_PORT = 25565;
 
 const CTASection = () => {
   const [serverData, setServerData] = useState(null);
@@ -17,7 +17,7 @@ const CTASection = () => {
   useEffect(() => {
     const fetchServerStatus = async () => {
       try {
-        const response = await fetch(`${MCSRVSTAT_API}${SERVER_IP}:${SERVER_PORT}`);
+        const response = await fetch(`${MCSRVSTAT_API}${SERVER_IP}`);
         const data = await response.json();
         
         if (data.online) {
@@ -26,9 +26,11 @@ const CTASection = () => {
           setServerData(data);
         } else {
           setIsOnline(false);
+          setPlayersOnline(0);
         }
       } catch (error) {
-        console.error('Error fetching server status:', error);
+        setIsOnline(false);
+        setPlayersOnline(0);
       }
     };
 
@@ -206,7 +208,7 @@ const CTASection = () => {
                 className="ml-1"
               >
                 {playersOnline} Players
-              </motion.span> • play.acsmp.xyz
+              </motion.span> • {SERVER_IP}
             </span>
           </motion.div>
         </motion.div>

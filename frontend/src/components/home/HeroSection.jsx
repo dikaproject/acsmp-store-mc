@@ -7,8 +7,8 @@ import { GridPattern } from "../ui/GridPattern";
 import { useEffect, useMemo, useState } from "react";
 
 const MCSRVSTAT_API = 'https://api.mcsrvstat.us/3/';
-const SERVER_IP = 'play.acsmp.xyz';
-const SERVER_PORT = 19132;
+const SERVER_IP = 'amazingcraft.org';
+const SERVER_PORT = 25565;
 
 const HeroSection = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -49,7 +49,7 @@ const HeroSection = () => {
   useEffect(() => {
     const fetchServerStatus = async () => {
       try {
-        const response = await fetch(`${MCSRVSTAT_API}${SERVER_IP}:${SERVER_PORT}`);
+        const response = await fetch(`${MCSRVSTAT_API}${SERVER_IP}`);
         const data = await response.json();
         
         if (data.online) {
@@ -57,9 +57,11 @@ const HeroSection = () => {
           setPlayersOnline(data.players?.online || 0);
         } else {
           setIsServerOnline(false);
+          setPlayersOnline(0);
         }
       } catch (error) {
-        console.error('Error fetching server status:', error);
+        setIsServerOnline(false);
+        setPlayersOnline(0);
       }
     };
 

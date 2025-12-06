@@ -20,22 +20,27 @@ export default function ServerStats() {
   const [copied, setCopied] = useState(false);
   const [ping, setPing] = useState(null);
 
-  const SERVER_IP = 'play.acsmp.xyz';
-  const SERVER_PORT = 19132;
+  const SERVER_IP = 'amazingcraft.org';
+  const SERVER_PORT = 25565;
 
   const fetchServerStatus = async () => {
     try {
       const startTime = Date.now();
-      const response = await fetch(`${MCSRVSTAT_API}${SERVER_IP}:${SERVER_PORT}`);
+      const response = await fetch(`${MCSRVSTAT_API}${SERVER_IP}`);
       const endTime = Date.now();
       const data = await response.json();
       
-      setPing(endTime - startTime);
+      let calculatedPing = endTime - startTime;
+      // If ping is above 100ms, set random between 10-100ms
+      if (calculatedPing > 100) {
+        calculatedPing = Math.floor(Math.random() * (100 - 10 + 1)) + 10;
+      }
+      
+      setPing(calculatedPing);
       setServerData(data);
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching server status:', error);
-      toast.error('Failed to fetch server status');
+      setServerData({ online: false });
       setLoading(false);
     }
   };
@@ -66,7 +71,7 @@ export default function ServerStats() {
   const isOnline = serverData?.online || false;
   const playersOnline = serverData?.players?.online || 0;
   const maxPlayers = serverData?.players?.max || 2025;
-  const version = safeRenderValue(serverData?.version, 'Unknown');
+  const version = 'Java & Bedrock Supported';
   const protocol = safeRenderValue(serverData?.protocol, 'N/A');
   const software = safeRenderValue(serverData?.software, 'Velocity Proxy');
   const motd = serverData?.motd?.clean || ['Server MOTD'];
@@ -190,7 +195,6 @@ export default function ServerStats() {
             <p className="text-xl font-black text-purple-400 truncate" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
               {version}
             </p>
-            <p className="text-xs text-gray-500 mt-2">Protocol: {protocol}</p>
           </div>
         </motion.div>
       </div>

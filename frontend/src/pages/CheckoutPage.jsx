@@ -282,7 +282,7 @@ const CheckoutPage = () => {
                     <div>
                       <label className="text-sm font-medium text-white mb-2 flex items-center gap-2">
                         <Mail className="w-4 h-4 text-purple-400" />
-                        Email (Opsional)
+                        Email (Wajib)
                       </label>
                       <Input
                         name="email"
@@ -293,7 +293,7 @@ const CheckoutPage = () => {
                         className="bg-black/40 border-purple-500/20 focus:border-purple-500/40 text-white placeholder:text-gray-500"
                       />
                       <p className="text-xs text-gray-500 mt-2">
-                        Email untuk notifikasi pembayaran (opsional)
+                        Email untuk notifikasi pembayaran
                       </p>
                     </div>
                   </div>
