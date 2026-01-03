@@ -488,6 +488,27 @@ const ShopPage = () => {
               })}
             </div>
           </motion.div>
+
+          {/* Info Notice - Rank Upgrade */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-5 bg-gradient-to-r from-amber-500/10 to-orange-500/10 backdrop-blur-xl border border-amber-500/30 rounded-2xl"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center border border-amber-500/30 flex-shrink-0">
+                <Info className="w-6 h-6 text-amber-400" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-base font-bold text-amber-400 mb-1.5">
+                  💎 Ingin Upgrade Rank?
+                </h4>
+                <p className="text-sm text-amber-300/80 leading-relaxed">
+                  Jika kamu ingin <span className="font-semibold text-amber-300">upgrade rank</span> dari rank yang sudah dimiliki, silakan hubungi <span className="font-semibold text-amber-300">Admin</span> melalui Discord atau WhatsApp untuk mendapatkan harga khusus dan proses upgrade yang lebih cepat!
+                </p>
+              </div>
+            </div>
+          </motion.div>
         </div>
 
         {/* Products Grid */}

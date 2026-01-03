@@ -311,9 +311,27 @@ const CheckoutPage = () => {
                     <CreditCard className="w-5 h-5 text-purple-400" />
                     Metode Pembayaran <span className="text-red-400">*</span>
                   </h3>
-                  <p className="text-gray-400 text-sm mb-6">
+                  <p className="text-gray-400 text-sm mb-4">
                     Pilih metode pembayaran yang Anda inginkan
                   </p>
+                  
+                  {/* Malaysia Payment Info */}
+                  <div className="mb-6 p-4 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-xl">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center border border-blue-500/30 flex-shrink-0">
+                        <span className="text-lg">🇲🇾</span>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-sm font-bold text-blue-400 mb-1">
+                          Info untuk Player Malaysia
+                        </h4>
+                        <p className="text-xs text-blue-300/80 leading-relaxed">
+                          Jika kamu dari <span className="font-semibold text-blue-300">Malaysia</span>, silakan pilih metode pembayaran <span className="font-semibold text-blue-300">QRIS</span> dan gunakan aplikasi <span className="font-semibold text-blue-300">Touch 'n Go (TNG) eWallet</span> untuk melakukan pembayaran.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
                   {loadingChannels ? (
                     <div className="flex items-center justify-center py-12">
                       <Loader2 className="w-8 h-8 animate-spin text-purple-400" />
