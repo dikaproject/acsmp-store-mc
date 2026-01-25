@@ -15,6 +15,7 @@ import {
   Shield,
   ShoppingBag
 } from "lucide-react";
+import Flag from "react-world-flags";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/Card";
@@ -318,8 +319,8 @@ const CheckoutPage = () => {
                   {/* Malaysia Payment Info */}
                   <div className="mb-6 p-4 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-xl">
                     <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center border border-blue-500/30 flex-shrink-0">
-                        <span className="text-lg">🇲🇾</span>
+                      <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center border border-blue-500/30 flex-shrink-0 overflow-hidden">
+                        <Flag code="MY" className="w-8 h-8 object-cover" />
                       </div>
                       <div className="flex-1">
                         <h4 className="text-sm font-bold text-blue-400 mb-1">

@@ -18,7 +18,8 @@ import {
   CheckCircle2,
   XCircle,
   ChevronDown,
-  TrendingUp
+  TrendingUp,
+  Shield
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
@@ -132,6 +133,7 @@ const ProductsPage = () => {
     total: products.length,
     active: products.filter(p => p.isActive).length,
     coins: products.filter(p => p.type === 'COIN').length,
+    features: products.filter(p => p.type === 'FEATURE').length,
     ranks: products.filter(p => p.type === 'RANK').length,
     totalValue: products.reduce((sum, p) => sum + p.price, 0)
   };
@@ -308,6 +310,7 @@ const ProductsPage = () => {
               >
                 <option value="all">All Types</option>
                 <option value="COIN">Coins</option>
+                <option value="FEATURE">Features</option>
                 <option value="RANK">Ranks</option>
               </select>
             </div>
@@ -400,12 +403,19 @@ const ProductsPage = () => {
                       <Badge className={`${
                         product.type === 'COIN'
                           ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+                          : product.type === 'FEATURE'
+                          ? 'bg-purple-500/20 text-purple-400 border-purple-500/30'
                           : 'bg-orange-500/20 text-orange-400 border-orange-500/30'
                       }`}>
                         {product.type === 'COIN' ? (
                           <>
                             <Coins className="w-3 h-3 mr-1" />
                             Coin
+                          </>
+                        ) : product.type === 'FEATURE' ? (
+                          <>
+                            <Shield className="w-3 h-3 mr-1" />
+                            Feature
                           </>
                         ) : (
                           <>
@@ -473,10 +483,10 @@ const ProductsPage = () => {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-gray-400">
-                          {product.type === 'COIN' ? 'Coins' : 'Group'}
+                          {product.type === 'COIN' ? 'Coins' : product.type === 'FEATURE' ? 'Permission' : 'Group'}
                         </span>
                         <span className="text-sm font-medium text-white">
-                          {product.type === 'COIN' ? product.amount.toLocaleString() : product.groupName}
+                          {product.type === 'COIN' ? product.amount.toLocaleString() : product.type === 'FEATURE' ? product.permission : product.groupName}
                         </span>
                       </div>
                     </div>
@@ -568,12 +578,19 @@ const ProductsPage = () => {
                         <Badge className={`${
                           product.type === 'COIN'
                             ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+                            : product.type === 'FEATURE'
+                            ? 'bg-purple-500/20 text-purple-400 border-purple-500/30'
                             : 'bg-orange-500/20 text-orange-400 border-orange-500/30'
                         }`}>
                           {product.type === 'COIN' ? (
                             <>
                               <Coins className="w-3 h-3 mr-1" />
                               Coin
+                            </>
+                          ) : product.type === 'FEATURE' ? (
+                            <>
+                              <Shield className="w-3 h-3 mr-1" />
+                              Feature
                             </>
                           ) : (
                             <>
@@ -606,7 +623,7 @@ const ProductsPage = () => {
                       </td>
                       <td className="p-4">
                         <p className="text-sm text-white">
-                          {product.type === 'COIN' ? product.amount.toLocaleString() : product.groupName}
+                          {product.type === 'COIN' ? product.amount.toLocaleString() : product.type === 'FEATURE' ? product.permission : product.groupName}
                         </p>
                       </td>
                       <td className="p-4">

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   Search, ShoppingCart, Filter, Sparkles, Tag, TrendingUp, Zap, 
   Star, Package, Clock, ChevronLeft, ChevronRight, Info, X,
-  CheckCircle, Command, Gift
+  CheckCircle, Command, Gift, Shield
 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import SpotlightCard from "../components/ui/SpotlightCard";
@@ -79,16 +79,33 @@ const RankDetailModal = ({ product, isOpen, onClose }) => {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-violet-500/20 flex items-center justify-center border border-purple-500/30">
-                          <TrendingUp className="w-6 h-6 text-purple-400" />
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
+                          product.type === 'FEATURE' 
+                            ? 'bg-gradient-to-br from-purple-500/20 to-violet-500/20 border-purple-500/30'
+                            : 'bg-gradient-to-br from-orange-500/20 to-amber-500/20 border-orange-500/30'
+                        }`}>
+                          {product.type === 'FEATURE' ? (
+                            <Shield className="w-6 h-6 text-purple-400" />
+                          ) : (
+                            <TrendingUp className="w-6 h-6 text-orange-400" />
+                          )}
                         </div>
                         <div>
                           <h2 className="text-2xl font-black text-white">
                             {product.name}
                           </h2>
-                          <Badge className="bg-purple-500/20 text-purple-400 border-0 mt-1">
-                            {product.ServerType?.name}
-                          </Badge>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge className={`border-0 ${
+                              product.type === 'FEATURE'
+                                ? 'bg-purple-500/20 text-purple-400'
+                                : 'bg-orange-500/20 text-orange-400'
+                            }`}>
+                              {product.type === 'FEATURE' ? 'Feature' : 'Rank'}
+                            </Badge>
+                            <Badge className="bg-blue-500/20 text-blue-400 border-0">
+                              {product.ServerType?.name}
+                            </Badge>
+                          </div>
                         </div>
                       </div>
                       <p className="text-sm text-gray-400 leading-relaxed">
@@ -161,17 +178,47 @@ const RankDetailModal = ({ product, isOpen, onClose }) => {
                     </div>
                   )}
 
-                  {/* Group Name */}
+                  {/* Group Name (for RANK) */}
                   {product.groupName && (
                     <div>
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center border border-purple-500/30">
-                          <Tag className="w-4 h-4 text-purple-400" />
+                        <div className="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center border border-orange-500/30">
+                          <Tag className="w-4 h-4 text-orange-400" />
                         </div>
                         <h3 className="text-lg font-bold text-white">Group Name</h3>
                       </div>
+                      <div className="p-4 rounded-xl bg-orange-500/5 border border-orange-500/20">
+                        <code className="text-orange-300 font-mono">{product.groupName}</code>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Permission (for FEATURE) */}
+                  {product.permission && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center border border-purple-500/30">
+                          <Shield className="w-4 h-4 text-purple-400" />
+                        </div>
+                        <h3 className="text-lg font-bold text-white">Permission Node</h3>
+                      </div>
                       <div className="p-4 rounded-xl bg-purple-500/5 border border-purple-500/20">
-                        <code className="text-purple-300 font-mono">{product.groupName}</code>
+                        <code className="text-purple-300 font-mono">{product.permission}</code>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Duration */}
+                  {product.amount && product.type !== 'COIN' && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center border border-cyan-500/30">
+                          <Clock className="w-4 h-4 text-cyan-400" />
+                        </div>
+                        <h3 className="text-lg font-bold text-white">Duration</h3>
+                      </div>
+                      <div className="p-4 rounded-xl bg-cyan-500/5 border border-cyan-500/20">
+                        <span className="text-cyan-300 font-bold">{product.amount} Hari</span>
                       </div>
                     </div>
                   )}
@@ -323,6 +370,7 @@ const ShopPage = () => {
   const categories = [
     { value: "all", label: "Semua Produk", icon: Tag },
     { value: "coin", label: "Coins", icon: Sparkles },
+    { value: "feature", label: "Features", icon: Shield },
     { value: "rank", label: "Ranks", icon: TrendingUp },
   ];
 
@@ -504,7 +552,7 @@ const ShopPage = () => {
                   💎 Ingin Upgrade Rank?
                 </h4>
                 <p className="text-sm text-amber-300/80 leading-relaxed">
-                  Jika kamu ingin <span className="font-semibold text-amber-300">upgrade rank</span> dari rank yang sudah dimiliki, silakan hubungi <span className="font-semibold text-amber-300">Admin</span> melalui Discord atau WhatsApp untuk mendapatkan harga khusus dan proses upgrade yang lebih cepat!
+                  Jika kamu ingin <span className="font-semibold text-amber-300">upgrade rank</span>, silakan hubungi <span className="font-semibold text-amber-300">Admin</span> melalui Discord atau WhatsApp. Kamu hanya perlu membayar selisih harganya, tidak perlu membayar penuh.
                 </p>
               </div>
             </div>
@@ -551,8 +599,8 @@ const ShopPage = () => {
                       </Badge>
                     </div>
 
-                    {/* Info Button for Ranks - Changed to white/cyan */}
-                    {product.type === 'RANK' && (
+                    {/* Info Button for Ranks and Features - Changed to white/cyan */}
+                    {(product.type === 'RANK' || product.type === 'FEATURE') && (
                       <button
                         onClick={() => handleShowDetail(product)}
                         className="absolute top-3 right-3 w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/20 transition-colors group/btn"

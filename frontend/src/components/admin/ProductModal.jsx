@@ -14,7 +14,8 @@ import {
   Plus,
   Trash2,
   Sparkles,
-  Terminal
+  Terminal,
+  Shield
 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
@@ -33,6 +34,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
     discount: '0',
     amount: '',
     groupName: '',
+    permission: '',
     serverTypeId: '',
     isActive: true,
     benefits: [],
@@ -60,6 +62,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
         discount: product.discount?.toString() || '0',
         amount: product.amount?.toString() || '',
         groupName: product.groupName || '',
+        permission: product.permission || '',
         serverTypeId: product.serverTypeId || '',
         isActive: product.isActive ?? true,
         benefits: product.benefits || [],
@@ -77,6 +80,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
         discount: '0',
         amount: '',
         groupName: '',
+        permission: '',
         serverTypeId: serverTypes[0]?.id || '',
         isActive: true,
         benefits: [],
@@ -162,6 +166,13 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
       // Append RANK specific fields
       if (formData.type === 'RANK') {
         formDataToSend.append('groupName', formData.groupName || '');
+        formDataToSend.append('benefits', JSON.stringify(formData.benefits || []));
+        formDataToSend.append('commands', JSON.stringify(formData.commands || []));
+      }
+
+      // Append FEATURE specific fields
+      if (formData.type === 'FEATURE') {
+        formDataToSend.append('permission', formData.permission || '');
         formDataToSend.append('benefits', JSON.stringify(formData.benefits || []));
         formDataToSend.append('commands', JSON.stringify(formData.commands || []));
       }
@@ -341,6 +352,21 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                       </button>
                       <button
                         type="button"
+                        onClick={() => !isViewMode && setFormData({ ...formData, type: 'FEATURE' })}
+                        disabled={isViewMode}
+                        className={`flex-1 p-4 rounded-lg border-2 transition-all ${
+                          formData.type === 'FEATURE'
+                            ? 'border-purple-500 bg-purple-500/10'
+                            : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                        } ${isViewMode ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                      >
+                        <div className="flex flex-col items-center gap-2">
+                          <Shield className="w-6 h-6 text-purple-400" />
+                          <span className="font-medium text-white">Feature</span>
+                        </div>
+                      </button>
+                      <button
+                        type="button"
                         onClick={() => !isViewMode && setFormData({ ...formData, type: 'RANK' })}
                         disabled={isViewMode}
                         className={`flex-1 p-4 rounded-lg border-2 transition-all ${
@@ -510,6 +536,28 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                     </div>
                   )}
 
+                  {/* Permission (for FEATURE only) */}
+                  {formData.type === 'FEATURE' && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                        <Shield className="w-4 h-4 text-purple-400" />
+                        Permission <span className="text-red-400">*</span>
+                      </label>
+                      <Input
+                        type="text"
+                        value={formData.permission}
+                        onChange={(e) => setFormData({ ...formData, permission: e.target.value })}
+                        placeholder="contoh essentials.home.2"
+                        className="bg-gray-800/50 border-gray-700 focus:border-purple-500"
+                        required
+                        disabled={isViewMode}
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        💡 Permission yang akan diberikan ke player
+                      </p>
+                    </div>
+                  )}
+
                   {/* Amount Field */}
                   <div>
                     <label className="text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
@@ -520,7 +568,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         </>
                       ) : (
                         <>
-                          <Calendar className="w-4 h-4 text-orange-400" />
+                          <Calendar className="w-4 h-4 text-purple-400" />
                           Duration (Days) <span className="text-red-400">*</span>
                         </>
                       )}
@@ -542,11 +590,65 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                       }
                     </p>
                   </div>
+
+                  {/* Command Preview for FEATURE */}
+                  {formData.type === 'FEATURE' && (formData.permission || formData.amount) && (
+                    <div className="md:col-span-2">
+                      <div className="p-4 rounded-xl bg-gray-900/50 border border-purple-500/20">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Terminal className="w-4 h-4 text-purple-400" />
+                          <span className="text-sm font-medium text-gray-300">Command Preview</span>
+                        </div>
+                        <code className="block p-3 bg-black/50 rounded-lg text-sm font-mono text-purple-300 overflow-x-auto">
+                          /lp user <span className="text-cyan-400">{'{player}'}</span> permission settemp <span className="text-yellow-400">{formData.permission || '{permission}'}</span> true <span className="text-green-400">{formData.amount || '{duration}'}d</span>
+                        </code>
+                        <p className="text-xs text-gray-500 mt-2">
+                          ⚡ Command ini akan dieksekusi saat pembayaran berhasil
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Command Preview for RANK */}
+                  {formData.type === 'RANK' && (formData.groupName || formData.amount) && (
+                    <div className="md:col-span-2">
+                      <div className="p-4 rounded-xl bg-gray-900/50 border border-orange-500/20">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Terminal className="w-4 h-4 text-orange-400" />
+                          <span className="text-sm font-medium text-gray-300">Command Preview</span>
+                        </div>
+                        <code className="block p-3 bg-black/50 rounded-lg text-sm font-mono text-orange-300 overflow-x-auto">
+                          /lp user <span className="text-cyan-400">{'{player}'}</span> parent addtemp <span className="text-yellow-400">{formData.groupName || '{group}'}</span> <span className="text-green-400">{formData.amount || '{duration}'}d</span>
+                        </code>
+                        <p className="text-xs text-gray-500 mt-2">
+                          ⚡ Command ini akan dieksekusi saat pembayaran berhasil
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Benefits & Commands Section (RANK only) */}
-              {formData.type === 'RANK' && (
+              {/* Command Preview for COIN (outside grid) */}
+              {formData.type === 'COIN' && formData.amount && (
+                <div className="pt-6 border-t border-gray-800">
+                  <div className="p-4 rounded-xl bg-gray-900/50 border border-yellow-500/20">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Terminal className="w-4 h-4 text-yellow-400" />
+                      <span className="text-sm font-medium text-gray-300">Command Preview</span>
+                    </div>
+                    <code className="block p-3 bg-black/50 rounded-lg text-sm font-mono text-yellow-300 overflow-x-auto">
+                      /points give <span className="text-cyan-400">{'{player}'}</span> <span className="text-green-400">{formData.amount}</span>
+                    </code>
+                    <p className="text-xs text-gray-500 mt-2">
+                      ⚡ Command ini akan dieksekusi saat pembayaran berhasil
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Benefits & Commands Section (RANK and FEATURE) */}
+              {(formData.type === 'RANK' || formData.type === 'FEATURE') && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-800">
                   {/* Benefits */}
                   <div>

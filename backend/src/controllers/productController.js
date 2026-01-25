@@ -83,7 +83,7 @@ exports.getById = async (req, res, next) => {
 exports.create = async (req, res, next) => {
   try {
     const { 
-      name, description, type, price, discount, amount, groupName, 
+      name, description, type, price, discount, amount, groupName, permission,
       serverTypeId, isActive, benefits, commands 
     } = req.body;
 
@@ -125,6 +125,7 @@ exports.create = async (req, res, next) => {
         discount: parseInt(discount) || 0,
         amount: parseInt(amount) || 0,
         groupName: type === 'RANK' ? (groupName || null) : null,
+        permission: type === 'FEATURE' ? (permission || null) : null,
         serverTypeId,
         imageUrl,
         isActive: activeStatus,
@@ -161,7 +162,7 @@ exports.update = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { 
-      name, description, type, price, discount, amount, groupName, 
+      name, description, type, price, discount, amount, groupName, permission,
       serverTypeId, isActive, benefits, commands 
     } = req.body;
 
@@ -192,6 +193,7 @@ exports.update = async (req, res, next) => {
     if (discount !== undefined) updateData.discount = parseInt(discount) || 0;
     if (amount !== undefined) updateData.amount = parseInt(amount) || 0;
     if (groupName !== undefined) updateData.groupName = groupName || null;
+    if (permission !== undefined) updateData.permission = permission || null;
     if (serverTypeId !== undefined) updateData.serverTypeId = serverTypeId;
     
     if (isActive !== undefined) {

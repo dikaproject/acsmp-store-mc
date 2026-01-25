@@ -49,13 +49,19 @@ const serverTypeValidation = {
 const productValidation = {
   create: [
     body('name').trim().notEmpty().withMessage('Name is required'),
-    body('type').isIn(['COIN', 'RANK']).withMessage('Type must be COIN or RANK'),
+    body('type').isIn(['COIN', 'RANK', 'FEATURE']).withMessage('Type must be COIN, RANK, or FEATURE'),
     body('price').isInt({ min: 1 }).withMessage('Price must be positive integer'),
     body('amount').isInt({ min: 1 }).withMessage('Amount must be positive integer'),
     body('serverTypeId').notEmpty().withMessage('Server type is required'),
     body('groupName').custom((value, { req }) => {
       if (req.body.type === 'RANK' && !value) {
         throw new Error('Group name is required for RANK type');
+      }
+      return true;
+    }),
+    body('permission').custom((value, { req }) => {
+      if (req.body.type === 'FEATURE' && !value) {
+        throw new Error('Permission is required for FEATURE type');
       }
       return true;
     }),
@@ -66,10 +72,11 @@ const productValidation = {
   update: [
     param('id').notEmpty().withMessage('ID is required'),
     body('name').optional().trim().notEmpty(),
-    body('type').optional().isIn(['COIN', 'RANK']),
+    body('type').optional().isIn(['COIN', 'RANK', 'FEATURE']),
     body('price').optional().isInt({ min: 1 }),
     body('amount').optional().isInt({ min: 1 }),
     body('serverTypeId').optional().notEmpty(),
+    body('permission').optional(),
     body('isActive').optional(),
     toBooleanMiddleware(['isActive']),
     validate

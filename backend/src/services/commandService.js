@@ -40,10 +40,27 @@ class CommandService {
       return `lp user ${minecraftName} parent addtemp ${product.groupName} ${duration}d`;
     }
 
+    if (product.type === 'FEATURE') {
+      const duration = product.amount * quantity;
+      return `lp user ${minecraftName} permission settemp ${product.permission} true ${duration}d`;
+    }
+
     return null;
   }
 
   async executeCommand(command) {
+    // Check if dummy mode is enabled
+    const isDummyMode = process.env.DUMMY_MODE === 'true';
+    
+    if (isDummyMode) {
+      console.log('[DUMMY MODE] Simulating command execution:', command);
+      return {
+        success: true,
+        message: `[DUMMY MODE] Command simulated: ${command}`,
+        output: `[DUMMY] Executed: ${command}`
+      };
+    }
+
     let rcon;
     try {
       console.log('[RCON] Executing command:', command);
@@ -224,6 +241,19 @@ class CommandService {
     try {
       console.log(`[VERIFY] Verifying player: ${minecraftName}`);
       
+      // Check if dummy mode is enabled
+      const isDummyMode = process.env.DUMMY_MODE === 'true';
+      
+      if (isDummyMode) {
+        console.log('[DUMMY MODE] Skipping RCON verification for:', minecraftName);
+        return {
+          success: true,
+          exists: true,
+          method: 'dummy',
+          message: `[DUMMY MODE] Player ${minecraftName} verified without RCON`
+        };
+      }
+      
       // Method 1: Try LuckPerms
       console.log('[VERIFY] Method 1: Checking via LuckPerms...');
       const lpResult = await this.getPlayerInfo(minecraftName);
@@ -294,6 +324,19 @@ class CommandService {
 
   async testConnection() {
     try {
+      // Check if dummy mode is enabled
+      const isDummyMode = process.env.DUMMY_MODE === 'true';
+      
+      if (isDummyMode) {
+        console.log('[DUMMY MODE] Simulating RCON connection test');
+        return {
+          success: true,
+          message: '[DUMMY MODE] RCON connection simulated successfully',
+          output: '[DUMMY] There are 0/20 players online',
+          isDummy: true
+        };
+      }
+      
       console.log('[TEST] Testing RCON connection...');
       const result = await this.executeCommand('list');
       return {

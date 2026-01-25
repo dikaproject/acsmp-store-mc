@@ -24,6 +24,7 @@ enum OrderStatus {
 enum ProductType {
   COIN
   RANK
+  FEATURE
   BATTLEPASS
 }
 
@@ -65,6 +66,7 @@ model Product {
   discount     Int        @default(0)      
   amount       Int       
   groupName    String?    
+  permission   String?     // Permission node for FEATURE type (e.g., essentials.home.2)
   imageUrl     String?
   isActive     Boolean     @default(true)
 

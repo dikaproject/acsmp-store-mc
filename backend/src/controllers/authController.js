@@ -25,23 +25,39 @@ exports.playerLogin = async (req, res, next) => {
       });
     }
 
-    // Verify player exists in server via RCON
-    const verification = await commandService.verifyPlayerExists(minecraftName);
+    // Check if dummy mode is enabled
+    const isDummyMode = process.env.DUMMY_MODE === 'true';
+    
+    let verification;
+    
+    if (isDummyMode) {
+      // Dummy mode - skip RCON verification
+      console.log('[DUMMY MODE] Skipping RCON verification for:', minecraftName);
+      verification = {
+        success: true,
+        exists: true,
+        method: 'dummy',
+        message: `[DUMMY MODE] Player ${minecraftName} verified without RCON`
+      };
+    } else {
+      // Production mode - Verify player exists in server via RCON
+      verification = await commandService.verifyPlayerExists(minecraftName);
 
-    if (!verification.success) {
-      return res.status(500).json({
-        success: false,
-        message: 'Failed to verify player. Please try again later.',
-        details: verification.error
-      });
-    }
+      if (!verification.success) {
+        return res.status(500).json({
+          success: false,
+          message: 'Failed to verify player. Please try again later.',
+          details: verification.error
+        });
+      }
 
-    if (!verification.exists) {
-      return res.status(404).json({
-        success: false,
-        message: 'Player not found in server. Please join the server at least once before logging in.',
-        details: verification.message
-      });
+      if (!verification.exists) {
+        return res.status(404).json({
+          success: false,
+          message: 'Player not found in server. Please join the server at least once before logging in.',
+          details: verification.message
+        });
+      }
     }
 
     // Generate simple token with minecraft name only (no user ID needed)
