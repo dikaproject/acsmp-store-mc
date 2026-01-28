@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 const SERVER_IP = 'amazingcraft.org';
-const SERVER_PORT = 25565;
+const SERVER_PORT = 19132;
 
 const AboutSection = () => {
   const sectionRef = useRef(null);
