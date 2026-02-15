@@ -10,7 +10,8 @@ import {
   Image,
   Server,
   LogOut,
-  ChevronRight
+  ChevronRight,
+  Link2
 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -50,6 +51,12 @@ const Sidebar = ({ isOpen, onClose }) => {
       label: "Users", 
       path: "/admin/users",
       description: "User management"
+    },
+    { 
+      icon: Link2, 
+      label: "Linktree", 
+      path: "/admin/linktree",
+      description: "Manage link page"
     },
     { 
       icon: Settings, 

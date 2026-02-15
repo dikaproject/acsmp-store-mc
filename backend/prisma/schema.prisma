@@ -168,3 +168,18 @@ model Setting {
   
   @@map("settings")
 }
+
+model LinktreeLink {
+  id              String   @id @default(cuid())
+  title           String
+  url             String
+  icon            String?
+  description     String?  @db.Text
+  backgroundColor String?
+  order           Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("linktree_links")
+}

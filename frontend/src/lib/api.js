@@ -110,3 +110,14 @@ export const userAPI = {
   update: (id, data) => api.put(`/users/update/${id}`, data),
   delete: (id) => api.delete(`/users/delete/${id}`),
 };
+
+// Linktree API
+export const linktreeAPI = {
+  getAll: () => api.get("/linktree"),
+  getAllAdmin: () => api.get("/linktree/admin"),
+  getById: (id) => api.get(`/linktree/${id}`),
+  create: (data) => api.post("/linktree", data),
+  update: (id, data) => api.put(`/linktree/${id}`, data),
+  delete: (id) => api.delete(`/linktree/${id}`),
+  reorder: (data) => api.put("/linktree/reorder", data),
+};

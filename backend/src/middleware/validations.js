@@ -169,6 +169,32 @@ const settingValidation = {
   ]
 };
 
+const linktreeValidation = {
+  create: [
+    body('title').trim().notEmpty().withMessage('Title is required'),
+    body('url').trim().notEmpty().withMessage('URL is required'),
+    body('icon').optional({ values: 'falsy' }).trim(),
+    body('description').optional({ values: 'falsy' }).trim(),
+    body('backgroundColor').optional({ values: 'falsy' }).trim(),
+    body('order').optional().toInt(),
+    body('isActive').optional(),
+    toBooleanMiddleware(['isActive']),
+    validate
+  ],
+  update: [
+    param('id').notEmpty().withMessage('ID is required'),
+    body('title').optional().trim().notEmpty(),
+    body('url').optional().trim(),
+    body('icon').optional({ values: 'falsy' }).trim(),
+    body('description').optional({ values: 'falsy' }).trim(),
+    body('backgroundColor').optional({ values: 'falsy' }).trim(),
+    body('order').optional().toInt(),
+    body('isActive').optional(),
+    toBooleanMiddleware(['isActive']),
+    validate
+  ]
+};
+
 module.exports = {
   validate,
   toBooleanMiddleware,
@@ -177,5 +203,6 @@ module.exports = {
   orderValidation,
   galleryValidation,
   guideValidation,
-  settingValidation
+  settingValidation,
+  linktreeValidation
 };

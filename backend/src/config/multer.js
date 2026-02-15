@@ -8,6 +8,7 @@ const uploadDirs = [
     'uploads/products',
     'uploads/gallery',
     'uploads/guides',
+    'uploads/linktree',
 ];
 
 // Ensure all directories exist
@@ -30,6 +31,8 @@ const storage = multer.diskStorage({
             uploadPath = 'uploads/gallery/';
         } else if (req.baseUrl.includes('/guides')) {
             uploadPath = 'uploads/guides/';
+        } else if (req.baseUrl.includes('/linktree')) {
+            uploadPath = 'uploads/linktree/';
         }
         
         // Ensure directory exists

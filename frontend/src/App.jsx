@@ -29,6 +29,10 @@ import GuidesPageAdmin from "./pages/admin/GuidesPage";
 import GalleryPage from "./pages/admin/GalleryPage";
 import UsersPage from "./pages/admin/UsersPage";
 import SettingsPage from "./pages/admin/SettingsPage";
+import AdminLinktreePage from "./pages/admin/LinktreePage";
+
+// Public standalone pages
+import LinktreePage from "./pages/LinktreePage";
 
 function App() {
   return (
@@ -58,6 +62,9 @@ function App() {
         }}
       />
       <Routes>
+        {/* Standalone pages (no Layout wrapper) */}
+        <Route path="/linktree" element={<LinktreePage />} />
+
         {/* Public Routes */}
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
@@ -85,6 +92,7 @@ function App() {
           <Route path="guides" element={<GuidesPageAdmin />} />
           <Route path="gallery" element={<GalleryPage />} />
           <Route path="users" element={<UsersPage />} />
+          <Route path="linktree" element={<AdminLinktreePage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>

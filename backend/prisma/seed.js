@@ -16,7 +16,7 @@ async function main() {
       name: 'Admin Server',
       role: 'ADMIN'
     }
-  });
+  })
   console.log('✅ Admin user created:', admin.email);
 
   const serverRPG = await prisma.serverType.upsert({
