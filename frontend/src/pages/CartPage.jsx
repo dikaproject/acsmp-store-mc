@@ -19,7 +19,7 @@ import { Badge } from "../components/ui/Badge";
 import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { GridPattern } from "../components/ui/GridPattern";
 import { useCartStore } from "../store/useCartStore";
-import { formatCurrency } from "../lib/utils";
+import { formatCurrency, getImageUrl } from "../lib/utils";
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -147,7 +147,7 @@ const CartPage = () => {
                         {/* Product Image */}
                         <div className="relative w-28 h-28 rounded-xl overflow-hidden flex-shrink-0 border border-purple-500/10">
                           <img
-                            src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${item.imageUrl}`}
+                            src={getImageUrl(item.imageUrl)}
                             alt={item.name}
                             className="w-full h-full object-cover"
                             loading="lazy"

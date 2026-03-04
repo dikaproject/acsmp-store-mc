@@ -23,6 +23,7 @@ import { Card } from "../ui/Card";
 import { Badge } from "../ui/Badge";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { getImageUrl } from "../../lib/utils";
 
 const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }) => {
   const [loading, setLoading] = useState(false);
@@ -69,7 +70,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
         commands: product.commands || []
       });
       if (product.imageUrl) {
-        setImagePreview(`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${product.imageUrl}`);
+        setImagePreview(getImageUrl(product.imageUrl));
       }
     } else {
       setFormData({

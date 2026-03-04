@@ -29,7 +29,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import ProductModal from "../../components/admin/ProductModal";
 import DeleteConfirmModal from "../../components/admin/DeleteConfirmModal";
-import { formatCurrency } from "../../lib/utils";
+import { formatCurrency, getImageUrl } from "../../lib/utils";
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -388,7 +388,7 @@ const ProductsPage = () => {
                   <div className="relative h-40 overflow-hidden bg-gray-800/50">
                     {product.imageUrl ? (
                       <img
-                        src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${product.imageUrl}`}
+                        src={getImageUrl(product.imageUrl)}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
@@ -554,7 +554,7 @@ const ProductsPage = () => {
                         <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-800/50">
                           {product.imageUrl ? (
                             <img
-                              src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${product.imageUrl}`}
+                              src={getImageUrl(product.imageUrl)}
                               alt={product.name}
                               className="w-full h-full object-cover"
                             />

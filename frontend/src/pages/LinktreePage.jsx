@@ -13,6 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { getIconComponent } from "../lib/iconResolver";
+import { getImageUrl } from "../lib/utils";
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -150,7 +151,7 @@ const LinktreePage = () => {
       {bgImage && (
         <div className="fixed inset-0 pointer-events-none z-0">
           <img
-            src={bgImage.startsWith("http") ? bgImage : `${API_URL.replace('/api', '')}${bgImage}`}
+            src={getImageUrl(bgImage)}
             alt=""
             className="w-full h-full object-cover opacity-30"
           />
@@ -195,7 +196,7 @@ const LinktreePage = () => {
             <div className="relative w-24 h-24 rounded-full overflow-hidden ring-2 ring-white/10 bg-[#13151a]">
               {avatarUrl ? (
                 <img
-                  src={avatarUrl.startsWith("http") ? avatarUrl : `${API_URL.replace('/api', '')}${avatarUrl}`}
+                  src={getImageUrl(avatarUrl)}
                   alt={title}
                   className="w-full h-full object-cover"
                 />

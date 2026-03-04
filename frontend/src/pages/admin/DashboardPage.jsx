@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../..
 import { Badge } from "../../components/ui/Badge";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../../components/ui/Chart";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts";
-import { formatCurrency } from "../../lib/utils";
+import { formatCurrency, getImageUrl } from "../../lib/utils";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Button } from "../../components/ui/Button";
@@ -362,7 +362,7 @@ const DashboardPage = () => {
                     </div>
                     {product.imageUrl && (
                       <img
-                        src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${product.imageUrl}`}
+                        src={getImageUrl(product.imageUrl)}
                         alt={product.name}
                         className="w-12 h-12 rounded-lg object-cover ring-2 ring-gray-700 group-hover:ring-emerald-500/50 transition-all"
                       />

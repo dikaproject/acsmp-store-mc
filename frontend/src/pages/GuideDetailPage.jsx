@@ -16,7 +16,7 @@ import { Badge } from "../components/ui/Badge";
 import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { GridPattern } from "../components/ui/GridPattern";
 import { guideAPI } from "../lib/api";
-import { formatDate } from "../lib/utils";
+import { formatDate, getImageUrl } from "../lib/utils";
 
 const GuideDetailPage = () => {
   const { slug } = useParams();
@@ -195,7 +195,7 @@ const GuideDetailPage = () => {
               >
                 <div className="relative rounded-2xl overflow-hidden border-2 border-emerald-500/20">
                   <img
-                    src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${guide.imageUrl}`}
+                    src={getImageUrl(guide.imageUrl)}
                     alt={guide.title}
                     className="w-full h-auto"
                   />
@@ -280,7 +280,7 @@ const GuideDetailPage = () => {
                         {relatedGuide.imageUrl && (
                           <div className="relative h-48 overflow-hidden">
                             <img
-                              src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${relatedGuide.imageUrl}`}
+                              src={getImageUrl(relatedGuide.imageUrl)}
                               alt={relatedGuide.title}
                               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                             />

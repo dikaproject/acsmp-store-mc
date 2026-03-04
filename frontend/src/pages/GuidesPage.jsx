@@ -24,6 +24,7 @@ import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { Input } from "../components/ui/Input";
 import { Badge } from "../components/ui/Badge";
 import { guideAPI } from "../lib/api";
+import { getImageUrl } from "../lib/utils";
 
 const GuidesPage = () => {
   const [guides, setGuides] = useState([]);
@@ -277,7 +278,7 @@ const GuidesPage = () => {
                                 >
                                   {guide.imageUrl && (
                                     <img
-                                      src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${guide.imageUrl}`}
+                                      src={getImageUrl(guide.imageUrl)}
                                       alt={guide.title}
                                       className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
                                     />
@@ -394,7 +395,7 @@ const GuidesPage = () => {
                       {featuredGuide.imageUrl && (
                         <div className="relative h-80 md:h-auto overflow-hidden">
                           <img
-                            src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${featuredGuide.imageUrl}`}
+                            src={getImageUrl(featuredGuide.imageUrl)}
                             alt={featuredGuide.title}
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                           />
@@ -513,7 +514,7 @@ const GuidesPage = () => {
                         {guide.imageUrl && (
                           <div className="relative h-48 overflow-hidden">
                             <img
-                              src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${guide.imageUrl}`}
+                              src={getImageUrl(guide.imageUrl)}
                               alt={guide.title}
                               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             />

@@ -30,6 +30,7 @@ import { Badge } from "../../components/ui/Badge";
 import LinktreeModal from "../../components/admin/LinktreeModal";
 import DeleteConfirmModal from "../../components/admin/DeleteConfirmModal";
 import { getIconComponent } from "../../lib/iconResolver";
+import { getImageUrl } from "../../lib/utils";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -564,11 +565,7 @@ const AdminLinktreePage = () => {
               {profileSettings.linktreeBgImage ? (
                 <div className="relative group rounded-xl overflow-hidden border border-gray-700/50">
                   <img
-                    src={
-                      profileSettings.linktreeBgImage.startsWith("http")
-                        ? profileSettings.linktreeBgImage
-                        : `${API_URL.replace("/api", "")}${profileSettings.linktreeBgImage}`
-                    }
+                    src={getImageUrl(profileSettings.linktreeBgImage)}
                     alt="Background"
                     className="w-full h-36 object-cover"
                   />
@@ -641,11 +638,7 @@ const AdminLinktreePage = () => {
               >
                 {profileSettings.linktreeBgImage && (
                   <img
-                    src={
-                      profileSettings.linktreeBgImage.startsWith("http")
-                        ? profileSettings.linktreeBgImage
-                        : `${API_URL.replace("/api", "")}${profileSettings.linktreeBgImage}`
-                    }
+                    src={getImageUrl(profileSettings.linktreeBgImage)}
                     alt="Preview"
                     className="absolute inset-0 w-full h-full object-cover opacity-40"
                   />

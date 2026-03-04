@@ -12,7 +12,7 @@ import { Input } from "../components/ui/Input";
 import { Badge } from "../components/ui/Badge";
 import { productAPI, serverTypeAPI } from "../lib/api";
 import { useCartStore } from "../store/useCartStore";
-import { formatCurrency } from "../lib/utils";
+import { formatCurrency, getImageUrl } from "../lib/utils";
 import toast from "react-hot-toast";
 
 // Optimized Image Component with lazy loading
@@ -586,7 +586,7 @@ const ShopPage = () => {
                   {/* Product Image */}
                   <div className="relative h-56 overflow-hidden">
                     <ProductImage
-                      src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${product.imageUrl}`}
+                      src={getImageUrl(product.imageUrl)}
                       alt={product.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />

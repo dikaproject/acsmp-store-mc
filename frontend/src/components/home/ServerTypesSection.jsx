@@ -14,6 +14,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { HoverBorderGradient } from "../ui/HoverBorderGradient";
+import { getImageUrl } from "../../lib/utils";
 
 const ServerTypesSection = ({ serverTypes = [] }) => {
   const [active, setActive] = useState(0);
@@ -165,10 +166,7 @@ const ServerTypesSection = ({ serverTypes = [] }) => {
                   {servers[active].imageUrl ? (
                     <>
                       <img
-                        src={`${
-                          import.meta.env.VITE_API_URL?.replace("/api", "") ||
-                          "http://localhost:5000"
-                        }${servers[active].imageUrl}`}
+                        src={getImageUrl(servers[active].imageUrl)}
                         alt={servers[active].name}
                         className="w-full h-full object-cover"
                       />

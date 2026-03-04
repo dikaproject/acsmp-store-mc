@@ -7,6 +7,7 @@ import { Card } from "../ui/Card";
 import { Badge } from "../ui/Badge";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { getImageUrl } from "../../lib/utils";
 
 const ServerTypeModal = ({ isOpen, onClose, mode, serverType, onSuccess }) => {
   const [loading, setLoading] = useState(false);
@@ -26,7 +27,7 @@ const ServerTypeModal = ({ isOpen, onClose, mode, serverType, onSuccess }) => {
         isActive: serverType.isActive ?? true
       });
       if (serverType.imageUrl) {
-        setImagePreview(`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${serverType.imageUrl}`);
+        setImagePreview(getImageUrl(serverType.imageUrl));
       }
     } else {
       setFormData({ name: '', description: '', isActive: true });

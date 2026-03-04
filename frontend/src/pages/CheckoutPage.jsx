@@ -24,7 +24,7 @@ import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { GridPattern } from "../components/ui/GridPattern";
 import { useCartStore } from "../store/useCartStore";
 import { useAuthStore } from "../store/useAuthStore";
-import { formatCurrency } from "../lib/utils";
+import { formatCurrency, getImageUrl } from "../lib/utils";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -434,7 +434,7 @@ const CheckoutPage = () => {
                         return (
                           <div key={item.id} className="flex gap-3 p-3 rounded-lg bg-black/40 border border-purple-500/10">
                             <img
-                              src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${item.imageUrl}`}
+                              src={getImageUrl(item.imageUrl)}
                               alt={item.name}
                               className="w-14 h-14 rounded-lg object-cover border border-purple-500/20"
                             />

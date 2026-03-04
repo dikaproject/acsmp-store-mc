@@ -11,13 +11,14 @@ import { Button } from "../ui/Button";
 import { Badge } from "../ui/Badge";
 import { Card } from "../ui/Card";
 import toast from "react-hot-toast";
+import { getImageUrl } from "../../lib/utils";
 
 const GalleryViewModal = ({ isOpen, onClose, gallery }) => {
   if (!isOpen || !gallery) return null;
 
   const handleDownload = async () => {
     try {
-      const imageUrl = `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${gallery.imageUrl}`;
+      const imageUrl = getImageUrl(gallery.imageUrl);
       const response = await fetch(imageUrl);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -104,7 +105,7 @@ const GalleryViewModal = ({ isOpen, onClose, gallery }) => {
             <div className="p-6">
               <div className="relative rounded-xl overflow-hidden bg-gray-800/50 mb-6">
                 <img
-                  src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${gallery.imageUrl}`}
+                  src={getImageUrl(gallery.imageUrl)}
                   alt={gallery.title}
                   className="w-full h-auto"
                 />

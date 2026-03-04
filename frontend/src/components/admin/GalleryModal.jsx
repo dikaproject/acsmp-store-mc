@@ -15,6 +15,7 @@ import { Input } from "../ui/Input";
 import { Card } from "../ui/Card";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { getImageUrl } from "../../lib/utils";
 
 const GalleryModal = ({ isOpen, onClose, mode, gallery, onSuccess, totalGalleries }) => {
   const [loading, setLoading] = useState(false);
@@ -37,7 +38,7 @@ const GalleryModal = ({ isOpen, onClose, mode, gallery, onSuccess, totalGallerie
         isActive: gallery.isActive ?? true
       });
       if (gallery.imageUrl) {
-        setImagePreview(`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${gallery.imageUrl}`);
+        setImagePreview(getImageUrl(gallery.imageUrl));
       }
     } else {
       // Auto set next display order for new gallery

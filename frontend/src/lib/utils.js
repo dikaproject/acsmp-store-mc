@@ -5,6 +5,21 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Build full image URL from a stored path like /uploads/products/xxx.jpg
+ * Uses VITE_API_URL directly (e.g. https://domain.com/api) so the result
+ * becomes https://domain.com/api/uploads/xxx.jpg
+ */
+export function getImageUrl(path) {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  // VITE_API_URL is like "http://localhost:5000/api", strip the trailing /api
+  // because imageUrl from backend already includes /api/uploads/...
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+  const base = apiUrl.replace(/\/api$/, "");
+  return `${base}${path}`;
+}
+
 export function formatCurrency(amount) {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",

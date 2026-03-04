@@ -27,7 +27,7 @@ import { Badge } from "../components/ui/Badge";
 import { SpotlightCard } from "../components/ui/SpotlightCard";
 import { GridPattern } from "../components/ui/GridPattern";
 import { orderAPI } from "../lib/api";
-import { formatCurrency, formatDate } from "../lib/utils";
+import { formatCurrency, formatDate, getImageUrl } from "../lib/utils";
 import toast from "react-hot-toast";
 
 const TrackOrderPage = () => {
@@ -520,7 +520,7 @@ const TrackOrderPage = () => {
                             <div className="flex items-center gap-4">
                               {item.product.imageUrl && (
                                 <img
-                                  src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${item.product.imageUrl}`}
+                                  src={getImageUrl(item.product.imageUrl)}
                                   alt={item.product.name}
                                   className="w-14 h-14 rounded-lg object-cover border border-indigo-500/20"
                                 />

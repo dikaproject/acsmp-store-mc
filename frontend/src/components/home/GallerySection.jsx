@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import { Image, Sparkles, ArrowRight, MousePointer2 } from "lucide-react";
 import { GlowingButton } from "../ui/GlowingButton";
 import CircularGallery from "../ui/CircularGallery";
+import { getImageUrl } from "../../lib/utils";
 
 const GallerySection = ({ gallery = [] }) => {
   // Transform gallery data untuk CircularGallery
   const galleryItems = gallery.length > 0 
     ? gallery.map(item => ({
-        image: `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${item.imageUrl}`,
+        image: getImageUrl(item.imageUrl),
         text: item.title || 'Gallery Image'
       }))
     : null; // Use default images from CircularGallery

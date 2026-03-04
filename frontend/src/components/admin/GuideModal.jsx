@@ -17,6 +17,7 @@ import { Input } from "../ui/Input";
 import { Card } from "../ui/Card";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { getImageUrl } from "../../lib/utils";
 
 const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
   const [loading, setLoading] = useState(false);
@@ -41,7 +42,7 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
         isActive: guide.isActive ?? true
       });
       if (guide.imageUrl) {
-        setImagePreview(`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${guide.imageUrl}`);
+        setImagePreview(getImageUrl(guide.imageUrl));
       }
     } else {
       setFormData({
@@ -420,7 +421,7 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
                                     }
                                   }
                                 );
-                                return `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${response.data.url}`;
+                                return getImageUrl(response.data.url);
                               } catch (error) {
                                 throw new Error('Image upload failed');
                               }

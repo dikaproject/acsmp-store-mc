@@ -27,6 +27,7 @@ import axios from "axios";
 import GalleryModal from "../../components/admin/GalleryModal";
 import GalleryViewModal from "../../components/admin/GalleryViewModal";
 import DeleteConfirmModal from "../../components/admin/DeleteConfirmModal";
+import { getImageUrl } from "../../lib/utils";
 
 const GalleryPage = () => {
   const [galleries, setGalleries] = useState([]);
@@ -104,7 +105,7 @@ const GalleryPage = () => {
 
   const handleDownload = async (gallery) => {
     try {
-      const imageUrl = `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${gallery.imageUrl}`;
+      const imageUrl = getImageUrl(gallery.imageUrl);
       const response = await fetch(imageUrl);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -336,7 +337,7 @@ const GalleryPage = () => {
                   {/* Image */}
                   <div className="relative overflow-hidden bg-gray-800/50">
                     <img
-                      src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${gallery.imageUrl}`}
+                      src={getImageUrl(gallery.imageUrl)}
                       alt={gallery.title}
                       className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-500"
                       loading="lazy"
@@ -439,7 +440,7 @@ const GalleryPage = () => {
                   {/* Image */}
                   <div className="relative aspect-square overflow-hidden bg-gray-800/50">
                     <img
-                      src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${gallery.imageUrl}`}
+                      src={getImageUrl(gallery.imageUrl)}
                       alt={gallery.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       loading="lazy"

@@ -15,6 +15,7 @@ import { GlowingButton } from "../components/ui/GlowingButton";
 import { AnimatedGradientText } from "../components/ui/AnimatedGradientText";
 import { GridPattern } from "../components/ui/GridPattern";
 import axios from "axios";
+import { getImageUrl } from "../lib/utils";
 
 const GalleryPage = () => {
   const [galleries, setGalleries] = useState([]);
@@ -221,7 +222,7 @@ const GalleryPage = () => {
                     >
                       {/* Image */}
                       <img
-                        src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${gallery.imageUrl}`}
+                        src={getImageUrl(gallery.imageUrl)}
                         alt={gallery.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         loading="lazy"
@@ -380,7 +381,7 @@ const GalleryPage = () => {
               {/* Image container with glow */}
               <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-purple-500/20">
                 <img
-                  src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${selectedImage.imageUrl}`}
+                  src={getImageUrl(selectedImage.imageUrl)}
                   alt={selectedImage.title}
                   className="w-full h-auto max-h-[85vh] object-contain"
                 />

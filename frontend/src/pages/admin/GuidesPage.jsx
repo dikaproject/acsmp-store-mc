@@ -27,6 +27,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import GuideModal from "../../components/admin/GuideModal";
 import DeleteConfirmModal from "../../components/admin/DeleteConfirmModal";
+import { getImageUrl } from "../../lib/utils";
 
 const GuidesPage = () => {
   const [guides, setGuides] = useState([]);
@@ -341,7 +342,7 @@ const GuidesPage = () => {
                   <div className="relative h-48 overflow-hidden bg-gray-800/50">
                     {guide.imageUrl ? (
                       <img
-                        src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${guide.imageUrl}`}
+                        src={getImageUrl(guide.imageUrl)}
                         alt={guide.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
@@ -484,7 +485,7 @@ const GuidesPage = () => {
                         <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-800/50">
                           {guide.imageUrl ? (
                             <img
-                              src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${guide.imageUrl}`}
+                              src={getImageUrl(guide.imageUrl)}
                               alt={guide.title}
                               className="w-full h-full object-cover"
                             />

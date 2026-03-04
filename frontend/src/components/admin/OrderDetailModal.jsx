@@ -20,7 +20,7 @@ import {
 import { Button } from "../ui/Button";
 import { Card } from "../ui/Card";
 import { Badge } from "../ui/Badge";
-import { formatCurrency } from "../../lib/utils";
+import { formatCurrency, getImageUrl } from "../../lib/utils";
 import toast from "react-hot-toast";
 
 const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh }) => {
@@ -186,7 +186,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                       <div className="flex items-center gap-4">
                         {item.product?.imageUrl && (
                           <img
-                            src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${item.product.imageUrl}`}
+                            src={getImageUrl(item.product.imageUrl)}
                             alt={item.product.name}
                             className="w-12 h-12 rounded-lg object-cover"
                           />
