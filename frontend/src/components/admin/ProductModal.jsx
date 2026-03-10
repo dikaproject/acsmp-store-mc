@@ -15,7 +15,8 @@ import {
   Trash2,
   Sparkles,
   Terminal,
-  Shield
+  Shield,
+  AlertTriangle
 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
@@ -164,18 +165,28 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
       formDataToSend.append('serverTypeId', formData.serverTypeId);
       formDataToSend.append('isActive', formData.isActive.toString());
       
+      // Warn if any command is missing {player}
+      const commandsMissingPlayer = (formData.commands || []).filter(c => c.trim() && !c.includes('{player}'));
+      if (commandsMissingPlayer.length > 0) {
+        toast('Peringatan: ' + commandsMissingPlayer.length + ' command tidak memiliki {player}. Command mungkin tidak berfungsi dengan benar!', {
+          icon: '⚠️',
+          style: { background: '#1a1a1a', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }
+        });
+      }
+
+      // Commands sent for all product types
+      formDataToSend.append('commands', JSON.stringify(formData.commands || []));
+
       // Append RANK specific fields
       if (formData.type === 'RANK') {
         formDataToSend.append('groupName', formData.groupName || '');
         formDataToSend.append('benefits', JSON.stringify(formData.benefits || []));
-        formDataToSend.append('commands', JSON.stringify(formData.commands || []));
       }
 
       // Append FEATURE specific fields
       if (formData.type === 'FEATURE') {
         formDataToSend.append('permission', formData.permission || '');
         formDataToSend.append('benefits', JSON.stringify(formData.benefits || []));
-        formDataToSend.append('commands', JSON.stringify(formData.commands || []));
       }
       
       // Append image only if new file selected
@@ -648,136 +659,177 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                 </div>
               )}
 
-              {/* Benefits & Commands Section (RANK and FEATURE) */}
+              {/* Benefits (RANK and FEATURE only) */}
               {(formData.type === 'RANK' || formData.type === 'FEATURE') && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-800">
-                  {/* Benefits */}
-                  <div>
-                    <label className="text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-purple-400" />
-                      Benefits
-                    </label>
-                    
-                    {/* Add Benefit Input */}
-                    {!isViewMode && (
-                      <div className="flex gap-2 mb-3">
-                        <Input
-                          type="text"
-                          value={newBenefit}
-                          onChange={(e) => setNewBenefit(e.target.value)}
-                          onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addBenefit())}
-                          placeholder="e.g., Access to /fly command"
-                          className="bg-gray-800/50 border-gray-700 focus:border-purple-500 flex-1"
-                        />
-                        <Button
-                          type="button"
-                          onClick={addBenefit}
-                          className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border border-purple-500/30"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </Button>
+                <div className="pt-6 border-t border-gray-800">
+                  <label className="text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-purple-400" />
+                    Benefits
+                  </label>
+                  {!isViewMode && (
+                    <div className="flex gap-2 mb-3">
+                      <Input
+                        type="text"
+                        value={newBenefit}
+                        onChange={(e) => setNewBenefit(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addBenefit())}
+                        placeholder="e.g., Access to /fly command"
+                        className="bg-gray-800/50 border-gray-700 focus:border-purple-500 flex-1"
+                      />
+                      <Button type="button" onClick={addBenefit}
+                        className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border border-purple-500/30">
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  )}
+                  <div className="space-y-2 max-h-40 overflow-y-auto">
+                    {formData.benefits.length > 0 ? formData.benefits.map((benefit, index) => (
+                      <motion.div key={index} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+                        className="flex items-center gap-2 p-2 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                        <Sparkles className="w-3 h-3 text-purple-400 flex-shrink-0" />
+                        <span className="text-sm text-gray-300 flex-1">{benefit}</span>
+                        {!isViewMode && (
+                          <button type="button" onClick={() => removeBenefit(index)}
+                            className="p-1 hover:bg-red-500/20 rounded transition-colors">
+                            <X className="w-3 h-3 text-red-400" />
+                          </button>
+                        )}
+                      </motion.div>
+                    )) : (
+                      <div className="text-center py-4 text-gray-500 text-sm">
+                        <Sparkles className="w-6 h-6 mx-auto mb-2 opacity-50" />
+                        <p>Belum ada benefits</p>
                       </div>
                     )}
-
-                    {/* Benefits List */}
-                    <div className="space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
-                      {formData.benefits.length > 0 ? (
-                        formData.benefits.map((benefit, index) => (
-                          <motion.div
-                            key={index}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="flex items-center gap-2 p-2 rounded-lg bg-purple-500/10 border border-purple-500/20"
-                          >
-                            <Sparkles className="w-3 h-3 text-purple-400 flex-shrink-0" />
-                            <span className="text-sm text-gray-300 flex-1">{benefit}</span>
-                            {!isViewMode && (
-                              <button
-                                type="button"
-                                onClick={() => removeBenefit(index)}
-                                className="p-1 hover:bg-red-500/20 rounded transition-colors"
-                              >
-                                <X className="w-3 h-3 text-red-400" />
-                              </button>
-                            )}
-                          </motion.div>
-                        ))
-                      ) : (
-                        <div className="text-center py-4 text-gray-500 text-sm">
-                          <Sparkles className="w-6 h-6 mx-auto mb-2 opacity-50" />
-                          <p>Belum ada benefits</p>
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-xs text-gray-500 mt-2">
-                      💡 List keuntungan yang didapat player
-                    </p>
                   </div>
-
-                  {/* Commands */}
-                  <div>
-                    <label className="text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
-                      <Terminal className="w-4 h-4 text-cyan-400" />
-                      Commands
-                    </label>
-                    
-                    {/* Add Command Input */}
-                    {!isViewMode && (
-                      <div className="flex gap-2 mb-3">
-                        <Input
-                          type="text"
-                          value={newCommand}
-                          onChange={(e) => setNewCommand(e.target.value)}
-                          onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCommand())}
-                          placeholder="e.g., lp user {player} parent add vip"
-                          className="bg-gray-800/50 border-gray-700 focus:border-cyan-500 flex-1 font-mono text-sm"
-                        />
-                        <Button
-                          type="button"
-                          onClick={addCommand}
-                          className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    )}
-
-                    {/* Commands List */}
-                    <div className="space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
-                      {formData.commands.length > 0 ? (
-                        formData.commands.map((command, index) => (
-                          <motion.div
-                            key={index}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="flex items-center gap-2 p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20"
-                          >
-                            <Terminal className="w-3 h-3 text-cyan-400 flex-shrink-0" />
-                            <code className="text-sm text-gray-300 flex-1 font-mono truncate">{command}</code>
-                            {!isViewMode && (
-                              <button
-                                type="button"
-                                onClick={() => removeCommand(index)}
-                                className="p-1 hover:bg-red-500/20 rounded transition-colors"
-                              >
-                                <X className="w-3 h-3 text-red-400" />
-                              </button>
-                            )}
-                          </motion.div>
-                        ))
-                      ) : (
-                        <div className="text-center py-4 text-gray-500 text-sm">
-                          <Terminal className="w-6 h-6 mx-auto mb-2 opacity-50" />
-                          <p>Belum ada commands</p>
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-xs text-gray-500 mt-2">
-                      💡 Gunakan <code className="text-cyan-400">{'{player}'}</code> untuk nama player
-                    </p>
-                  </div>
+                  <p className="text-xs text-gray-500 mt-2">💡 List keuntungan yang didapat player</p>
                 </div>
               )}
+
+              {/* Commands Section (all product types) */}
+              <div className="pt-6 border-t border-gray-800">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                    <Terminal className="w-4 h-4 text-cyan-400" />
+                    Custom Commands
+                  </label>
+                  {formData.commands.length > 0 && (
+                    <span className="text-xs text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-full">
+                      {formData.commands.length} command
+                    </span>
+                  )}
+                </div>
+
+                {/* Variable Reference Chips */}
+                <div className="mb-3 flex flex-wrap gap-1.5">
+                  <span className="text-xs text-gray-500 self-center mr-1">Variabel:</span>
+                  {[
+                    { key: '{player}', color: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30', required: true },
+                    { key: '{amount}', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30', required: false },
+                    { key: '{quantity}', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30', required: false },
+                    { key: '{duration}', color: 'bg-green-500/20 text-green-400 border-green-500/30', required: false },
+                    ...(formData.type === 'RANK' ? [{ key: '{groupName}', color: 'bg-orange-500/20 text-orange-400 border-orange-500/30', required: false }] : []),
+                    ...(formData.type === 'FEATURE' ? [{ key: '{permission}', color: 'bg-purple-500/20 text-purple-400 border-purple-500/30', required: false }] : []),
+                  ].map(({ key, color, required }) => (
+                    <button
+                      key={key}
+                      type="button"
+                      title={required ? 'Wajib — diisi otomatis dengan nama player' : 'Opsional'}
+                      onClick={() => setNewCommand(prev => prev + key)}
+                      className={`text-xs border px-2 py-0.5 rounded-full font-mono cursor-pointer hover:opacity-80 transition-opacity ${color} ${required ? 'ring-1 ring-cyan-400/30' : ''}`}
+                    >
+                      {key}{required && ' *'}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Hardcoded fallback preview (only when commands list is empty) */}
+                {formData.commands.length === 0 && (
+                  <div className="mb-3 p-3 rounded-lg bg-gray-900/60 border border-dashed border-gray-700">
+                    <p className="text-xs text-gray-500 mb-1.5 flex items-center gap-1">
+                      <Terminal className="w-3 h-3" />
+                      Fallback hardcoded (digunakan jika tidak ada custom command):
+                    </p>
+                    <code className="block text-xs font-mono text-gray-500 overflow-x-auto">
+                      {formData.type === 'COIN' && (
+                        <>points give <span className="text-cyan-600">{'{player}'}</span> <span className="text-yellow-600">{formData.amount || '{amount}'}</span></>
+                      )}
+                      {formData.type === 'RANK' && (
+                        <>lp user <span className="text-cyan-600">{'{player}'}</span> parent addtemp <span className="text-orange-600">{formData.groupName || '{groupName}'}</span> <span className="text-green-600">{formData.amount || '{duration}'}d</span></>
+                      )}
+                      {formData.type === 'FEATURE' && (
+                        <>lp user <span className="text-cyan-600">{'{player}'}</span> permission settemp <span className="text-purple-600">{formData.permission || '{permission}'}</span> true <span className="text-green-600">{formData.amount || '{duration}'}d</span></>
+                      )}
+                    </code>
+                  </div>
+                )}
+
+                {/* Add Command Input */}
+                {!isViewMode && (
+                  <div className="flex gap-2 mb-3">
+                    <Input
+                      type="text"
+                      value={newCommand}
+                      onChange={(e) => setNewCommand(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCommand())}
+                      placeholder="e.g., points give {player} {amount}"
+                      className="bg-gray-800/50 border-gray-700 focus:border-cyan-500 flex-1 font-mono text-sm"
+                    />
+                    <Button type="button" onClick={addCommand}
+                      className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30">
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
+
+                {/* Commands List */}
+                <div className="space-y-2 max-h-48 overflow-y-auto">
+                  {formData.commands.length > 0 ? formData.commands.map((command, index) => {
+                    const missingPlayer = !command.includes('{player}');
+                    return (
+                      <motion.div key={index} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+                        className={`flex items-center gap-2 p-2 rounded-lg border ${
+                          missingPlayer
+                            ? 'bg-amber-500/5 border-amber-500/30'
+                            : 'bg-cyan-500/10 border-cyan-500/20'
+                        }`}>
+                        <Terminal className={`w-3 h-3 flex-shrink-0 ${missingPlayer ? 'text-amber-400' : 'text-cyan-400'}`} />
+                        <code className="text-sm text-gray-300 flex-1 font-mono break-all">{command}</code>
+                        {missingPlayer && (
+                          <div title="Command ini tidak memiliki {player}. Nama player tidak akan disubstitusi!">
+                            <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                          </div>
+                        )}
+                        {!isViewMode && (
+                          <button type="button" onClick={() => removeCommand(index)}
+                            className="p-1 hover:bg-red-500/20 rounded transition-colors flex-shrink-0">
+                            <X className="w-3 h-3 text-red-400" />
+                          </button>
+                        )}
+                      </motion.div>
+                    );
+                  }) : (
+                    <div className="text-center py-4 text-gray-600 text-sm">
+                      <Terminal className="w-6 h-6 mx-auto mb-2 opacity-30" />
+                      <p>Tidak ada custom command — fallback hardcoded aktif</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Warning if any command missing {player} */}
+                {formData.commands.some(c => c.trim() && !c.includes('{player}')) && (
+                  <div className="mt-2 flex items-start gap-2 p-2 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-400 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs text-amber-400">
+                      Beberapa command tidak memiliki <code className="font-mono">{'{player}'}</code>. Nama player tidak akan disubstitusi pada command tersebut — pastikan ini disengaja.
+                    </p>
+                  </div>
+                )}
+
+                <p className="text-xs text-gray-600 mt-2">
+                  💡 Klik chip variabel di atas untuk menambahkan ke input. Custom command menggantikan fallback hardcoded.
+                </p>
+              </div>
 
               {/* View Mode Additional Info */}
               {isViewMode && product && (

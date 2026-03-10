@@ -11,7 +11,8 @@ import {
   Server,
   LogOut,
   ChevronRight,
-  Link2
+  Link2,
+  Terminal
 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -33,6 +34,12 @@ const Sidebar = ({ isOpen, onClose }) => {
       label: "Server Types", 
       path: "/admin/server-types",
       description: "Manage server types"
+    },
+    { 
+      icon: Terminal, 
+      label: "RCON Config", 
+      path: "/admin/rcon",
+      description: "Manage RCON servers"
     },
     { 
       icon: Package, 

@@ -7,12 +7,19 @@ const prisma = new PrismaClient();
 // Player Login (verify minecraft name only, no database)
 exports.playerLogin = async (req, res, next) => {
   try {
-    const { minecraftName } = req.body;
+    const { minecraftName, serverTypeId } = req.body;
 
     if (!minecraftName) {
       return res.status(400).json({
         success: false,
         message: 'Minecraft name is required'
+      });
+    }
+
+    if (!serverTypeId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Server type is required'
       });
     }
 
@@ -40,8 +47,8 @@ exports.playerLogin = async (req, res, next) => {
         message: `[DUMMY MODE] Player ${minecraftName} verified without RCON`
       };
     } else {
-      // Production mode - Verify player exists in server via RCON
-      verification = await commandService.verifyPlayerExists(minecraftName);
+      // Production mode - Verify player exists in server via RCON (using the selected serverType)
+      verification = await commandService.verifyPlayerExists(minecraftName, serverTypeId);
 
       if (!verification.success) {
         return res.status(500).json({
@@ -64,7 +71,8 @@ exports.playerLogin = async (req, res, next) => {
     const token = jwt.sign(
       { 
         minecraftName: minecraftName,
-        role: 'PLAYER'
+        role: 'PLAYER',
+        serverTypeId: serverTypeId
       },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
@@ -76,6 +84,7 @@ exports.playerLogin = async (req, res, next) => {
       data: {
         minecraftName: minecraftName,
         role: 'PLAYER',
+        serverTypeId: serverTypeId,
         token,
         verification: {
           method: verification.method,

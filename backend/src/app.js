@@ -15,6 +15,7 @@ const galleryRoutes = require('./routes/gallery');
 const guideRoutes = require('./routes/guide');
 const settingRoutes = require('./routes/setting');
 const linktreeRoutes = require('./routes/linktree');
+const rconRoutes = require('./routes/rcon');
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -63,6 +64,7 @@ app.use('/api/gallery', galleryRoutes);
 app.use('/api/guides', guideRoutes);
 app.use('/api/settings', settingRoutes);
 app.use('/api/linktree', linktreeRoutes);
+app.use('/api/rcon', rconRoutes);
 app.use(errorHandler);
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

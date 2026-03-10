@@ -53,8 +53,26 @@ model ServerType {
   
   products    Product[]
   orders      Order[]
+  rconConfig  RconConfig?
   
   @@map("server_types")
+}
+
+model RconConfig {
+  id                 String     @id @default(cuid())
+  name               String
+  host               String
+  port               Int        @default(25575)
+  passwordEncrypted  String     @db.Text
+  timeout            Int        @default(10000)
+  isActive           Boolean    @default(true)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  serverTypeId       String     @unique
+  serverType         ServerType @relation(fields: [serverTypeId], references: [id], onDelete: Cascade)
+
+  @@map("rcon_configs")
 }
 
 model Product {

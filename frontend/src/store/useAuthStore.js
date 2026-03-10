@@ -11,6 +11,7 @@ export const useAuthStore = create(
 
       // Player auth (no database, just token + minecraft name)
       minecraftName: null,
+      serverTypeId: null,
       isUserLoggedIn: false,
 
       // Admin login
@@ -34,10 +35,11 @@ export const useAuthStore = create(
       },
 
       // Player login (just minecraft name + token)
-      loginUser: (minecraftName, token) => {
+      loginUser: (minecraftName, token, serverTypeId = null) => {
         localStorage.setItem("token", token);
         set({
           minecraftName,
+          serverTypeId,
           isUserLoggedIn: true,
         });
       },
@@ -47,6 +49,7 @@ export const useAuthStore = create(
         localStorage.removeItem("token");
         set({
           minecraftName: null,
+          serverTypeId: null,
           isUserLoggedIn: false,
         });
       },

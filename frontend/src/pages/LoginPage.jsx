@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, memo, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -11,7 +11,8 @@ import {
   Sparkles,
   ArrowRight,
   Monitor,
-  Smartphone
+  Smartphone,
+  Server
 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
@@ -44,9 +45,23 @@ const LoginPage = () => {
   
   const [minecraftName, setMinecraftName] = useState("");
   const [platform, setPlatform] = useState("java"); // java or bedrock
+  const [serverTypeId, setServerTypeId] = useState("");
+  const [serverTypes, setServerTypes] = useState([]);
+  const [serverTypesLoading, setServerTypesLoading] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const from = location.state?.from?.pathname || '/shop';
+
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_API_URL}/server-types`)
+      .then(res => {
+        const list = res.data?.data || [];
+        setServerTypes(list);
+        if (list.length > 0) setServerTypeId(list[0].id);
+      })
+      .catch(() => {})
+      .finally(() => setServerTypesLoading(false));
+  }, []);
 
   // Get the actual username to send (with underscore prefix for bedrock)
   const getActualUsername = () => {
@@ -94,6 +109,11 @@ const LoginPage = () => {
     
     if (!validateUsername()) return;
 
+    if (!serverTypeId) {
+      toast.error("Pilih server yang ingin kamu masuki");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -101,13 +121,13 @@ const LoginPage = () => {
       
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/auth/login/player`,
-        { minecraftName: actualUsername }
+        { minecraftName: actualUsername, serverTypeId }
       );
 
       const { token, minecraftName: verifiedName, verification } = response.data.data;
       
       localStorage.setItem('token', token);
-      loginUser(verifiedName, token);
+      loginUser(verifiedName, token, serverTypeId);
       
       toast.success(
         <div>
@@ -202,7 +222,61 @@ const LoginPage = () => {
               </div>
               
               <form onSubmit={handleSubmit} className="space-y-5">
-                
+
+                {/* Server Type Selection */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-white mb-3">
+                    <Server className="w-4 h-4 text-purple-400" />
+                    Pilih Server
+                  </label>
+                  {serverTypesLoading ? (
+                    <div className="flex items-center gap-2 text-gray-500 text-sm py-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Memuat server...</span>
+                    </div>
+                  ) : serverTypes.length === 0 ? (
+                    <p className="text-sm text-gray-500">Tidak ada server tersedia.</p>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-2">
+                      {serverTypes.map(st => (
+                        <motion.button
+                          key={st.id}
+                          type="button"
+                          onClick={() => setServerTypeId(st.id)}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className={`relative p-3 rounded-xl border-2 transition-all text-left ${
+                            serverTypeId === st.id
+                              ? 'border-purple-500 bg-purple-500/10'
+                              : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            {st.image ? (
+                              <img src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}/uploads/servers/${st.image}`}
+                                alt={st.name} className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
+                            ) : (
+                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                                serverTypeId === st.id ? 'bg-purple-500/20' : 'bg-gray-700/50'
+                              }`}>
+                                <Server className={`w-4 h-4 ${serverTypeId === st.id ? 'text-purple-400' : 'text-gray-400'}`} />
+                              </div>
+                            )}
+                            <span className={`font-semibold text-sm truncate ${
+                              serverTypeId === st.id ? 'text-purple-300' : 'text-gray-300'
+                            }`}>{st.name}</span>
+                          </div>
+                          {serverTypeId === st.id && (
+                            <div className="absolute top-2 right-2">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-purple-400" />
+                            </div>
+                          )}
+                        </motion.button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
                 {/* Platform Selection */}
                 <div>
                   <label className="flex items-center gap-2 text-sm font-semibold text-white mb-3">

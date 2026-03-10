@@ -1,26 +1,62 @@
 const { PrismaClient } = require('@prisma/client');
 const { Rcon } = require('rcon-client');
+const { decrypt } = require('../utils/encryption');
 const prisma = new PrismaClient();
 
 class CommandService {
   constructor() {
-    this.rconHost = process.env.RCON_HOST || 'localhost';
-    this.rconPort = parseInt(process.env.RCON_PORT) || 25566;
-    this.rconPassword = process.env.RCON_PASSWORD || 'dikakimak19281';
-    this.rconTimeout = 10000; // 10 seconds timeout
+    // Fallback env vars for backward compatibility
+    this.envRconHost = process.env.RCON_HOST || 'localhost';
+    this.envRconPort = parseInt(process.env.RCON_PORT) || 25575;
+    this.envRconPassword = process.env.RCON_PASSWORD || '';
+    this.envRconTimeout = 10000;
   }
 
-  async connectRcon() {
-    try {
-      console.log(`[RCON] Connecting to ${this.rconHost}:${this.rconPort}...`);
-      
-      const rcon = await Rcon.connect({
-        host: this.rconHost,
-        port: this.rconPort,
-        password: this.rconPassword,
-        timeout: this.rconTimeout
+  // ---------------------------------------------------------------------------
+  // RCON Config Resolution
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Fetch and decrypt the RCON config for a serverType from DB.
+   * Falls back to env vars if no DB config exists.
+   */
+  async getRconConfig(serverTypeId) {
+    if (serverTypeId) {
+      const config = await prisma.rconConfig.findUnique({
+        where: { serverTypeId }
       });
-      
+
+      if (config && config.isActive) {
+        let password;
+        try {
+          password = decrypt(config.passwordEncrypted);
+        } catch (err) {
+          console.error('[RCON] Failed to decrypt password for config', config.id, err.message);
+          throw new Error('Failed to decrypt RCON password');
+        }
+        return { host: config.host, port: config.port, password, timeout: config.timeout };
+      }
+    }
+
+    // Fallback to environment variables
+    console.warn('[RCON] No active DB config found for serverTypeId', serverTypeId, '— using env vars');
+    return {
+      host: this.envRconHost,
+      port: this.envRconPort,
+      password: this.envRconPassword,
+      timeout: this.envRconTimeout
+    };
+  }
+
+  // ---------------------------------------------------------------------------
+  // Connection
+  // ---------------------------------------------------------------------------
+
+  async connectRcon(serverTypeId = null) {
+    const { host, port, password, timeout } = await this.getRconConfig(serverTypeId);
+    try {
+      console.log(`[RCON] Connecting to ${host}:${port}...`);
+      const rcon = await Rcon.connect({ host, port, password, timeout });
       console.log('[RCON] Connected successfully');
       return rcon;
     } catch (error) {
@@ -29,29 +65,74 @@ class CommandService {
     }
   }
 
-  generateCommand(product, minecraftName, quantity = 1) {
-    if (product.type === 'COIN') {
-      const totalAmount = product.amount * quantity;
-      return `points give ${minecraftName} ${totalAmount}`;
-    }
+  // ---------------------------------------------------------------------------
+  // Command Generation
+  // ---------------------------------------------------------------------------
 
-    if (product.type === 'RANK') {
-      const duration = product.amount * quantity;
-      return `lp user ${minecraftName} parent addtemp ${product.groupName} ${duration}d`;
-    }
-
-    if (product.type === 'FEATURE') {
-      const duration = product.amount * quantity;
-      return `lp user ${minecraftName} permission settemp ${product.permission} true ${duration}d`;
-    }
-
-    return null;
+  /**
+   * Substitute known variables in a command template string.
+   * Supported: {player}, {amount}, {quantity}, {duration}, {groupName}, {permission}
+   */
+  interpolateCommand(template, vars) {
+    return template
+      .replace(/\{player\}/g, vars.player || '')
+      .replace(/\{amount\}/g, vars.amount ?? '')
+      .replace(/\{quantity\}/g, vars.quantity ?? '')
+      .replace(/\{duration\}/g, vars.duration ?? '')
+      .replace(/\{groupName\}/g, vars.groupName || '')
+      .replace(/\{permission\}/g, vars.permission || '');
   }
 
-  async executeCommand(command) {
-    // Check if dummy mode is enabled
+  /**
+   * Generate an array of RCON commands for a product + player.
+   * Uses product.commands (custom) first; falls back to hardcoded logic.
+   * @returns {string[]}
+   */
+  generateCommands(product, minecraftName, quantity = 1) {
+    const vars = {
+      player: minecraftName,
+      quantity,
+      amount: product.amount * quantity,
+      duration: product.amount * quantity,
+      groupName: product.groupName || '',
+      permission: product.permission || ''
+    };
+
+    // Custom commands take priority
+    const customCommands = Array.isArray(product.commands)
+      ? product.commands.filter(c => typeof c === 'string' && c.trim())
+      : [];
+
+    if (customCommands.length > 0) {
+      return customCommands.map(cmd => this.interpolateCommand(cmd, vars));
+    }
+
+    // Hardcoded fallback per product type
+    if (product.type === 'COIN') {
+      return [`points give ${minecraftName} ${vars.amount}`];
+    }
+    if (product.type === 'RANK') {
+      return [`lp user ${minecraftName} parent addtemp ${product.groupName} ${vars.duration}d`];
+    }
+    if (product.type === 'FEATURE') {
+      return [`lp user ${minecraftName} permission settemp ${product.permission} true ${vars.duration}d`];
+    }
+
+    return [];
+  }
+
+  // Keep old single-command method as alias for backward compat
+  generateCommand(product, minecraftName, quantity = 1) {
+    return this.generateCommands(product, minecraftName, quantity)[0] || null;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Command Execution
+  // ---------------------------------------------------------------------------
+
+  async executeCommand(command, serverTypeId = null) {
     const isDummyMode = process.env.DUMMY_MODE === 'true';
-    
+
     if (isDummyMode) {
       console.log('[DUMMY MODE] Simulating command execution:', command);
       return {
@@ -64,38 +145,24 @@ class CommandService {
     let rcon;
     try {
       console.log('[RCON] Executing command:', command);
-      
-      rcon = await this.connectRcon();
+      rcon = await this.connectRcon(serverTypeId);
       const response = await rcon.send(command);
-      
       console.log('[RCON] Command response:', response || '(empty response)');
-      
       await rcon.end();
       console.log('[RCON] Connection closed');
-      
-      return { 
-        success: true, 
-        message: response || 'Command executed successfully',
-        output: response
-      };
+      return { success: true, message: response || 'Command executed successfully', output: response };
     } catch (error) {
       console.error('[RCON] Failed to execute command:', error.message);
-      
       if (rcon) {
-        try {
-          await rcon.end();
-        } catch (endError) {
-          console.error('[RCON] Error closing connection:', endError);
-        }
+        try { await rcon.end(); } catch (_) {}
       }
-      
-      return { 
-        success: false, 
-        error: error.message,
-        output: null
-      };
+      return { success: false, error: error.message, output: null };
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // Order Execution
+  // ---------------------------------------------------------------------------
 
   async executeOrderCommands(orderId) {
     try {
@@ -103,27 +170,28 @@ class CommandService {
         where: { id: orderId },
         include: {
           items: {
-            include: {
-              product: true
-            }
+            include: { product: true }
           }
         }
       });
 
-      if (!order) {
-        throw new Error('Order not found');
-      }
+      if (!order) throw new Error('Order not found');
 
       console.log(`[ORDER] Executing commands for order ${order.orderCode}`);
       const results = [];
       let allSuccess = true;
 
       for (const item of order.items) {
-        const command = this.generateCommand(item.product, order.minecraftName, item.quantity);
-        
-        if (command) {
-          const result = await this.executeCommand(command);
-          
+        const commands = this.generateCommands(item.product, order.minecraftName, item.quantity);
+
+        if (commands.length === 0) {
+          console.warn(`[ORDER] No commands generated for product ${item.product.name}`);
+          continue;
+        }
+
+        for (const command of commands) {
+          const result = await this.executeCommand(command, order.serverTypeId);
+
           const logEntry = {
             productId: item.productId,
             productName: item.product.name,
@@ -132,11 +200,10 @@ class CommandService {
             output: result.output || result.message,
             error: result.error
           };
-          
+
           results.push(logEntry);
-          if (!result.success) {
-            allSuccess = false;
-          }
+          if (!result.success) allSuccess = false;
+
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }
@@ -163,11 +230,14 @@ class CommandService {
     }
   }
 
-  async checkPlayerOnline(minecraftName) {
+  // ---------------------------------------------------------------------------
+  // Player Verification
+  // ---------------------------------------------------------------------------
+
+  async checkPlayerOnline(minecraftName, serverTypeId = null) {
     try {
       console.log(`[RCON] Checking if ${minecraftName} is online...`);
-      const command = `seen ${minecraftName}`;
-      const result = await this.executeCommand(command);
+      const result = await this.executeCommand(`seen ${minecraftName}`, serverTypeId);
 
       if (result.success && result.output) {
         const output = result.output.toLowerCase();
@@ -199,11 +269,10 @@ class CommandService {
     }
   }
 
-  async getPlayerInfo(minecraftName) {
+  async getPlayerInfo(minecraftName, serverTypeId = null) {
     try {
       console.log(`[RCON] Getting info for player ${minecraftName}...`);
-      const command = `lp user ${minecraftName} info`;
-      const result = await this.executeCommand(command);
+      const result = await this.executeCommand(`lp user ${minecraftName} info`, serverTypeId);
 
       if (result.success && result.output) {
         const output = result.output.toLowerCase();
@@ -237,11 +306,10 @@ class CommandService {
     }
   }
 
-  async verifyPlayerExists(minecraftName) {
+  async verifyPlayerExists(minecraftName, serverTypeId = null) {
     try {
       console.log(`[VERIFY] Verifying player: ${minecraftName}`);
-      
-      // Check if dummy mode is enabled
+
       const isDummyMode = process.env.DUMMY_MODE === 'true';
       
       if (isDummyMode) {
@@ -256,7 +324,7 @@ class CommandService {
       
       // Method 1: Try LuckPerms
       console.log('[VERIFY] Method 1: Checking via LuckPerms...');
-      const lpResult = await this.getPlayerInfo(minecraftName);
+      const lpResult = await this.getPlayerInfo(minecraftName, serverTypeId);
       
       if (lpResult.success) {
         if (lpResult.exists) {
@@ -277,7 +345,7 @@ class CommandService {
 
       // Method 2: Try seen command (Essentials)
       console.log('[VERIFY] Method 2: Checking via seen command...');
-      const seenResult = await this.executeCommand(`seen ${minecraftName}`);
+      const seenResult = await this.executeCommand(`seen ${minecraftName}`, serverTypeId);
       
       if (seenResult.success && seenResult.output) {
         const output = seenResult.output.toLowerCase();
@@ -322,13 +390,10 @@ class CommandService {
     }
   }
 
-  async testConnection() {
+  async testConnection(serverTypeId = null) {
     try {
-      // Check if dummy mode is enabled
       const isDummyMode = process.env.DUMMY_MODE === 'true';
-      
       if (isDummyMode) {
-        console.log('[DUMMY MODE] Simulating RCON connection test');
         return {
           success: true,
           message: '[DUMMY MODE] RCON connection simulated successfully',
@@ -336,9 +401,7 @@ class CommandService {
           isDummy: true
         };
       }
-      
-      console.log('[TEST] Testing RCON connection...');
-      const result = await this.executeCommand('list');
+      const result = await this.executeCommand('list', serverTypeId);
       return {
         success: result.success,
         message: result.success ? 'RCON connection successful' : 'RCON connection failed',
@@ -346,11 +409,7 @@ class CommandService {
         error: result.error
       };
     } catch (error) {
-      return {
-        success: false,
-        message: 'RCON connection failed',
-        error: error.message
-      };
+      return { success: false, message: error.message, error: error.message };
     }
   }
 }

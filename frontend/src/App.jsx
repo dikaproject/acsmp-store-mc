@@ -30,6 +30,7 @@ import GalleryPage from "./pages/admin/GalleryPage";
 import UsersPage from "./pages/admin/UsersPage";
 import SettingsPage from "./pages/admin/SettingsPage";
 import AdminLinktreePage from "./pages/admin/LinktreePage";
+import RconPage from "./pages/admin/RconPage";
 
 // Public standalone pages
 import LinktreePage from "./pages/LinktreePage";
@@ -93,6 +94,7 @@ function App() {
           <Route path="gallery" element={<GalleryPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="linktree" element={<AdminLinktreePage />} />
+          <Route path="rcon" element={<RconPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>
