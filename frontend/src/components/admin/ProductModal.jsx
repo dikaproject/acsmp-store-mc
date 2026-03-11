@@ -16,7 +16,8 @@ import {
   Sparkles,
   Terminal,
   Shield,
-  AlertTriangle
+  AlertTriangle,
+  BookOpen
 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
@@ -46,6 +47,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
   const [imagePreview, setImagePreview] = useState(null);
   const [newBenefit, setNewBenefit] = useState('');
   const [newCommand, setNewCommand] = useState('');
+  const [newInfoCommand, setNewInfoCommand] = useState('');
 
   // Calculate discounted price
   const getDiscountedPrice = () => {
@@ -68,7 +70,8 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
         serverTypeId: product.serverTypeId || '',
         isActive: product.isActive ?? true,
         benefits: product.benefits || [],
-        commands: product.commands || []
+        commands: product.commands || [],
+        infoCommands: product.infoCommands || []
       });
       if (product.imageUrl) {
         setImagePreview(getImageUrl(product.imageUrl));
@@ -86,13 +89,15 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
         serverTypeId: serverTypes[0]?.id || '',
         isActive: true,
         benefits: [],
-        commands: []
+        commands: [],
+        infoCommands: []
       });
       setImagePreview(null);
       setImageFile(null);
     }
     setNewBenefit('');
     setNewCommand('');
+    setNewInfoCommand('');
   }, [product, mode, isOpen, serverTypes]);
 
   const handleImageChange = (e) => {
@@ -147,6 +152,24 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
     });
   };
 
+  // Info Commands handlers
+  const addInfoCommand = () => {
+    if (newInfoCommand.trim()) {
+      setFormData({
+        ...formData,
+        infoCommands: [...(formData.infoCommands || []), newInfoCommand.trim()]
+      });
+      setNewInfoCommand('');
+    }
+  };
+
+  const removeInfoCommand = (index) => {
+    setFormData({
+      ...formData,
+      infoCommands: (formData.infoCommands || []).filter((_, i) => i !== index)
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -181,12 +204,14 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
       if (formData.type === 'RANK') {
         formDataToSend.append('groupName', formData.groupName || '');
         formDataToSend.append('benefits', JSON.stringify(formData.benefits || []));
+        formDataToSend.append('infoCommands', JSON.stringify(formData.infoCommands || []));
       }
 
       // Append FEATURE specific fields
       if (formData.type === 'FEATURE') {
         formDataToSend.append('permission', formData.permission || '');
         formDataToSend.append('benefits', JSON.stringify(formData.benefits || []));
+        formDataToSend.append('infoCommands', JSON.stringify(formData.infoCommands || []));
       }
       
       // Append image only if new file selected
@@ -703,6 +728,65 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                     )}
                   </div>
                   <p className="text-xs text-gray-500 mt-2">💡 List keuntungan yang didapat player</p>
+                </div>
+              )}
+
+              {/* Info Commands Section (RANK and FEATURE only) */}
+              {(formData.type === 'RANK' || formData.type === 'FEATURE') && (
+                <div className="pt-6 border-t border-gray-800">
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                      <BookOpen className="w-4 h-4 text-emerald-400" />
+                      Info Commands
+                      <span className="text-xs font-normal text-gray-500">(ditampilkan ke pembeli)</span>
+                    </label>
+                    {(formData.infoCommands || []).length > 0 && (
+                      <span className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                        {formData.infoCommands.length} command
+                      </span>
+                    )}
+                  </div>
+
+                  {!isViewMode && (
+                    <div className="flex gap-2 mb-3">
+                      <Input
+                        type="text"
+                        value={newInfoCommand}
+                        onChange={(e) => setNewInfoCommand(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addInfoCommand())}
+                        placeholder="e.g., /fly, /home set, /nick"
+                        className="bg-gray-800/50 border-gray-700 focus:border-emerald-500 flex-1 font-mono text-sm"
+                      />
+                      <Button type="button" onClick={addInfoCommand}
+                        className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/30">
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  )}
+
+                  <div className="space-y-2 max-h-40 overflow-y-auto">
+                    {(formData.infoCommands || []).length > 0 ? formData.infoCommands.map((cmd, index) => (
+                      <motion.div key={index} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+                        className="flex items-center gap-2 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                        <BookOpen className="w-3 h-3 text-emerald-400 flex-shrink-0" />
+                        <code className="text-sm text-gray-300 flex-1 font-mono break-all">{cmd}</code>
+                        {!isViewMode && (
+                          <button type="button" onClick={() => removeInfoCommand(index)}
+                            className="p-1 hover:bg-red-500/20 rounded transition-colors flex-shrink-0">
+                            <X className="w-3 h-3 text-red-400" />
+                          </button>
+                        )}
+                      </motion.div>
+                    )) : (
+                      <div className="text-center py-4 text-gray-600 text-sm">
+                        <BookOpen className="w-6 h-6 mx-auto mb-2 opacity-30" />
+                        <p>Belum ada info command</p>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-600 mt-2">
+                    💡 Command yang bisa digunakan player setelah membeli (contoh: /fly, /kit vip). Ditampilkan di halaman toko.
+                  </p>
                 </div>
               )}
 

@@ -49,7 +49,7 @@ const serverTypeValidation = {
 const productValidation = {
   create: [
     body('name').trim().notEmpty().withMessage('Name is required'),
-    body('type').isIn(['COIN', 'RANK', 'FEATURE']).withMessage('Type must be COIN, RANK, or FEATURE'),
+    body('type').isIn(['COIN', 'RANK', 'FEATURE', 'BATTLEPASS']).withMessage('Type must be COIN, RANK, FEATURE, or BATTLEPASS'),
     body('price').isInt({ min: 1 }).withMessage('Price must be positive integer'),
     body('amount').isInt({ min: 1 }).withMessage('Amount must be positive integer'),
     body('serverTypeId').notEmpty().withMessage('Server type is required'),
@@ -72,7 +72,7 @@ const productValidation = {
   update: [
     param('id').notEmpty().withMessage('ID is required'),
     body('name').optional().trim().notEmpty(),
-    body('type').optional().isIn(['COIN', 'RANK', 'FEATURE']),
+    body('type').optional().isIn(['COIN', 'RANK', 'FEATURE', 'BATTLEPASS']),
     body('price').optional().isInt({ min: 1 }),
     body('amount').optional().isInt({ min: 1 }),
     body('serverTypeId').optional().notEmpty(),

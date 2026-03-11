@@ -90,6 +90,7 @@ model Product {
 
   benefits     Json?       
   commands     Json?       
+  infoCommands Json?       
   
   serverTypeId String
   serverType   ServerType  @relation(fields: [serverTypeId], references: [id], onDelete: Cascade)

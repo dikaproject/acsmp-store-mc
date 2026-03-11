@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   Search, ShoppingCart, Filter, Sparkles, Tag, TrendingUp, Zap, 
   Star, Package, Clock, ChevronLeft, ChevronRight, Info, X,
-  CheckCircle, Command, Gift, Shield
+  CheckCircle, Command, Gift, Shield, Lock
 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import SpotlightCard from "../components/ui/SpotlightCard";
@@ -12,6 +12,7 @@ import { Input } from "../components/ui/Input";
 import { Badge } from "../components/ui/Badge";
 import { productAPI, serverTypeAPI } from "../lib/api";
 import { useCartStore } from "../store/useCartStore";
+import { useAuthStore } from "../store/useAuthStore";
 import { formatCurrency, getImageUrl } from "../lib/utils";
 import toast from "react-hot-toast";
 
@@ -153,17 +154,17 @@ const RankDetailModal = ({ product, isOpen, onClose }) => {
                   )}
 
                   {/* Commands Section */}
-                  {product.commands && Array.isArray(product.commands) && product.commands.length > 0 && (
+                  {product.infoCommands && Array.isArray(product.infoCommands) && product.infoCommands.length > 0 && (
                     <div>
                       <div className="flex items-center gap-2 mb-4">
                         <div className="w-8 h-8 rounded-lg bg-violet-500/20 flex items-center justify-center border border-violet-500/30">
                           <Command className="w-4 h-4 text-violet-400" />
                         </div>
-                        <h3 className="text-lg font-bold text-white">Commands</h3>
+                        <h3 className="text-lg font-bold text-white">Commands yang Tersedia</h3>
                       </div>
                       
                       <div className="grid gap-2">
-                        {product.commands.map((command, index) => (
+                        {product.infoCommands.map((command, index) => (
                           <motion.div
                             key={index}
                             initial={{ opacity: 0, x: -10 }}
@@ -285,6 +286,7 @@ const ShopPage = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
 
   const addItem = useCartStore((state) => state.addItem);
+  const { isUserLoggedIn, serverTypeId: userServerTypeId } = useAuthStore();
 
   useEffect(() => {
     fetchData();
@@ -333,7 +335,25 @@ const ShopPage = () => {
     setSearchParams(searchParams);
   }, [searchParams, setSearchParams]);
 
+  const isProductLocked = useCallback((product) => {
+    if (!isUserLoggedIn || !userServerTypeId) return false;
+    return String(product.serverTypeId) !== String(userServerTypeId);
+  }, [isUserLoggedIn, userServerTypeId]);
+
+  const userServerName = serverTypes.find(s => String(s.id) === String(userServerTypeId))?.name;
+
   const handleAddToCart = useCallback((product) => {
+    if (isProductLocked(product)) {
+      toast.error(
+        <div className="flex flex-col gap-1">
+          <span className="font-semibold">Tidak bisa menambahkan produk</span>
+          <span className="text-xs opacity-80">
+            Kamu login di server <strong>{userServerName}</strong>, produk ini untuk server <strong>{product.ServerType?.name}</strong>
+          </span>
+        </div>
+      );
+      return;
+    }
     addItem(product, 1);
     toast.success(
       <div className="flex items-center gap-2">
@@ -341,7 +361,7 @@ const ShopPage = () => {
         <span>{product.name} ditambahkan ke keranjang!</span>
       </div>
     );
-  }, [addItem]);
+  }, [addItem, isProductLocked, userServerName]);
 
   const handleShowDetail = useCallback((product) => {
     setSelectedProduct(product);
@@ -557,6 +577,29 @@ const ShopPage = () => {
               </div>
             </div>
           </motion.div>
+
+          {/* Server Lock Notice */}
+          {isUserLoggedIn && userServerTypeId && userServerName && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-5 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 backdrop-blur-xl border border-cyan-500/30 rounded-2xl"
+            >
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center border border-cyan-500/30 flex-shrink-0">
+                  <Lock className="w-6 h-6 text-cyan-400" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-base font-bold text-cyan-400 mb-1.5">
+                    🎮 Server: {userServerName}
+                  </h4>
+                  <p className="text-sm text-cyan-300/80 leading-relaxed">
+                    Kamu sedang berbelanja untuk server <span className="font-semibold text-cyan-300">{userServerName}</span>. Produk dari server lain tidak bisa ditambahkan ke keranjang. Untuk membeli produk server lain, silakan logout dan login ulang dengan memilih server yang sesuai.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
         </div>
 
         {/* Products Grid */}
@@ -649,18 +692,34 @@ const ShopPage = () => {
                     </div>
 
                     {/* Add to Cart Button - Always at Same Position */}
-                    <button
-                      onClick={() => handleAddToCart(product)}
-                      disabled={!product.isActive}
-                      className={`w-full py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all ${
-                        product.isActive
-                          ? "bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white"
-                          : "bg-gray-800 text-gray-500 cursor-not-allowed"
-                      }`}
-                    >
-                      <ShoppingCart className="w-4 h-4" />
-                      {product.isActive ? "Add to Cart" : "Out of Stock"}
-                    </button>
+                    {(() => {
+                      const locked = isProductLocked(product);
+                      return (
+                        <button
+                          onClick={() => handleAddToCart(product)}
+                          disabled={!product.isActive || locked}
+                          className={`w-full py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all ${
+                            locked
+                              ? "bg-amber-500/10 border border-amber-500/30 text-amber-400 cursor-not-allowed"
+                              : product.isActive
+                                ? "bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white"
+                                : "bg-gray-800 text-gray-500 cursor-not-allowed"
+                          }`}
+                        >
+                          {locked ? (
+                            <>
+                              <Lock className="w-4 h-4" />
+                              Server Berbeda
+                            </>
+                          ) : (
+                            <>
+                              <ShoppingCart className="w-4 h-4" />
+                              {product.isActive ? "Add to Cart" : "Out of Stock"}
+                            </>
+                          )}
+                        </button>
+                      );
+                    })()}
                   </div>
 
                 </motion.div>

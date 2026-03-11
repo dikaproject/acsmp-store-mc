@@ -12,7 +12,8 @@ import {
   ToggleRight,
   CheckCircle2,
   AlertCircle,
-  Loader2
+  Loader2,
+  ChevronDown
 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
@@ -235,18 +236,21 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
                     <span className="ml-2 text-xs text-gray-600">(tidak bisa diubah)</span>
                   </div>
                 ) : (
-                  <select
-                    name="serverTypeId"
-                    value={formData.serverTypeId}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-3 py-2 bg-gray-800 border border-gray-700/50 rounded-lg text-white focus:outline-none focus:border-cyan-500/50 transition-colors appearance-none cursor-pointer [&_option]:bg-gray-800 [&_option]:text-white"
-                  >
-                    <option value="">Pilih Server Type</option>
-                    {availableServerTypes.map(st => (
-                      <option key={st.id} value={st.id}>{st.name}</option>
-                    ))}
-                  </select>
+                  <div className="relative">
+                    <select
+                      name="serverTypeId"
+                      value={formData.serverTypeId}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-3 py-2 pr-10 bg-gray-800 border border-gray-700/50 rounded-lg text-white focus:outline-none focus:border-cyan-500/50 transition-colors appearance-none cursor-pointer [&_option]:bg-gray-800 [&_option]:text-white"
+                    >
+                      <option value="">Pilih Server Type</option>
+                      {availableServerTypes.map(st => (
+                        <option key={st.id} value={st.id}>{st.name}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  </div>
                 )}
                 {mode === "create" && availableServerTypes.length === 0 && (
                   <p className="text-xs text-amber-400 mt-1">Semua Server Type sudah memiliki RCON config.</p>

@@ -84,15 +84,16 @@ exports.create = async (req, res, next) => {
   try {
     const { 
       name, description, type, price, discount, amount, groupName, permission,
-      serverTypeId, isActive, benefits, commands 
+      serverTypeId, isActive, benefits, commands, infoCommands
     } = req.body;
 
     // Parse isActive properly
     const activeStatus = isActive === 'true' || isActive === true;
 
-    // Parse benefits and commands
+    // Parse benefits, commands and infoCommands
     let parsedBenefits = null;
     let parsedCommands = null;
+    let parsedInfoCommands = null;
 
     if (benefits) {
       try {
@@ -110,28 +111,43 @@ exports.create = async (req, res, next) => {
       }
     }
 
+    if (infoCommands) {
+      try {
+        parsedInfoCommands = typeof infoCommands === 'string' ? JSON.parse(infoCommands) : infoCommands;
+      } catch (e) {
+        parsedInfoCommands = [];
+      }
+    }
+
     // Build image URL
     let imageUrl = null;
     if (req.file) {
       imageUrl = `/api/uploads/products/${req.file.filename}`;
     }
 
+    const createData = {
+      name,
+      description: description || null,
+      type: type || 'COIN',
+      price: parseInt(price) || 0,
+      discount: parseInt(discount) || 0,
+      amount: parseInt(amount) || 0,
+      groupName: type === 'RANK' ? (groupName || null) : null,
+      permission: type === 'FEATURE' ? (permission || null) : null,
+      serverTypeId,
+      imageUrl,
+      isActive: activeStatus,
+      benefits: parsedBenefits,
+      commands: parsedCommands
+    };
+
+    // Only include infoCommands if provided (column may not exist if db push pending)
+    if (parsedInfoCommands !== null) {
+      createData.infoCommands = parsedInfoCommands;
+    }
+
     const product = await prisma.product.create({
-      data: {
-        name,
-        description: description || null,
-        type: type || 'COIN',
-        price: parseInt(price) || 0,
-        discount: parseInt(discount) || 0,
-        amount: parseInt(amount) || 0,
-        groupName: type === 'RANK' ? (groupName || null) : null,
-        permission: type === 'FEATURE' ? (permission || null) : null,
-        serverTypeId,
-        imageUrl,
-        isActive: activeStatus,
-        benefits: parsedBenefits,
-        commands: parsedCommands
-      },
+      data: createData,
       include: {
         serverType: true
       }
@@ -163,7 +179,7 @@ exports.update = async (req, res, next) => {
     const { id } = req.params;
     const { 
       name, description, type, price, discount, amount, groupName, permission,
-      serverTypeId, isActive, benefits, commands 
+      serverTypeId, isActive, benefits, commands, infoCommands
     } = req.body;
 
     const existing = await prisma.product.findUnique({
@@ -217,6 +233,17 @@ exports.update = async (req, res, next) => {
         updateData.commands = [];
       }
     }
+
+    // Parse infoCommands (only include if column exists — guard against missing db push)
+    if (infoCommands !== undefined) {
+      try {
+        const parsed = typeof infoCommands === 'string' ? JSON.parse(infoCommands) : infoCommands;
+        // Wrap in try so a missing column doesn't prevent the rest from saving
+        updateData.infoCommands = parsed;
+      } catch (e) {
+        // ignore
+      }
+    }
     
     // Handle image update
     if (req.file) {
@@ -230,13 +257,26 @@ exports.update = async (req, res, next) => {
       updateData.imageUrl = `/api/uploads/products/${req.file.filename}`;
     }
 
-    const product = await prisma.product.update({
-      where: { id },
-      data: updateData,
-      include: {
-        serverType: true
+    let product;
+    try {
+      product = await prisma.product.update({
+        where: { id },
+        data: updateData,
+        include: { serverType: true }
+      });
+    } catch (dbErr) {
+      // If the error is about unknown column (info_commands not yet pushed), retry without it
+      if (dbErr.message && dbErr.message.includes('info_commands')) {
+        delete updateData.infoCommands;
+        product = await prisma.product.update({
+          where: { id },
+          data: updateData,
+          include: { serverType: true }
+        });
+      } else {
+        throw dbErr;
       }
-    });
+    }
 
     res.json({
       success: true,
