@@ -64,7 +64,7 @@ function App() {
       />
       <Routes>
         {/* Standalone pages (no Layout wrapper) */}
-        <Route path="/linktree" element={<LinktreePage />} />
+        <Route path="/link" element={<LinktreePage />} />
 
         {/* Public Routes */}
         <Route path="/" element={<Layout />}>

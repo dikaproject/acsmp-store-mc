@@ -1,4 +1,5 @@
  import axios from "axios";
+import toast from "react-hot-toast";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -29,7 +30,10 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/admin/login";
+      toast.error("logout akun dan login kembali");
+      setTimeout(() => {
+        window.location.href = "/admin/login";
+      }, 1500);
     }
     return Promise.reject(error);
   }
