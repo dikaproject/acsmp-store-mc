@@ -390,6 +390,48 @@ class CommandService {
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // Rank Check
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Run /rankcheck {player} via RCON and return the player's current rank name.
+   * Returns { success: true, rank: "VIP" | null, method: string }
+   */
+  async getPlayerRank(minecraftName, serverTypeId = null) {
+    try {
+      const isDummyMode = process.env.DUMMY_MODE === 'true';
+
+      if (isDummyMode) {
+        console.log('[DUMMY MODE] Skipping rankcheck for:', minecraftName);
+        return { success: true, rank: null, method: 'dummy' };
+      }
+
+      console.log(`[RCON] Checking rank for ${minecraftName}...`);
+      const result = await this.executeCommand(`rankcheck ${minecraftName}`, serverTypeId);
+
+      if (result.success && result.output) {
+        const output = result.output.trim();
+        // rankcheck returns the rank name directly; empty / error phrases = no rank
+        if (
+          output &&
+          !output.toLowerCase().includes('not found') &&
+          !output.toLowerCase().includes('error') &&
+          output.toLowerCase() !== 'default'
+        ) {
+          console.log(`[RCON] Player ${minecraftName} has rank: ${output}`);
+          return { success: true, rank: output, method: 'rankcheck' };
+        }
+      }
+
+      console.log(`[RCON] Player ${minecraftName} has no rank or default rank`);
+      return { success: true, rank: null, method: 'rankcheck' };
+    } catch (error) {
+      console.error('[RCON] Failed to check player rank:', error);
+      return { success: false, rank: null, error: error.message };
+    }
+  }
+
   async testConnection(serverTypeId = null) {
     try {
       const isDummyMode = process.env.DUMMY_MODE === 'true';

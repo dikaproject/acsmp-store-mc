@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import Layout from "./components/layout/Layout";
 import AdminLayout from "./components/admin/AdminLayout";
 import { AdminRoute, UserRoute } from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
+import SessionExpiredModal from "./components/SessionExpiredModal";
 
 // Public Pages
 import HomePage from "./pages/HomePage";
@@ -34,11 +36,30 @@ import RconPage from "./pages/admin/RconPage";
 
 // Public standalone pages
 import LinktreePage from "./pages/LinktreePage";
+import SkinPage from "./pages/SkinPage";
+import LeaderboardPage from "./pages/LeaderboardPage";
 
 function App() {
+  const [sessionExpired, setSessionExpired] = useState({
+    open: false,
+    isAdmin: false,
+  });
+
+  useEffect(() => {
+    const handler = (e) =>
+      setSessionExpired({ open: true, isAdmin: e.detail?.isAdmin ?? false });
+    window.addEventListener("session:expired", handler);
+    return () => window.removeEventListener("session:expired", handler);
+  }, []);
+
   return (
     <Router>
       <ScrollToTop />
+      <SessionExpiredModal
+        isOpen={sessionExpired.open}
+        onClose={() => setSessionExpired((s) => ({ ...s, open: false }))}
+        isAdmin={sessionExpired.isAdmin}
+      />
       <Toaster
         position="top-right"
         toastOptions={{
@@ -75,11 +96,13 @@ function App() {
           <Route path="guides" element={<GuidesPage />} />
           <Route path="guides/:slug" element={<GuideDetailPage />} />
           <Route path="track" element={<TrackOrderPage />} />
+          <Route path="leaderboard" element={<LeaderboardPage />} />
           
           {/* User Protected Routes */}
           <Route path="shop" element={<UserRoute><ShopPage /></UserRoute>} />
           <Route path="cart" element={<UserRoute><CartPage /></UserRoute>} />
           <Route path="checkout" element={<UserRoute><CheckoutPage /></UserRoute>} />
+          <Route path="skin" element={<SkinPage />} />
         </Route>
 
         {/* Admin Routes */}

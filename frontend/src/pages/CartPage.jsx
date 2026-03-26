@@ -184,7 +184,7 @@ const CartPage = () => {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                disabled={item.quantity <= 1}
+                                disabled={item.quantity <= 1 || item._isUpgrade}
                                 className="border-purple-500/20 hover:bg-purple-500/10 disabled:opacity-50 text-white"
                               >
                                 <Minus className="w-4 h-4" />
@@ -196,13 +196,31 @@ const CartPage = () => {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                className="border-purple-500/20 hover:bg-purple-500/10 text-white"
+                                disabled={item._isUpgrade}
+                                className="border-purple-500/20 hover:bg-purple-500/10 text-white disabled:opacity-40"
                               >
                                 <Plus className="w-4 h-4" />
                               </Button>
                             </div>
                             <div className="text-right">
-                              {item.discount > 0 ? (
+                              {item._isUpgrade ? (
+                                <div className="space-y-1">
+                                  <div className="flex items-center justify-end gap-2">
+                                    <span className="text-xs text-gray-500 line-through">
+                                      {formatCurrency(item.price * item.quantity)}
+                                    </span>
+                                    <Badge className="bg-blue-500/20 text-blue-400 border-0 text-xs px-1.5 py-0">
+                                      UPGRADE
+                                    </Badge>
+                                  </div>
+                                  <p className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                                    {formatCurrency(item._upgradePrice * item.quantity)}
+                                  </p>
+                                  <p className="text-xs text-blue-400">
+                                    Selisih dari rank {item._currentRankName}
+                                  </p>
+                                </div>
+                              ) : item.discount > 0 ? (
                                 <div className="space-y-1">
                                   <div className="flex items-center justify-end gap-2">
                                     <span className="text-xs text-gray-500 line-through">
@@ -275,9 +293,11 @@ const CartPage = () => {
                   {/* Items Summary */}
                   <div className="space-y-3 mb-6 max-h-60 overflow-y-auto custom-scrollbar">
                     {items.map((item) => {
-                      const finalPrice = item.discount > 0 
-                        ? Math.floor(item.price - (item.price * item.discount / 100))
-                        : item.price;
+                      const finalPrice = item._isUpgrade
+                        ? item._upgradePrice
+                        : item.discount > 0
+                          ? Math.floor(item.price - (item.price * item.discount / 100))
+                          : item.price;
                       const subtotal = finalPrice * item.quantity;
                       
                       return (
@@ -290,7 +310,16 @@ const CartPage = () => {
                               {formatCurrency(subtotal)}
                             </span>
                           </div>
-                          {item.discount > 0 && (
+                          {item._isUpgrade ? (
+                            <div className="flex items-center gap-1.5 mt-1">
+                              <Badge className="bg-blue-500/20 text-blue-400 border-0 text-xs px-1.5 py-0">
+                                UPGRADE
+                              </Badge>
+                              <span className="text-xs text-gray-500 line-through">
+                                {formatCurrency(item.price * item.quantity)}
+                              </span>
+                            </div>
+                          ) : item.discount > 0 && (
                             <div className="flex items-center gap-1.5 mt-1">
                               <Badge className="bg-green-500/20 text-green-400 border-0 text-xs px-1.5 py-0">
                                 -{item.discount}%

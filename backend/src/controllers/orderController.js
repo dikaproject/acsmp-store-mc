@@ -144,19 +144,51 @@ exports.create = async (req, res, next) => {
       });
     }
 
+    // Determine upgrade pricing: if any item has isUpgrade=true for a RANK product,
+    // fetch the player's current rank via RCON and resolve the current rank price
+    let upgradeRankPrice = null;
+    const hasUpgradeItem = items.some(i => i.isUpgrade);
+    if (hasUpgradeItem) {
+      try {
+        const rankResult = await commandService.getPlayerRank(minecraftName, serverTypeId);
+        if (rankResult.success && rankResult.rank) {
+          const currentRankProduct = await prisma.product.findFirst({
+            where: {
+              serverTypeId,
+              type: 'RANK',
+              groupName: rankResult.rank,
+              isActive: true
+            }
+          });
+          if (currentRankProduct) {
+            upgradeRankPrice = currentRankProduct.price;
+          }
+        }
+      } catch (e) {
+        console.warn('[ORDER] Failed to fetch upgrade rank price:', e.message);
+      }
+    }
+
     const orderItems = items.map(item => {
       const product = products.find(p => p.id === item.productId);
       const quantity = item.quantity || 1;
       
-      // ✅ Calculate price with discount
-      const originalPrice = product.price;
-      const discount = product.discount || 0;
-      const finalPrice = Math.floor(originalPrice - (originalPrice * discount / 100));
+      let finalPrice;
+
+      if (item.isUpgrade && product.type === 'RANK' && upgradeRankPrice !== null) {
+        // Upgrade pricing: pay only the price difference
+        finalPrice = Math.max(0, product.price - upgradeRankPrice);
+      } else {
+        // ✅ Calculate price with discount
+        const originalPrice = product.price;
+        const discount = product.discount || 0;
+        finalPrice = Math.floor(originalPrice - (originalPrice * discount / 100));
+      }
       
       return {
         productId: product.id,
         quantity,
-        price: finalPrice, // ✅ Use discounted price
+        price: finalPrice,
         subtotal: finalPrice * quantity
       };
     });
@@ -533,6 +565,69 @@ exports.getStats = async (req, res, next) => {
         })),
         topProducts: productsWithDetails,
         serverTypeSales: serverSalesWithDetails
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getLeaderboard = async (req, res, next) => {
+  try {
+    // Names excluded from leaderboard (e.g. owner accounts)
+    // Set LEADERBOARD_EXCLUDED env var as comma-separated list to override
+    const excluded = process.env.LEADERBOARD_EXCLUDED
+      ? process.env.LEADERBOARD_EXCLUDED.split(',').map(s => s.trim()).filter(Boolean)
+      : ['MasWisnu', '.MasWisnu'];
+
+    // Top donors: group COMPLETED orders by minecraftName, sum totalAmount
+    const topDonors = await prisma.order.groupBy({
+      by: ['minecraftName'],
+      where: {
+        status: 'COMPLETED',
+        NOT: { minecraftName: { in: excluded } }
+      },
+      _sum: { totalAmount: true },
+      _count: { _all: true },
+      orderBy: { _sum: { totalAmount: 'desc' } },
+      take: 10
+    });
+
+    // Top products: sum quantities sold across COMPLETED orders
+    const topProductsRaw = await prisma.orderItem.groupBy({
+      by: ['productId'],
+      where: { order: { status: 'COMPLETED' } },
+      _sum: { quantity: true },
+      orderBy: { _sum: { quantity: 'desc' } },
+      take: 10
+    });
+
+    const productIds = topProductsRaw.map(t => t.productId);
+    const products = productIds.length > 0
+      ? await prisma.product.findMany({ where: { id: { in: productIds } } })
+      : [];
+    const productMap = Object.fromEntries(products.map(p => [p.id, p]));
+
+    res.json({
+      success: true,
+      data: {
+        topDonors: topDonors.map((d, i) => ({
+          rank: i + 1,
+          minecraftName: d.minecraftName,
+          totalAmount: d._sum.totalAmount || 0,
+          orderCount: d._count._all
+        })),
+        topProducts: topProductsRaw.map((item, i) => {
+          const product = productMap[item.productId];
+          return {
+            rank: i + 1,
+            productId: item.productId,
+            productName: product?.name ?? 'Unknown',
+            productType: product?.type ?? 'UNKNOWN',
+            imageUrl: product?.imageUrl ?? null,
+            totalQuantity: item._sum.quantity || 0
+          };
+        })
       }
     });
   } catch (error) {

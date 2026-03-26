@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -286,7 +286,7 @@ const ShopPage = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
 
   const addItem = useCartStore((state) => state.addItem);
-  const { isUserLoggedIn, serverTypeId: userServerTypeId } = useAuthStore();
+  const { isUserLoggedIn, serverTypeId: userServerTypeId, currentRank } = useAuthStore();
 
   useEffect(() => {
     fetchData();
@@ -342,6 +342,36 @@ const ShopPage = () => {
 
   const userServerName = serverTypes.find(s => String(s.id) === String(userServerTypeId))?.name;
 
+  // Find the product matching the player's current rank (case-insensitive groupName match)
+  const currentRankProduct = useMemo(() => {
+    if (!currentRank || !isUserLoggedIn || !products.length) return null;
+    return products.find(
+      p =>
+        p.type === 'RANK' &&
+        String(p.serverTypeId) === String(userServerTypeId) &&
+        p.groupName?.toLowerCase() === currentRank.toLowerCase()
+    ) || null;
+  }, [currentRank, products, userServerTypeId, isUserLoggedIn]);
+
+  // Returns true when the RANK product is already owned or lower than current rank
+  const isProductRankLocked = useCallback(
+    (product) => {
+      if (product.type !== 'RANK' || !currentRankProduct) return false;
+      return product.price <= currentRankProduct.price;
+    },
+    [currentRankProduct]
+  );
+
+  // Returns the upgrade price (target - current) or null when not applicable
+  const getUpgradePrice = useCallback(
+    (product) => {
+      if (product.type !== 'RANK' || !currentRankProduct) return null;
+      if (product.price <= currentRankProduct.price) return null;
+      return product.price - currentRankProduct.price;
+    },
+    [currentRankProduct]
+  );
+
   const handleAddToCart = useCallback((product) => {
     if (isProductLocked(product)) {
       toast.error(
@@ -354,6 +384,24 @@ const ShopPage = () => {
       );
       return;
     }
+
+    if (isProductRankLocked(product)) {
+      toast.error(`Kamu sudah memiliki rank ${product.name} atau yang lebih tinggi`);
+      return;
+    }
+
+    const upgradePrice = getUpgradePrice(product);
+    if (upgradePrice !== null) {
+      addItem({ ...product, _isUpgrade: true, _upgradePrice: upgradePrice, _currentRankName: currentRank }, 1);
+      toast.success(
+        <div className="flex items-center gap-2">
+          <TrendingUp className="w-4 h-4" />
+          <span>Upgrade {product.name} ditambahkan ke keranjang!</span>
+        </div>
+      );
+      return;
+    }
+
     addItem(product, 1);
     toast.success(
       <div className="flex items-center gap-2">
@@ -361,7 +409,7 @@ const ShopPage = () => {
         <span>{product.name} ditambahkan ke keranjang!</span>
       </div>
     );
-  }, [addItem, isProductLocked, userServerName]);
+  }, [addItem, isProductLocked, isProductRankLocked, getUpgradePrice, currentRank, userServerName]);
 
   const handleShowDetail = useCallback((product) => {
     setSelectedProduct(product);
@@ -557,26 +605,69 @@ const ShopPage = () => {
             </div>
           </motion.div>
 
-          {/* Info Notice - Rank Upgrade */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="p-5 bg-gradient-to-r from-amber-500/10 to-orange-500/10 backdrop-blur-xl border border-amber-500/30 rounded-2xl"
-          >
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center border border-amber-500/30 flex-shrink-0">
-                <Info className="w-6 h-6 text-amber-400" />
+          {/* Info Notice - Rank Upgrade (dynamic based on player rank) */}
+          {isUserLoggedIn && currentRank && currentRankProduct ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-5 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 backdrop-blur-xl border border-blue-500/30 rounded-2xl"
+            >
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center border border-blue-500/30 flex-shrink-0">
+                  <TrendingUp className="w-6 h-6 text-blue-400" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-base font-bold text-blue-400 mb-1.5">
+                    🏆 Rank Aktif Kamu: <span className="text-white">{currentRank}</span>
+                  </h4>
+                  <p className="text-sm text-blue-300/80 leading-relaxed">
+                    Harga upgrade ditampilkan otomatis pada rank yang lebih tinggi — kamu hanya membayar{" "}
+                    <span className="font-semibold text-blue-300">selisih harga</span>. Rank yang setara atau lebih rendah dikunci karena sudah kamu miliki.
+                  </p>
+                </div>
               </div>
-              <div className="flex-1">
-                <h4 className="text-base font-bold text-amber-400 mb-1.5">
-                  💎 Ingin Upgrade Rank?
-                </h4>
-                <p className="text-sm text-amber-300/80 leading-relaxed">
-                  Jika kamu ingin <span className="font-semibold text-amber-300">upgrade rank</span>, silakan hubungi <span className="font-semibold text-amber-300">Admin</span> melalui Discord atau WhatsApp. Kamu hanya perlu membayar selisih harganya, tidak perlu membayar penuh.
-                </p>
+            </motion.div>
+          ) : isUserLoggedIn && currentRank && !currentRankProduct ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-5 bg-gradient-to-r from-amber-500/10 to-orange-500/10 backdrop-blur-xl border border-amber-500/30 rounded-2xl"
+            >
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center border border-amber-500/30 flex-shrink-0">
+                  <Info className="w-6 h-6 text-amber-400" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-base font-bold text-amber-400 mb-1.5">
+                    🔍 Rank Terdeteksi: <span className="text-white">{currentRank}</span>
+                  </h4>
+                  <p className="text-sm text-amber-300/80 leading-relaxed">
+                    Rank kamu terdeteksi tetapi belum terdaftar di toko ini. Hubungi Admin melalui Discord atau WhatsApp jika ada pertanyaan mengenai upgrade.
+                  </p>
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          ) : !isUserLoggedIn ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-5 bg-gradient-to-r from-amber-500/10 to-orange-500/10 backdrop-blur-xl border border-amber-500/30 rounded-2xl"
+            >
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center border border-amber-500/30 flex-shrink-0">
+                  <Info className="w-6 h-6 text-amber-400" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-base font-bold text-amber-400 mb-1.5">
+                    💎 Ingin Upgrade Rank?
+                  </h4>
+                  <p className="text-sm text-amber-300/80 leading-relaxed">
+                    <span className="font-semibold text-amber-300">Login</span> terlebih dahulu untuk melihat harga upgrade rank secara otomatis. Kamu hanya perlu membayar selisih harga dari rank saat ini ke rank yang dituju.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          ) : null}
 
           {/* Server Lock Notice */}
           {isUserLoggedIn && userServerTypeId && userServerName && (
@@ -662,61 +753,105 @@ const ShopPage = () => {
                       {product.description}
                     </p>
 
-                    {/* Price with Discount */}
+                    {/* Price: upgrade / discount / normal */}
                     <div className="mb-4 flex-grow flex flex-col justify-end">
-                      {product.discount > 0 ? (
-                        <div className="space-y-2">
-                          {/* Discount Badge */}
-                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 w-fit">
-                            <Tag className="w-3.5 h-3.5 text-green-400" />
-                            <span className="text-xs font-bold text-green-400">
-                              {product.discount}% OFF
-                            </span>
-                          </div>
-                          
-                          {/* Prices */}
-                          <div className="flex items-center gap-2">
-                            <p className="text-sm text-gray-500 line-through">
-                              {formatCurrency(product.price)}
-                            </p>
-                            <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
-                              {formatCurrency(Math.floor(product.price - (product.price * product.discount / 100)))}
-                            </p>
-                          </div>
-                        </div>
-                      ) : (
-                        <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400">
-                          {formatCurrency(product.price)}
-                        </p>
-                      )}
+                      {(() => {
+                        const upgradePrice = getUpgradePrice(product);
+                        if (upgradePrice !== null) {
+                          return (
+                            <div className="space-y-2">
+                              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 w-fit">
+                                <TrendingUp className="w-3.5 h-3.5 text-blue-400" />
+                                <span className="text-xs font-bold text-blue-400">UPGRADE</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm text-gray-500 line-through">{formatCurrency(product.price)}</p>
+                              </div>
+                              <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+                                {formatCurrency(upgradePrice)}
+                              </p>
+                              <p className="text-xs text-blue-400/70">Selisih dari rank saat ini</p>
+                            </div>
+                          );
+                        }
+                        if (product.discount > 0) {
+                          return (
+                            <div className="space-y-2">
+                              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 w-fit">
+                                <Tag className="w-3.5 h-3.5 text-green-400" />
+                                <span className="text-xs font-bold text-green-400">{product.discount}% OFF</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm text-gray-500 line-through">{formatCurrency(product.price)}</p>
+                                <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+                                  {formatCurrency(Math.floor(product.price - (product.price * product.discount / 100)))}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        }
+                        return (
+                          <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400">
+                            {formatCurrency(product.price)}
+                          </p>
+                        );
+                      })()}
                     </div>
 
-                    {/* Add to Cart Button - Always at Same Position */}
+                    {/* Add to Cart / Upgrade / Locked Button */}
                     {(() => {
                       const locked = isProductLocked(product);
+                      const rankLocked = isProductRankLocked(product);
+                      const upgradePrice = getUpgradePrice(product);
+
+                      if (locked) {
+                        return (
+                          <button
+                            disabled
+                            className="w-full py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 cursor-not-allowed"
+                          >
+                            <Lock className="w-4 h-4" />
+                            Server Berbeda
+                          </button>
+                        );
+                      }
+
+                      if (rankLocked) {
+                        return (
+                          <button
+                            disabled
+                            className="w-full py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 bg-gray-800/60 border border-gray-600/30 text-gray-500 cursor-not-allowed"
+                          >
+                            <CheckCircle className="w-4 h-4 text-emerald-600" />
+                            Sudah Dimiliki
+                          </button>
+                        );
+                      }
+
+                      if (upgradePrice !== null) {
+                        return (
+                          <button
+                            onClick={() => handleAddToCart(product)}
+                            className="w-full py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white transition-all"
+                          >
+                            <TrendingUp className="w-4 h-4" />
+                            Upgrade
+                          </button>
+                        );
+                      }
+
                       return (
                         <button
                           onClick={() => handleAddToCart(product)}
-                          disabled={!product.isActive || locked}
+                          disabled={!product.isActive}
                           className={`w-full py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all ${
-                            locked
-                              ? "bg-amber-500/10 border border-amber-500/30 text-amber-400 cursor-not-allowed"
-                              : product.isActive
-                                ? "bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white"
-                                : "bg-gray-800 text-gray-500 cursor-not-allowed"
+                            product.isActive
+                              ? "bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white"
+                              : "bg-gray-800 text-gray-500 cursor-not-allowed"
                           }`}
                         >
-                          {locked ? (
-                            <>
-                              <Lock className="w-4 h-4" />
-                              Server Berbeda
-                            </>
-                          ) : (
-                            <>
-                              <ShoppingCart className="w-4 h-4" />
-                              {product.isActive ? "Add to Cart" : "Out of Stock"}
-                            </>
-                          )}
+                          <ShoppingCart className="w-4 h-4" />
+                          {product.isActive ? "Add to Cart" : "Out of Stock"}
                         </button>
                       );
                     })()}

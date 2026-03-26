@@ -188,6 +188,15 @@ model Setting {
   @@map("settings")
 }
 
+model SkinShortUrl {
+  code      String   @id       // 8-char hex short code
+  hash      String             // minecraft texture hash
+  createdAt DateTime @default(now())
+
+  @@index([hash])
+  @@map("skin_short_urls")
+}
+
 model LinktreeLink {
   id              String   @id @default(cuid())
   title           String

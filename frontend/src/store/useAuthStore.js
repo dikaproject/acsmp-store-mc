@@ -13,6 +13,7 @@ export const useAuthStore = create(
       minecraftName: null,
       serverTypeId: null,
       isUserLoggedIn: false,
+      currentRank: null, // rank name from /rankcheck, e.g. "VIP" or null
 
       // Admin login
       login: (user, token) => {
@@ -35,12 +36,13 @@ export const useAuthStore = create(
       },
 
       // Player login (just minecraft name + token)
-      loginUser: (minecraftName, token, serverTypeId = null) => {
+      loginUser: (minecraftName, token, serverTypeId = null, currentRank = null) => {
         localStorage.setItem("token", token);
         set({
           minecraftName,
           serverTypeId,
           isUserLoggedIn: true,
+          currentRank,
         });
       },
 
@@ -51,6 +53,7 @@ export const useAuthStore = create(
           minecraftName: null,
           serverTypeId: null,
           isUserLoggedIn: false,
+          currentRank: null,
         });
       },
 

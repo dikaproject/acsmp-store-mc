@@ -57,7 +57,7 @@ const LoginPage = () => {
       .then(res => {
         const list = res.data?.data || [];
         setServerTypes(list);
-        if (list.length > 0) setServerTypeId(list[0].id);
+        // No auto-select — user must pick a server
       })
       .catch(() => {})
       .finally(() => setServerTypesLoading(false));
@@ -124,14 +124,19 @@ const LoginPage = () => {
         { minecraftName: actualUsername, serverTypeId }
       );
 
-      const { token, minecraftName: verifiedName, verification } = response.data.data;
+      const { token, minecraftName: verifiedName, verification, currentRank } = response.data.data;
       
       localStorage.setItem('token', token);
-      loginUser(verifiedName, token, serverTypeId);
+      loginUser(verifiedName, token, serverTypeId, currentRank || null);
       
       toast.success(
         <div>
           <p className="font-semibold">Selamat datang, {verifiedName}!</p>
+          {currentRank && (
+            <p className="text-xs text-yellow-300 mt-0.5">
+              🏆 Rank aktif: <span className="font-bold">{currentRank}</span>
+            </p>
+          )}
           <p className="text-xs text-gray-400 mt-1">
             {verification.message}
           </p>
@@ -491,6 +496,9 @@ const LoginPage = () => {
                       <h4 className="text-sm font-bold text-purple-400 mb-1">Penting!</h4>
                       <p className="text-xs text-gray-400 leading-relaxed">
                         Username harus pernah join server minimal 1x dan data akan tersinkronisasi otomatis.
+                        Login juga akan membaca{" "}
+                        <span className="text-purple-300 font-medium">rank aktif kamu</span>{" "}
+                        untuk menampilkan harga upgrade rank yang sesuai secara otomatis.
                       </p>
                     </div>
                   </div>

@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, ShoppingCart, User, LogOut, Home, Store, Heart, Package } from "lucide-react";
+import { Menu, X, ShoppingCart, User, LogOut, Home, Store, Heart, Package, ChevronDown, Crown, Palette, Trophy } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "../../store/useCartStore";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -9,10 +9,23 @@ import { cn } from "../../lib/utils";
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const userDropdownRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const totalItems = useCartStore((state) => state.getTotalItems());
-  const { minecraftName, isUserLoggedIn, logoutUser } = useAuthStore();
+  const { minecraftName, isUserLoggedIn, logoutUser, currentRank } = useAuthStore();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(e.target)) {
+        setIsUserDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     let ticking = false;
@@ -32,7 +45,9 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", path: "/", icon: Home },
     { name: "Shop", path: "/shop", icon: Store },
+    { name: "Skin", path: "/skin", icon: Palette },
     { name: "Vote", path: "/vote", icon: Heart },
+    { name: "Leaderboard", path: "/leaderboard", icon: Trophy },
     { name: "Track Order", path: "/track", icon: Package },
   ];
 
@@ -59,7 +74,7 @@ const Navbar = () => {
           >
             <div
               className={cn(
-                "relative w-full overflow-hidden transition-all duration-700 ease-in-out",
+                "relative w-full transition-all duration-700 ease-in-out",
                 isScrolled
                   ? "rounded-full bg-black/80 backdrop-blur-2xl shadow-2xl shadow-emerald-500/10 border border-white/10"
                   : "rounded-none bg-black/95 backdrop-blur-xl border-b border-white/10 shadow-none"
@@ -129,26 +144,104 @@ const Navbar = () => {
                       </Link>
                     )}
 
-                    {/* User Profile - No animation */}
+                    {/* User Profile Dropdown (desktop) */}
                     {isUserLoggedIn && (
-                      <div className="hidden md:flex items-center gap-2">
-                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/10">
+                      <div className="hidden md:block relative" ref={userDropdownRef}>
+                        <button
+                          onClick={() => setIsUserDropdownOpen(v => !v)}
+                          className={cn(
+                            "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors",
+                            isUserDropdownOpen
+                              ? "bg-white/15 border-white/20"
+                              : "bg-white/10 border-white/10 hover:bg-white/15"
+                          )}
+                        >
                           <div className="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center flex-shrink-0">
                             <User className="w-3 h-3 text-black" />
                           </div>
-                          <span className="text-sm font-semibold text-white whitespace-nowrap">
+                          <span className="text-sm font-semibold text-white whitespace-nowrap max-w-[120px] truncate">
                             {minecraftName}
                           </span>
-                        </div>
-                        <button
-                          onClick={() => {
-                            logoutUser();
-                            navigate("/");
-                          }}
-                          className="p-2 rounded-full hover:bg-red-500/10 hover:text-red-400 transition-colors"
-                        >
-                          <LogOut className="w-4 h-4" />
+                          <ChevronDown className={cn(
+                            "w-3.5 h-3.5 text-gray-400 transition-transform duration-200",
+                            isUserDropdownOpen && "rotate-180"
+                          )} />
                         </button>
+
+                        <AnimatePresence>
+                          {isUserDropdownOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 6, scale: 0.96 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                              transition={{ duration: 0.15 }}
+                              className="absolute right-0 mt-3 w-64 bg-black/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl shadow-black/50 overflow-hidden"
+                            >
+                              {/* Header */}
+                              <div className="px-4 py-4 border-b border-white/10">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center flex-shrink-0">
+                                    <User className="w-5 h-5 text-black" />
+                                  </div>
+                                  <div className="min-w-0">
+                                    <p className="text-sm font-bold text-white truncate">{minecraftName}</p>
+                                    <p className="text-xs text-gray-400">Player</p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Info rows */}
+                              <div className="px-4 py-3 space-y-2">
+                                {/* Nametag */}
+                                <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5">
+                                  <div className="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                                    <User className="w-3.5 h-3.5 text-emerald-400" />
+                                  </div>
+                                  <div className="min-w-0">
+                                    <p className="text-xs text-gray-500 leading-none mb-0.5">Nametag</p>
+                                    <p className="text-sm font-semibold text-white font-mono truncate">{minecraftName}</p>
+                                  </div>
+                                </div>
+
+                                {/* Rank */}
+                                <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5">
+                                  <div className={cn(
+                                    "w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0",
+                                    currentRank ? "bg-yellow-500/20" : "bg-gray-700/50"
+                                  )}>
+                                    <Crown className={cn(
+                                      "w-3.5 h-3.5",
+                                      currentRank ? "text-yellow-400" : "text-gray-500"
+                                    )} />
+                                  </div>
+                                  <div className="min-w-0">
+                                    <p className="text-xs text-gray-500 leading-none mb-0.5">Rank Saat Ini</p>
+                                    {currentRank ? (
+                                      <p className="text-sm font-bold text-yellow-400 truncate">{currentRank}</p>
+                                    ) : (
+                                      <p className="text-sm text-gray-500">Belum ada rank</p>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Logout */}
+                              <div className="px-4 pb-4">
+                                <button
+                                  onClick={() => {
+                                    setIsUserDropdownOpen(false);
+                                    logoutUser();
+                                    navigate('/');
+                                  }}
+                                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 font-semibold text-sm transition-colors"
+                                >
+                                  <LogOut className="w-4 h-4" />
+                                  Logout
+                                </button>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
                     )}
 
@@ -218,14 +311,38 @@ const Navbar = () => {
                 {/* Mobile User Section */}
                 {isUserLoggedIn && (
                   <div className="pt-4 border-t border-white/10 space-y-3">
+                    {/* Nametag */}
                     <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center flex-shrink-0">
                         <User className="w-5 h-5 text-black" />
                       </div>
-                      <span className="text-sm font-semibold text-white">
-                        {minecraftName}
-                      </span>
+                      <div className="min-w-0">
+                        <p className="text-xs text-gray-500 leading-none mb-0.5">Nametag</p>
+                        <p className="text-sm font-bold text-white font-mono truncate">{minecraftName}</p>
+                      </div>
                     </div>
+
+                    {/* Rank */}
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5">
+                      <div className={cn(
+                        "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0",
+                        currentRank ? "bg-yellow-500/20" : "bg-gray-700/50"
+                      )}>
+                        <Crown className={cn(
+                          "w-5 h-5",
+                          currentRank ? "text-yellow-400" : "text-gray-500"
+                        )} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs text-gray-500 leading-none mb-0.5">Rank Saat Ini</p>
+                        {currentRank ? (
+                          <p className="text-sm font-bold text-yellow-400 truncate">{currentRank}</p>
+                        ) : (
+                          <p className="text-sm text-gray-500">Belum ada rank</p>
+                        )}
+                      </div>
+                    </div>
+
                     <button
                       onClick={() => {
                         logoutUser();

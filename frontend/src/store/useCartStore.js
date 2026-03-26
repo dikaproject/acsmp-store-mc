@@ -50,11 +50,13 @@ export const useCartStore = create(
 
       getTotalPrice: () => {
         return get().items.reduce((total, item) => {
-          // Calculate price with discount
+          // Use upgrade price if this is a rank upgrade item
           const finalPrice =
-            item.discount > 0
-              ? Math.floor(item.price - (item.price * item.discount / 100))
-              : item.price;
+            item._upgradePrice !== undefined
+              ? item._upgradePrice
+              : item.discount > 0
+                ? Math.floor(item.price - (item.price * item.discount / 100))
+                : item.price;
           return total + (finalPrice * item.quantity);
         }, 0);
       },

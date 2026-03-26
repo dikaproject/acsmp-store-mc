@@ -112,7 +112,8 @@ const CheckoutPage = () => {
         paymentMethod: selectedPaymentMethod,
         items: items.map(item => ({
           productId: item.id,
-          quantity: item.quantity
+          quantity: item.quantity,
+          isUpgrade: item._isUpgrade || false
         }))
       };
 

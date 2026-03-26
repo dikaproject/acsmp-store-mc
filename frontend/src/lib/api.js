@@ -30,10 +30,12 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
-      toast.error("logout akun dan login kembali");
-      setTimeout(() => {
-        window.location.href = "/admin/login";
-      }, 1500);
+      // Dispatch a custom event so the global modal can react
+      window.dispatchEvent(
+        new CustomEvent("session:expired", {
+          detail: { isAdmin: window.location.pathname.startsWith("/admin") },
+        })
+      );
     }
     return Promise.reject(error);
   }
@@ -124,4 +126,17 @@ export const linktreeAPI = {
   update: (id, data) => api.put(`/linktree/${id}`, data),
   delete: (id) => api.delete(`/linktree/${id}`),
   reorder: (data) => api.put("/linktree/reorder", data),
+};
+
+// Skin Upload API
+export const skinAPI = {
+  upload: (formData) =>
+    api.post("/skin/upload", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      timeout: 90000, // MineSkin can be slow
+    }),
+};
+
+export const leaderboardAPI = {
+  get: () => api.get("/orders/leaderboard"),
 };

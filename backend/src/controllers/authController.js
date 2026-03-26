@@ -67,6 +67,17 @@ exports.playerLogin = async (req, res, next) => {
       }
     }
 
+    // Check player rank via RCON (non-critical – login succeeds even if this fails)
+    let currentRank = null;
+    try {
+      const rankResult = await commandService.getPlayerRank(minecraftName, serverTypeId);
+      if (rankResult.success) {
+        currentRank = rankResult.rank; // null or rank name string (e.g. "VIP")
+      }
+    } catch (e) {
+      console.warn('[AUTH] Failed to check player rank:', e.message);
+    }
+
     // Generate simple token with minecraft name only (no user ID needed)
     const token = jwt.sign(
       { 
@@ -86,6 +97,7 @@ exports.playerLogin = async (req, res, next) => {
         role: 'PLAYER',
         serverTypeId: serverTypeId,
         token,
+        currentRank,
         verification: {
           method: verification.method,
           message: verification.message
