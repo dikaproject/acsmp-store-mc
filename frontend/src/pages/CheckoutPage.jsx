@@ -31,7 +31,7 @@ import axios from "axios";
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const { items, getTotalPrice, clearCart } = useCartStore();
-  const { minecraftName } = useAuthStore();
+  const { minecraftName, logoutUser } = useAuthStore();
   
   const [loading, setLoading] = useState(false);
   const [paymentChannels, setPaymentChannels] = useState([]);
@@ -132,6 +132,7 @@ const CheckoutPage = () => {
         const { payment, orderCode } = response.data.data;
         
         clearCart();
+        logoutUser();
         
         toast.success("Pesanan berhasil dibuat! Mengarahkan ke halaman pembayaran...", {
           duration: 2000

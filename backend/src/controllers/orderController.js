@@ -161,7 +161,9 @@ exports.create = async (req, res, next) => {
             }
           });
           if (currentRankProduct) {
-            upgradeRankPrice = currentRankProduct.price;
+            upgradeRankPrice = Math.floor(
+              currentRankProduct.price - currentRankProduct.price * (currentRankProduct.discount || 0) / 100
+            );
           }
         }
       } catch (e) {
@@ -176,8 +178,9 @@ exports.create = async (req, res, next) => {
       let finalPrice;
 
       if (item.isUpgrade && product.type === 'RANK' && upgradeRankPrice !== null) {
-        // Upgrade pricing: pay only the price difference
-        finalPrice = Math.max(0, product.price - upgradeRankPrice);
+        // Upgrade pricing: pay only the discounted price difference
+        const targetDiscounted = Math.floor(product.price - product.price * (product.discount || 0) / 100);
+        finalPrice = Math.max(0, targetDiscounted - upgradeRankPrice);
       } else {
         // ✅ Calculate price with discount
         const originalPrice = product.price;

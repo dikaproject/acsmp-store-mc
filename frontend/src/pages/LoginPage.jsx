@@ -126,8 +126,11 @@ const LoginPage = () => {
 
       const { token, minecraftName: verifiedName, verification, currentRank } = response.data.data;
       
+      const selectedServer = serverTypes.find(s => String(s.id) === String(serverTypeId));
+      const serverName = selectedServer?.name || null;
+
       localStorage.setItem('token', token);
-      loginUser(verifiedName, token, serverTypeId, currentRank || null);
+      loginUser(verifiedName, token, serverTypeId, currentRank || null, serverName);
       
       toast.success(
         <div>

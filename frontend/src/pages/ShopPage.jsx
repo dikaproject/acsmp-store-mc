@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Search, ShoppingCart, Filter, Sparkles, Tag, TrendingUp, Zap, 
@@ -286,6 +286,8 @@ const ShopPage = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
 
   const addItem = useCartStore((state) => state.addItem);
+  const clearCart = useCartStore((state) => state.clearCart);
+  const navigate = useNavigate();
   const { isUserLoggedIn, serverTypeId: userServerTypeId, currentRank } = useAuthStore();
 
   useEffect(() => {
@@ -342,34 +344,47 @@ const ShopPage = () => {
 
   const userServerName = serverTypes.find(s => String(s.id) === String(userServerTypeId))?.name;
 
+  // Extract just the rank name (first word) — currentRank is e.g. "VIP 27 Mar 2026 07:35"
+  const rankName = currentRank ? currentRank.split(' ')[0] : null;
+
   // Find the product matching the player's current rank (case-insensitive groupName match)
   const currentRankProduct = useMemo(() => {
-    if (!currentRank || !isUserLoggedIn || !products.length) return null;
+    if (!rankName || !isUserLoggedIn || !products.length) return null;
     return products.find(
       p =>
         p.type === 'RANK' &&
         String(p.serverTypeId) === String(userServerTypeId) &&
-        p.groupName?.toLowerCase() === currentRank.toLowerCase()
+        p.groupName?.toLowerCase() === rankName.toLowerCase()
     ) || null;
-  }, [currentRank, products, userServerTypeId, isUserLoggedIn]);
+  }, [rankName, products, userServerTypeId, isUserLoggedIn]);
 
-  // Returns true when the RANK product is already owned or lower than current rank
+  // Helper: compute discounted price for a product
+  const discountedPrice = useCallback(
+    (p) => Math.floor(p.price - p.price * (p.discount || 0) / 100),
+    []
+  );
+
+  // Returns true when the RANK product is already owned or lower than current rank (using discounted prices)
   const isProductRankLocked = useCallback(
     (product) => {
       if (product.type !== 'RANK' || !currentRankProduct) return false;
-      return product.price <= currentRankProduct.price;
+      return discountedPrice(product) <= discountedPrice(currentRankProduct);
     },
-    [currentRankProduct]
+    [currentRankProduct, discountedPrice]
   );
 
-  // Returns the upgrade price (target - current) or null when not applicable
+  // Returns the upgrade price (discounted target - discounted current) or null when not applicable
+  // Returns null if the product is inactive (inactive products cannot be upgraded)
   const getUpgradePrice = useCallback(
     (product) => {
       if (product.type !== 'RANK' || !currentRankProduct) return null;
-      if (product.price <= currentRankProduct.price) return null;
-      return product.price - currentRankProduct.price;
+      if (!product.isActive) return null;
+      const targetPrice = discountedPrice(product);
+      const currentPrice = discountedPrice(currentRankProduct);
+      if (targetPrice <= currentPrice) return null;
+      return targetPrice - currentPrice;
     },
-    [currentRankProduct]
+    [currentRankProduct, discountedPrice]
   );
 
   const handleAddToCart = useCallback((product) => {
@@ -392,13 +407,15 @@ const ShopPage = () => {
 
     const upgradePrice = getUpgradePrice(product);
     if (upgradePrice !== null) {
-      addItem({ ...product, _isUpgrade: true, _upgradePrice: upgradePrice, _currentRankName: currentRank }, 1);
+      clearCart();
+      addItem({ ...product, _isUpgrade: true, _upgradePrice: upgradePrice, _currentRankName: rankName }, 1);
       toast.success(
         <div className="flex items-center gap-2">
           <TrendingUp className="w-4 h-4" />
-          <span>Upgrade {product.name} ditambahkan ke keranjang!</span>
+          <span>Upgrade {product.name} — lanjut ke checkout...</span>
         </div>
       );
+      navigate('/checkout');
       return;
     }
 
@@ -409,7 +426,7 @@ const ShopPage = () => {
         <span>{product.name} ditambahkan ke keranjang!</span>
       </div>
     );
-  }, [addItem, isProductLocked, isProductRankLocked, getUpgradePrice, currentRank, userServerName]);
+  }, [addItem, clearCart, navigate, isProductLocked, isProductRankLocked, getUpgradePrice, rankName, userServerName]);
 
   const handleShowDetail = useCallback((product) => {
     setSelectedProduct(product);
@@ -606,7 +623,7 @@ const ShopPage = () => {
           </motion.div>
 
           {/* Info Notice - Rank Upgrade (dynamic based on player rank) */}
-          {isUserLoggedIn && currentRank && currentRankProduct ? (
+          {isUserLoggedIn && rankName && currentRankProduct ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -618,7 +635,7 @@ const ShopPage = () => {
                 </div>
                 <div className="flex-1">
                   <h4 className="text-base font-bold text-blue-400 mb-1.5">
-                    🏆 Rank Aktif Kamu: <span className="text-white">{currentRank}</span>
+                    🏆 Rank Aktif Kamu: <span className="text-white">{rankName}</span>
                   </h4>
                   <p className="text-sm text-blue-300/80 leading-relaxed">
                     Harga upgrade ditampilkan otomatis pada rank yang lebih tinggi — kamu hanya membayar{" "}
@@ -627,7 +644,7 @@ const ShopPage = () => {
                 </div>
               </div>
             </motion.div>
-          ) : isUserLoggedIn && currentRank && !currentRankProduct ? (
+          ) : isUserLoggedIn && rankName && !currentRankProduct ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -639,7 +656,7 @@ const ShopPage = () => {
                 </div>
                 <div className="flex-1">
                   <h4 className="text-base font-bold text-amber-400 mb-1.5">
-                    🔍 Rank Terdeteksi: <span className="text-white">{currentRank}</span>
+                    🔍 Rank Terdeteksi: <span className="text-white">{rankName}</span>
                   </h4>
                   <p className="text-sm text-amber-300/80 leading-relaxed">
                     Rank kamu terdeteksi tetapi belum terdaftar di toko ini. Hubungi Admin melalui Discord atau WhatsApp jika ada pertanyaan mengenai upgrade.
@@ -758,14 +775,27 @@ const ShopPage = () => {
                       {(() => {
                         const upgradePrice = getUpgradePrice(product);
                         if (upgradePrice !== null) {
+                          // Original upgrade price without target discount (to show as strikethrough)
+                          const currentDiscounted = discountedPrice(currentRankProduct);
+                          const originalUpgrade = product.price - currentDiscounted;
                           return (
                             <div className="space-y-2">
-                              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 w-fit">
-                                <TrendingUp className="w-3.5 h-3.5 text-blue-400" />
-                                <span className="text-xs font-bold text-blue-400">UPGRADE</span>
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30">
+                                  <TrendingUp className="w-3.5 h-3.5 text-blue-400" />
+                                  <span className="text-xs font-bold text-blue-400">UPGRADE</span>
+                                </div>
+                                {product.discount > 0 && (
+                                  <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30">
+                                    <Tag className="w-3 h-3 text-green-400" />
+                                    <span className="text-xs font-bold text-green-400">{product.discount}% OFF</span>
+                                  </div>
+                                )}
                               </div>
                               <div className="flex items-center gap-2">
-                                <p className="text-sm text-gray-500 line-through">{formatCurrency(product.price)}</p>
+                                <p className="text-sm text-gray-500 line-through">
+                                  {formatCurrency(product.discount > 0 ? originalUpgrade : product.price)}
+                                </p>
                               </div>
                               <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
                                 {formatCurrency(upgradePrice)}

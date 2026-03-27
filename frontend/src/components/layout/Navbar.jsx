@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, ShoppingCart, User, LogOut, Home, Store, Heart, Package, ChevronDown, Crown, Palette, Trophy } from "lucide-react";
+import { Menu, X, ShoppingCart, User, LogOut, Home, Store, Heart, Package, ChevronDown, Crown, Palette, Trophy, Server, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "../../store/useCartStore";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -14,7 +14,10 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const totalItems = useCartStore((state) => state.getTotalItems());
-  const { minecraftName, isUserLoggedIn, logoutUser, currentRank } = useAuthStore();
+  const { minecraftName, isUserLoggedIn, logoutUser, currentRank, serverName } = useAuthStore();
+
+  const rankName = currentRank ? currentRank.split(' ')[0] : null;
+  const rankExpiry = currentRank ? currentRank.split(' ').slice(1).join(' ') : null;
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -185,7 +188,7 @@ const Navbar = () => {
                                   </div>
                                   <div className="min-w-0">
                                     <p className="text-sm font-bold text-white truncate">{minecraftName}</p>
-                                    <p className="text-xs text-gray-400">Player</p>
+                                    <p className="text-xs text-gray-400 truncate">{serverName || 'Player'}</p>
                                   </div>
                                 </div>
                               </div>
@@ -203,26 +206,39 @@ const Navbar = () => {
                                   </div>
                                 </div>
 
-                                {/* Rank */}
+                                  {/* Rank */}
                                 <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5">
                                   <div className={cn(
                                     "w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0",
-                                    currentRank ? "bg-yellow-500/20" : "bg-gray-700/50"
+                                    rankName ? "bg-yellow-500/20" : "bg-gray-700/50"
                                   )}>
                                     <Crown className={cn(
                                       "w-3.5 h-3.5",
-                                      currentRank ? "text-yellow-400" : "text-gray-500"
+                                      rankName ? "text-yellow-400" : "text-gray-500"
                                     )} />
                                   </div>
                                   <div className="min-w-0">
                                     <p className="text-xs text-gray-500 leading-none mb-0.5">Rank Saat Ini</p>
-                                    {currentRank ? (
-                                      <p className="text-sm font-bold text-yellow-400 truncate">{currentRank}</p>
+                                    {rankName ? (
+                                      <p className="text-sm font-bold text-yellow-400 truncate">{rankName}</p>
                                     ) : (
                                       <p className="text-sm text-gray-500">Belum ada rank</p>
                                     )}
                                   </div>
                                 </div>
+
+                                {/* Rank Expiry */}
+                                {rankExpiry && (
+                                  <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5">
+                                    <div className="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                                      <Clock className="w-3.5 h-3.5 text-blue-400" />
+                                    </div>
+                                    <div className="min-w-0">
+                                      <p className="text-xs text-gray-500 leading-none mb-0.5">Berakhir</p>
+                                      <p className="text-xs font-semibold text-blue-300 truncate">{rankExpiry}</p>
+                                    </div>
+                                  </div>
+                                )}
                               </div>
 
                               {/* Logout */}
@@ -322,21 +338,39 @@ const Navbar = () => {
                       </div>
                     </div>
 
+                    {/* Server */}
+                    {serverName && (
+                      <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5">
+                        <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                          <Server className="w-5 h-5 text-purple-400" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs text-gray-500 leading-none mb-0.5">Server</p>
+                          <p className="text-sm font-semibold text-white truncate">{serverName}</p>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Rank */}
                     <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5">
                       <div className={cn(
                         "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0",
-                        currentRank ? "bg-yellow-500/20" : "bg-gray-700/50"
+                        rankName ? "bg-yellow-500/20" : "bg-gray-700/50"
                       )}>
                         <Crown className={cn(
                           "w-5 h-5",
-                          currentRank ? "text-yellow-400" : "text-gray-500"
+                          rankName ? "text-yellow-400" : "text-gray-500"
                         )} />
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs text-gray-500 leading-none mb-0.5">Rank Saat Ini</p>
-                        {currentRank ? (
-                          <p className="text-sm font-bold text-yellow-400 truncate">{currentRank}</p>
+                        {rankName ? (
+                          <div>
+                            <p className="text-sm font-bold text-yellow-400 truncate">{rankName}</p>
+                            {rankExpiry && (
+                              <p className="text-xs text-blue-300 mt-0.5 truncate">{rankExpiry}</p>
+                            )}
+                          </div>
                         ) : (
                           <p className="text-sm text-gray-500">Belum ada rank</p>
                         )}
