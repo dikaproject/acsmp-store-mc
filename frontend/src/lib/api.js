@@ -70,6 +70,7 @@ export const orderAPI = {
   getById: (id) => api.get(`/orders/${id}`),
   getByCode: (code) => api.get(`/orders/code/${code}`),
   getAll: () => api.get("/orders"),
+  getMyOrders: (params) => api.get("/orders/my", { params }),
 };
 
 // Update galleryAPI
@@ -139,4 +140,12 @@ export const skinAPI = {
 
 export const leaderboardAPI = {
   get: () => api.get("/orders/leaderboard"),
+};
+
+export const voucherAPI = {
+  validate: (code) => api.post("/vouchers/validate", { code }),
+  getAll: () => api.get("/vouchers"),
+  create: (data) => api.post("/vouchers", data),
+  update: (id, data) => api.put(`/vouchers/${id}`, data),
+  delete: (id) => api.delete(`/vouchers/${id}`),
 };

@@ -7,6 +7,7 @@ const { orderValidation } = require('../middleware/validations');
 router.get('/stats', authenticate, isAdmin, orderController.getStats);
 router.get('/leaderboard', orderController.getLeaderboard);
 router.get('/payment-channels', orderController.getPaymentChannels);
+router.get('/my', authenticate, isPlayer, orderController.getMyOrders);
 router.get('/', authenticate, isAdmin, orderController.getAll);
 router.get('/code/:orderCode', orderController.getByOrderCode);
 router.get('/:id', orderController.getById);

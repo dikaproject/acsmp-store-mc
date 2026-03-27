@@ -54,6 +54,7 @@ model ServerType {
   products    Product[]
   orders      Order[]
   rconConfig  RconConfig?
+  galleries   Gallery[]
   
   @@map("server_types")
 }
@@ -110,6 +111,7 @@ model Order {
   email           String?
   whatsapp        String?
   totalAmount     Int
+  discountAmount  Int         @default(0)
   status          OrderStatus @default(PENDING)
   
   tripayReference String?     @unique
@@ -124,6 +126,9 @@ model Order {
   
   userId          String?
   user            User?       @relation(fields: [userId], references: [id])
+
+  voucherId       String?
+  voucher         Voucher?    @relation(fields: [voucherId], references: [id])
   
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
@@ -160,6 +165,9 @@ model Gallery {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  serverTypeId String?
+  serverType   ServerType? @relation(fields: [serverTypeId], references: [id], onDelete: SetNull)
   
   @@map("galleries")
 }
@@ -210,4 +218,20 @@ model LinktreeLink {
   updatedAt       DateTime @updatedAt
 
   @@map("linktree_links")
+}
+
+model Voucher {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  discount    Int      // Percentage discount 1-100
+  maxUse      Int      @default(1)
+  usedCount   Int      @default(0)
+  isActive    Boolean  @default(true)
+  expiredAt   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orders      Order[]
+
+  @@map("vouchers")
 }

@@ -2,6 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const tripayService = require('../services/tripayService');
 const commandService = require('../services/commandService');
+const fonnteService = require('../services/fonnteService');
 
 exports.getAll = async (req, res, next) => {
   try {
@@ -110,6 +111,44 @@ exports.getByOrderCode = async (req, res, next) => {
   }
 };
 
+exports.getMyOrders = async (req, res, next) => {
+  try {
+    const minecraftName = req.user.minecraftName;
+    const { page = 1, limit = 10 } = req.query;
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const [orders, total] = await Promise.all([
+      prisma.order.findMany({
+        where: { minecraftName },
+        include: {
+          serverType: true,
+          items: {
+            include: { product: true }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: parseInt(limit)
+      }),
+      prisma.order.count({ where: { minecraftName } })
+    ]);
+
+    res.json({
+      success: true,
+      data: orders,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        totalPages: Math.ceil(total / parseInt(limit))
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Update create order to include email and whatsapp
 exports.create = async (req, res, next) => {
   try {
@@ -119,7 +158,8 @@ exports.create = async (req, res, next) => {
       whatsapp,
       serverTypeId, 
       items, 
-      paymentMethod 
+      paymentMethod,
+      voucherCode
     } = req.body;
 
     if (!minecraftName || minecraftName !== req.user.minecraftName) {
@@ -196,8 +236,25 @@ exports.create = async (req, res, next) => {
       };
     });
 
-    const totalAmount = orderItems.reduce((sum, item) => sum + item.subtotal, 0);
+    const totalBeforeVoucher = orderItems.reduce((sum, item) => sum + item.subtotal, 0);
 
+    // Apply voucher if provided
+    let voucherId = null;
+    let discountAmount = 0;
+    if (voucherCode) {
+      const voucher = await prisma.voucher.findUnique({ where: { code: voucherCode.toUpperCase() } });
+      if (
+        voucher &&
+        voucher.isActive &&
+        voucher.usedCount < voucher.maxUse &&
+        (!voucher.expiredAt || new Date() <= new Date(voucher.expiredAt))
+      ) {
+        discountAmount = Math.floor(totalBeforeVoucher * voucher.discount / 100);
+        voucherId = voucher.id;
+      }
+    }
+
+    const totalAmount = Math.max(0, totalBeforeVoucher - discountAmount);
     const orderCode = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
 
     const order = await prisma.order.create({
@@ -207,7 +264,9 @@ exports.create = async (req, res, next) => {
         email: email || null,
         whatsapp: whatsapp || null,
         totalAmount,
+        discountAmount,
         serverTypeId,
+        ...(voucherId ? { voucherId } : {}),
         status: 'PENDING',
         items: {
           create: orderItems
@@ -222,6 +281,11 @@ exports.create = async (req, res, next) => {
         serverType: true
       }
     });
+
+    // Increment voucher usedCount
+    if (voucherId) {
+      await prisma.voucher.update({ where: { id: voucherId }, data: { usedCount: { increment: 1 } } });
+    }
 
     let paymentData = null;
     try {
@@ -343,6 +407,15 @@ exports.updateStatus = async (req, res, next) => {
 
     if (status === 'COMPLETED') {
       await commandService.executeOrderCommands(order.id);
+
+      // 📲 Send WA notification (fire and forget)
+      try {
+        if (updatedOrder.whatsapp) {
+          fonnteService.sendMessage(updatedOrder.whatsapp, fonnteService.buildCompletedMessage(updatedOrder));
+        }
+      } catch (e) {
+        console.error('[FONNTE] WA notification error:', e.message);
+      }
     }
 
     res.json({
@@ -418,6 +491,19 @@ exports.handleWebhook = async (req, res, next) => {
         } catch (error) {
           console.error('[WEBHOOK] Command execution failed:', error);
           // Don't fail the webhook, just log the error
+        }
+
+        // 📲 Send WA notification (fire and forget)
+        try {
+          const fullOrder = await prisma.order.findUnique({
+            where: { id: order.id },
+            include: { serverType: true, items: { include: { product: true } } }
+          });
+          if (fullOrder?.whatsapp) {
+            fonnteService.sendMessage(fullOrder.whatsapp, fonnteService.buildPaidMessage(fullOrder));
+          }
+        } catch (e) {
+          console.error('[WEBHOOK] WA notification error:', e.message);
         }
       }
     } else if (status === 'EXPIRED') {

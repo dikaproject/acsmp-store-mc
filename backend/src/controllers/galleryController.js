@@ -3,15 +3,19 @@ const prisma = new PrismaClient();
 
 exports.getAll = async (req, res, next) => {
   try {
-    const { isActive } = req.query;
+    const { isActive, serverTypeId } = req.query;
 
     const where = {};
     if (isActive !== undefined) {
       where.isActive = isActive === 'true';
     }
+    if (serverTypeId) {
+      where.serverTypeId = serverTypeId;
+    }
 
     const galleries = await prisma.gallery.findMany({
       where,
+      include: { serverType: { select: { id: true, name: true } } },
       orderBy: [
         { order: 'asc' },
         { createdAt: 'desc' }
@@ -32,7 +36,8 @@ exports.getById = async (req, res, next) => {
     const { id } = req.params;
 
     const gallery = await prisma.gallery.findUnique({
-      where: { id }
+      where: { id },
+      include: { serverType: { select: { id: true, name: true } } }
     });
 
     if (!gallery) {
@@ -53,7 +58,7 @@ exports.getById = async (req, res, next) => {
 
 exports.create = async (req, res, next) => {
   try {
-    const { title, description, order, isActive } = req.body;
+    const { title, description, order, isActive, serverTypeId } = req.body;
 
     if (!req.file) {
       return res.status(400).json({
@@ -68,7 +73,8 @@ exports.create = async (req, res, next) => {
         description,
         imageUrl: `/uploads/gallery/${req.file.filename}`,
         order: order ? parseInt(order) : 0,
-        isActive: isActive !== undefined ? isActive : true
+        isActive: isActive !== undefined ? isActive : true,
+        serverTypeId: serverTypeId || null,
       }
     });
 
@@ -85,7 +91,7 @@ exports.create = async (req, res, next) => {
 exports.update = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { title, description, order, isActive } = req.body;
+    const { title, description, order, isActive, serverTypeId } = req.body;
 
     const existing = await prisma.gallery.findUnique({
       where: { id }
@@ -103,6 +109,7 @@ exports.update = async (req, res, next) => {
     if (description !== undefined) updateData.description = description;
     if (order !== undefined) updateData.order = parseInt(order);
     if (isActive !== undefined) updateData.isActive = isActive;
+    if (serverTypeId !== undefined) updateData.serverTypeId = serverTypeId || null;
     
     if (req.file) {
       updateData.imageUrl = `/uploads/gallery/${req.file.filename}`;

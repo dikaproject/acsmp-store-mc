@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, ShoppingCart, User, LogOut, Home, Store, Heart, Package, ChevronDown, Crown, Palette, Trophy, Server, Clock } from "lucide-react";
+import { Menu, X, ShoppingCart, User, LogOut, Home, Store, Heart, Package, ChevronDown, Crown, Palette, Trophy, Server, Clock, History, Image } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "../../store/useCartStore";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -48,6 +48,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", path: "/", icon: Home },
     { name: "Shop", path: "/shop", icon: Store },
+    { name: "Gallery", path: "/gallery", icon: Image },
     { name: "Skin", path: "/skin", icon: Palette },
     { name: "Vote", path: "/vote", icon: Heart },
     { name: "Leaderboard", path: "/leaderboard", icon: Trophy },
@@ -239,6 +240,21 @@ const Navbar = () => {
                                     </div>
                                   </div>
                                 )}
+
+                                {/* My Orders */}
+                                <Link
+                                  to="/my-orders"
+                                  onClick={() => setIsUserDropdownOpen(false)}
+                                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                                >
+                                  <div className="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                                    <History className="w-3.5 h-3.5 text-purple-400" />
+                                  </div>
+                                  <div className="min-w-0">
+                                    <p className="text-xs text-gray-500 leading-none mb-0.5">Riwayat</p>
+                                    <p className="text-sm font-semibold text-white">Pesanan Saya</p>
+                                  </div>
+                                </Link>
                               </div>
 
                               {/* Logout */}
@@ -376,6 +392,20 @@ const Navbar = () => {
                         )}
                       </div>
                     </div>
+
+                    <Link
+                      to="/my-orders"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                        <History className="w-5 h-5 text-purple-400" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs text-gray-500 leading-none mb-0.5">Riwayat</p>
+                        <p className="text-sm font-semibold text-white">Pesanan Saya</p>
+                      </div>
+                    </Link>
 
                     <button
                       onClick={() => {

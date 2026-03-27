@@ -8,7 +8,8 @@ import {
   CheckCircle2,
   FileImage,
   Hash,
-  Info
+  Info,
+  Server
 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
@@ -19,11 +20,13 @@ import { getImageUrl } from "../../lib/utils";
 
 const GalleryModal = ({ isOpen, onClose, mode, gallery, onSuccess, totalGalleries }) => {
   const [loading, setLoading] = useState(false);
+  const [serverTypes, setServerTypes] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     order: '0',
-    isActive: true
+    isActive: true,
+    serverTypeId: ''
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -35,7 +38,8 @@ const GalleryModal = ({ isOpen, onClose, mode, gallery, onSuccess, totalGallerie
         title: gallery.title || '',
         description: gallery.description || '',
         order: gallery.order?.toString() || '0',
-        isActive: gallery.isActive ?? true
+        isActive: gallery.isActive ?? true,
+        serverTypeId: gallery.serverTypeId || ''
       });
       if (gallery.imageUrl) {
         setImagePreview(getImageUrl(gallery.imageUrl));
@@ -47,12 +51,19 @@ const GalleryModal = ({ isOpen, onClose, mode, gallery, onSuccess, totalGallerie
         title: '',
         description: '',
         order: nextOrder.toString(),
-        isActive: true
+        isActive: true,
+        serverTypeId: ''
       });
       setImagePreview(null);
       setImageFile(null);
     }
   }, [gallery, mode, isOpen, totalGalleries]);
+
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_API_URL}/server-types`)
+      .then(r => setServerTypes((r.data.data || []).filter(s => s.isActive)))
+      .catch(() => {});
+  }, []);
 
   const handleImageChange = (file) => {
     if (file) {
@@ -111,6 +122,7 @@ const GalleryModal = ({ isOpen, onClose, mode, gallery, onSuccess, totalGallerie
       formDataToSend.append('description', formData.description);
       formDataToSend.append('order', formData.order);
       formDataToSend.append('isActive', formData.isActive ? 'true' : 'false');
+      if (formData.serverTypeId) formDataToSend.append('serverTypeId', formData.serverTypeId);
       
       if (imageFile) {
         formDataToSend.append('image', imageFile);
@@ -309,6 +321,25 @@ const GalleryModal = ({ isOpen, onClose, mode, gallery, onSuccess, totalGallerie
                     </div>
                   )}
                   <p className="text-xs text-gray-500 mt-1">Lower numbers appear first</p>
+                </div>
+
+                {/* Server Type */}
+                <div>
+                  <label className="text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                    <Server className="w-4 h-4 text-gray-400" />
+                    Server (opsional)
+                  </label>
+                  <select
+                    value={formData.serverTypeId}
+                    onChange={(e) => setFormData({ ...formData, serverTypeId: e.target.value })}
+                    className="w-full px-3 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-pink-500 transition-colors"
+                  >
+                    <option value="">— Semua Server —</option>
+                    {serverTypes.map(s => (
+                      <option key={s.id} value={s.id}>{s.name}</option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">Kosongkan agar gambar muncul di semua server</p>
                 </div>
 
                 {/* Status */}

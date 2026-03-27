@@ -8,7 +8,8 @@ import {
   ZoomIn,
   X,
   Grid3x3,
-  Eye
+  Eye,
+  Server
 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { GlowingButton } from "../components/ui/GlowingButton";
@@ -19,19 +20,37 @@ import { getImageUrl } from "../lib/utils";
 
 const GalleryPage = () => {
   const [galleries, setGalleries] = useState([]);
+  const [serverTypes, setServerTypes] = useState([]);
+  const [activeServer, setActiveServer] = useState(null); // null = all
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedImage, setSelectedImage] = useState(null);
   const itemsPerPage = 12;
 
   useEffect(() => {
-    fetchGalleries();
+    fetchServerTypes();
   }, []);
 
-  const fetchGalleries = async () => {
+  useEffect(() => {
+    fetchGalleries(activeServer);
+    setCurrentPage(1);
+  }, [activeServer]);
+
+  const fetchServerTypes = async () => {
     try {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/server-types`);
+      setServerTypes((res.data.data || []).filter(s => s.isActive));
+    } catch {}
+  };
+
+  const fetchGalleries = async (serverTypeId = nullserverTypeId = null) => {
+    setLoading(true);
+    try {
+      const params = { isActive: true };
+      if (serverTypeId) params.serverTypeId = serverTypeId;
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/gallery`
+        `${import.meta.env.VITE_API_URL}/gallery`,
+        { params }
       );
       const activeGalleries = response.data.data
         .filter(g => g.isActive)
@@ -181,6 +200,41 @@ const GalleryPage = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Server Filter Tabs */}
+      {serverTypes.length > 0 && (
+        <div className="pb-4 pt-2">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-wrap justify-center gap-2">
+              <button
+                onClick={() => setActiveServer(null)}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all border ${
+                  !activeServer
+                    ? 'bg-purple-500/20 border-purple-500/50 text-purple-300'
+                    : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/20'
+                }`}
+              >
+                <Grid3x3 className="w-3.5 h-3.5" />
+                Semua Server
+              </button>
+              {serverTypes.map(s => (
+                <button
+                  key={s.id}
+                  onClick={() => setActiveServer(s.id)}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all border ${
+                    activeServer === s.id
+                      ? 'bg-purple-500/20 border-purple-500/50 text-purple-300'
+                      : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/20'
+                  }`}
+                >
+                  <Server className="w-3.5 h-3.5" />
+                  {s.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Gallery Grid */}
       <section className="py-16 relative">

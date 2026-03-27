@@ -20,6 +20,7 @@ import GalleryPagePublic from "./pages/GalleryPage";
 import ShopPage from "./pages/ShopPage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import MyOrdersPage from "./pages/MyOrdersPage";
 
 // Admin Pages
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
@@ -33,6 +34,7 @@ import UsersPage from "./pages/admin/UsersPage";
 import SettingsPage from "./pages/admin/SettingsPage";
 import AdminLinktreePage from "./pages/admin/LinktreePage";
 import RconPage from "./pages/admin/RconPage";
+import VouchersPage from "./pages/admin/VouchersPage";
 
 // Public standalone pages
 import LinktreePage from "./pages/LinktreePage";
@@ -102,6 +104,7 @@ function App() {
           <Route path="shop" element={<UserRoute><ShopPage /></UserRoute>} />
           <Route path="cart" element={<UserRoute><CartPage /></UserRoute>} />
           <Route path="checkout" element={<UserRoute><CheckoutPage /></UserRoute>} />
+          <Route path="my-orders" element={<UserRoute><MyOrdersPage /></UserRoute>} />
           <Route path="skin" element={<SkinPage />} />
         </Route>
 
@@ -118,6 +121,7 @@ function App() {
           <Route path="users" element={<UsersPage />} />
           <Route path="linktree" element={<AdminLinktreePage />} />
           <Route path="rcon" element={<RconPage />} />
+          <Route path="vouchers" element={<VouchersPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>

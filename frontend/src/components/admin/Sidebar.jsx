@@ -12,7 +12,8 @@ import {
   LogOut,
   ChevronRight,
   Link2,
-  Terminal
+  Terminal,
+  Ticket
 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -64,6 +65,18 @@ const Sidebar = ({ isOpen, onClose }) => {
       label: "Linktree", 
       path: "/admin/linktree",
       description: "Manage link page"
+    },
+    { 
+      icon: Image, 
+      label: "Gallery", 
+      path: "/admin/gallery",
+      description: "Kelola foto gallery"
+    },
+    { 
+      icon: Ticket, 
+      label: "Vouchers", 
+      path: "/admin/vouchers",
+      description: "Kode promo & diskon"
     },
     { 
       icon: Settings, 

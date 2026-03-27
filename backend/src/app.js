@@ -17,6 +17,7 @@ const settingRoutes = require('./routes/setting');
 const linktreeRoutes = require('./routes/linktree');
 const rconRoutes = require('./routes/rcon');
 const skinRoutes = require('./routes/skin');
+const voucherRoutes = require('./routes/voucher');
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -67,6 +68,7 @@ app.use('/api/settings', settingRoutes);
 app.use('/api/linktree', linktreeRoutes);
 app.use('/api/rcon', rconRoutes);
 app.use('/api/skin', skinRoutes);
+app.use('/api/vouchers', voucherRoutes);
 app.use(errorHandler);
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

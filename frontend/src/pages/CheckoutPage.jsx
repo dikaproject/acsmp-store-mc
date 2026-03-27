@@ -13,7 +13,9 @@ import {
   Loader2,
   Sparkles,
   Shield,
-  ShoppingBag
+  ShoppingBag,
+  Tag,
+  X
 } from "lucide-react";
 import Flag from "react-world-flags";
 import { Button } from "../components/ui/Button";
@@ -42,6 +44,9 @@ const CheckoutPage = () => {
     whatsapp: ""
   });
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
+  const [voucherCode, setVoucherCode] = useState("");
+  const [voucher, setVoucher] = useState(null); // { id, code, discount }
+  const [voucherLoading, setVoucherLoading] = useState(false);
 
   useEffect(() => {
     if (!minecraftName) {
@@ -79,6 +84,26 @@ const CheckoutPage = () => {
     });
   };
 
+  const handleApplyVoucher = async () => {
+    if (!voucherCode.trim()) return;
+    setVoucherLoading(true);
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/vouchers/validate`, { code: voucherCode.trim() });
+      setVoucher(res.data.data);
+      toast.success(`Voucher ${res.data.data.code} berhasil! Diskon ${res.data.data.discount}%`);
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Voucher tidak valid');
+      setVoucher(null);
+    } finally {
+      setVoucherLoading(false);
+    }
+  };
+
+  const handleRemoveVoucher = () => {
+    setVoucher(null);
+    setVoucherCode("");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -110,6 +135,7 @@ const CheckoutPage = () => {
         whatsapp: contactInfo.whatsapp,
         serverTypeId: items[0].serverTypeId,
         paymentMethod: selectedPaymentMethod,
+        voucherCode: voucher?.code || undefined,
         items: items.map(item => ({
           productId: item.id,
           quantity: item.quantity,
@@ -469,10 +495,49 @@ const CheckoutPage = () => {
 
                     {/* Price Summary */}
                     <div className="border-t border-purple-500/10 pt-4 space-y-3">
+                      {/* Voucher Input */}
+                      {!voucher ? (
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            placeholder="Kode voucher..."
+                            value={voucherCode}
+                            onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
+                            onKeyDown={(e) => e.key === 'Enter' && handleApplyVoucher()}
+                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 font-mono"
+                          />
+                          <button
+                            type="button"
+                            onClick={handleApplyVoucher}
+                            disabled={voucherLoading || !voucherCode}
+                            className="px-3 py-2 rounded-xl bg-purple-500/20 border border-purple-500/30 text-purple-400 text-sm font-semibold hover:bg-purple-500/30 transition-colors disabled:opacity-40"
+                          >
+                            {voucherLoading ? '...' : 'Pakai'}
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-green-500/10 border border-green-500/30">
+                          <div className="flex items-center gap-2">
+                            <Tag className="w-3.5 h-3.5 text-green-400" />
+                            <span className="text-sm font-bold text-green-400 font-mono">{voucher.code}</span>
+                            <span className="text-xs text-green-400/70">-{voucher.discount}%</span>
+                          </div>
+                          <button type="button" onClick={handleRemoveVoucher} className="text-gray-500 hover:text-red-400 transition-colors">
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      )}
+
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-400">Subtotal</span>
                         <span className="font-medium text-white">{formatCurrency(getTotalPrice())}</span>
                       </div>
+                      {voucher && (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-green-400">Diskon Voucher</span>
+                          <span className="font-medium text-green-400">- {formatCurrency(Math.floor(getTotalPrice() * voucher.discount / 100))}</span>
+                        </div>
+                      )}
                       {selectedPaymentMethod && (
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-400">Biaya Admin</span>
@@ -491,7 +556,9 @@ const CheckoutPage = () => {
                           {(() => {
                             const channel = paymentChannels.find(c => c.code === selectedPaymentMethod);
                             const fee = channel?.total_fee?.flat || 0;
-                            return formatCurrency(getTotalPrice() + fee);
+                            const subtotal = getTotalPrice();
+                            const discount = voucher ? Math.floor(subtotal * voucher.discount / 100) : 0;
+                            return formatCurrency(subtotal - discount + fee);
                           })()}
                         </span>
                       </div>
