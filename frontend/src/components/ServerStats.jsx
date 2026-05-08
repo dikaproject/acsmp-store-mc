@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Server, Users, Wifi, Activity, Copy, Check, Zap, Globe, Shield, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const MCSTATUS_API = 'https://api.mcstatus.io/v2/status/bedrock/';
+const MCSTATUS_API = 'https://api.mcsrvstat.us/bedrock/3/';
 
 const safeRenderValue = (value, fallback = 'N/A') => {
   if (value === null || value === undefined) return fallback;
@@ -74,8 +74,8 @@ export default function ServerStats() {
   const version = 'Java & Bedrock Supported';
   const protocol = safeRenderValue(serverData?.protocol, 'N/A');
   const software = safeRenderValue(serverData?.software, 'Velocity Proxy');
-  const motdRaw = serverData?.motd?.clean || 'Server MOTD';
-  const motd = typeof motdRaw === 'string' ? motdRaw.split('\n') : [motdRaw];
+  const motdRaw = serverData?.motd?.clean;
+  const motd = Array.isArray(motdRaw) ? motdRaw : (typeof motdRaw === 'string' ? motdRaw.split('\n') : ['Server MOTD']);
   const progressPercentage = (playersOnline / maxPlayers) * 100;
 
   return (

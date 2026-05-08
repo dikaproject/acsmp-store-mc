@@ -139,7 +139,8 @@ const CheckoutPage = () => {
         items: items.map(item => ({
           productId: item.id,
           quantity: item.quantity,
-          isUpgrade: item._isUpgrade || false
+          isUpgrade: item._isUpgrade || false,
+          upgradePrice: item._isUpgrade ? item._upgradePrice : undefined
         }))
       };
 
@@ -541,11 +542,11 @@ const CheckoutPage = () => {
                       {selectedPaymentMethod && (
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-400">Biaya Admin</span>
-                          <span className="font-medium text-amber-400">
+                          <span className="text-gray-500 text-xs italic">
                             {(() => {
                               const channel = paymentChannels.find(c => c.code === selectedPaymentMethod);
                               const fee = channel?.total_fee?.flat || 0;
-                              return fee > 0 ? `+ ${formatCurrency(fee)}` : 'Gratis';
+                              return fee > 0 ? `± ${formatCurrency(fee)} (ditambah Tripay)` : 'Gratis';
                             })()}
                           </span>
                         </div>
@@ -554,11 +555,9 @@ const CheckoutPage = () => {
                         <span className="text-white">Total</span>
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400">
                           {(() => {
-                            const channel = paymentChannels.find(c => c.code === selectedPaymentMethod);
-                            const fee = channel?.total_fee?.flat || 0;
                             const subtotal = getTotalPrice();
                             const discount = voucher ? Math.floor(subtotal * voucher.discount / 100) : 0;
-                            return formatCurrency(subtotal - discount + fee);
+                            return formatCurrency(subtotal - discount);
                           })()}
                         </span>
                       </div>

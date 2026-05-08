@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Sparkles, ArrowRight, Zap, Shield, Trophy, Star, Play } from "lucide-react";
 import LiquidEther from "../ui/LiquidEther";
 
-const MCSTATUS_API = 'https://api.mcstatus.io/v2/status/bedrock/';
+const MCSTATUS_API = 'https://api.mcsrvstat.us/bedrock/3/';
 const SERVER_IP = 'amazingcraft.org';
 const SERVER_PORT = 19132;
 
@@ -13,7 +13,7 @@ const CTASection = () => {
   const [playersOnline, setPlayersOnline] = useState(0);
   const [isOnline, setIsOnline] = useState(true);
 
-  // Fetch server status from mcstatus.io (Bedrock)
+  // Fetch server status from mcsrvstat.us
   useEffect(() => {
     const fetchServerStatus = async () => {
       try {

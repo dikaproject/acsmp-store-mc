@@ -6,7 +6,7 @@ import { GlowingButton } from "../ui/GlowingButton";
 import { GridPattern } from "../ui/GridPattern";
 import { useEffect, useMemo, useState } from "react";
 
-const MCSTATUS_API = 'https://api.mcstatus.io/v2/status/bedrock/';
+const MCSTATUS_API = 'https://api.mcsrvstat.us/bedrock/3/';
 const SERVER_IP = 'amazingcraft.org';
 const SERVER_PORT = 19132;
 
@@ -45,7 +45,7 @@ const HeroSection = () => {
     }
   }, []);
 
-  // Fetch live player count from mcstatus.io (Bedrock)
+  // Fetch live player count from mcsrvstat.us
   useEffect(() => {
     const fetchServerStatus = async () => {
       try {

@@ -184,50 +184,31 @@ exports.create = async (req, res, next) => {
       });
     }
 
-    // Determine upgrade pricing: if any item has isUpgrade=true for a RANK product,
-    // fetch the player's current rank via RCON and resolve the current rank price
-    let upgradeRankPrice = null;
-    const hasUpgradeItem = items.some(i => i.isUpgrade);
-    if (hasUpgradeItem) {
-      try {
-        const rankResult = await commandService.getPlayerRank(minecraftName, serverTypeId);
-        if (rankResult.success && rankResult.rank) {
-          const currentRankProduct = await prisma.product.findFirst({
-            where: {
-              serverTypeId,
-              type: 'RANK',
-              groupName: rankResult.rank,
-              isActive: true
-            }
-          });
-          if (currentRankProduct) {
-            upgradeRankPrice = Math.floor(
-              currentRankProduct.price - currentRankProduct.price * (currentRankProduct.discount || 0) / 100
-            );
-          }
-        }
-      } catch (e) {
-        console.warn('[ORDER] Failed to fetch upgrade rank price:', e.message);
-      }
-    }
+    // Upgrade pricing: use the price computed on the frontend (validated against product bounds)
+    // This avoids RCON-dependency for pricing and guarantees the charged price matches what user saw
 
     const orderItems = items.map(item => {
       const product = products.find(p => p.id === item.productId);
       const quantity = item.quantity || 1;
-      
+
+      // Discounted price of this product (server-computed, source of truth)
+      const discountedTarget = Math.floor(product.price - product.price * (product.discount || 0) / 100);
+
       let finalPrice;
 
-      if (item.isUpgrade && product.type === 'RANK' && upgradeRankPrice !== null) {
-        // Upgrade pricing: pay only the discounted price difference
-        const targetDiscounted = Math.floor(product.price - product.price * (product.discount || 0) / 100);
-        finalPrice = Math.max(0, targetDiscounted - upgradeRankPrice);
+      if (item.isUpgrade && product.type === 'RANK') {
+        // Validate client-provided upgradePrice: must be >= 0 and <= discountedTarget
+        const clientUpgradePrice = parseInt(item.upgradePrice);
+        if (!isNaN(clientUpgradePrice) && clientUpgradePrice >= 0 && clientUpgradePrice <= discountedTarget) {
+          finalPrice = clientUpgradePrice;
+        } else {
+          // Fallback: charge full discounted price (safe default)
+          finalPrice = discountedTarget;
+        }
       } else {
-        // ✅ Calculate price with discount
-        const originalPrice = product.price;
-        const discount = product.discount || 0;
-        finalPrice = Math.floor(originalPrice - (originalPrice * discount / 100));
+        finalPrice = discountedTarget;
       }
-      
+
       return {
         productId: product.id,
         quantity,

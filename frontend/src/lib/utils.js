@@ -13,11 +13,15 @@ export function cn(...inputs) {
 export function getImageUrl(path) {
   if (!path) return "";
   if (path.startsWith("http")) return path;
-  // VITE_API_URL is like "http://localhost:5000/api", strip the trailing /api
-  // because imageUrl from backend already includes /api/uploads/...
-  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-  const base = apiUrl.replace(/\/api$/, "");
-  return `${base}${path}`;
+  const apiUrl = (import.meta.env.VITE_API_URL || "http://localhost:5000/api").replace(/\/$/, "");
+  // Some controllers (e.g. product) already store /api/uploads/... in the DB.
+  // Others (gallery, guide, serverType, linktree) store /uploads/... without /api.
+  // When path already starts with /api/, use the base origin (strip /api from apiUrl).
+  if (path.startsWith("/api/")) {
+    const base = apiUrl.replace(/\/api$/, "");
+    return `${base}${path}`;
+  }
+  return `${apiUrl}${path}`;
 }
 
 export function formatCurrency(amount) {

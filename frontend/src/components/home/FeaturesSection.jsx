@@ -75,7 +75,6 @@ export function FeaturesSection() {
     }
   };
 
-  const MCSTATUS_API = 'https://api.mcstatus.io/v2/status/bedrock/';
   const SERVER_IP = 'amazingcraft.org';
   const SERVER_PORT = 19132;
 
