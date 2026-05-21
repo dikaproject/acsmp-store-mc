@@ -53,7 +53,7 @@ const LoginPage = () => {
   const from = location.state?.from?.pathname || '/shop';
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_URL}/server-types`)
+    axios.get(`${import.meta.env.VITE_API_URL}/server-types?isActive=true`)
       .then(res => {
         const list = res.data?.data || [];
         setServerTypes(list);

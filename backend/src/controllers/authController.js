@@ -32,6 +32,25 @@ exports.playerLogin = async (req, res, next) => {
       });
     }
 
+    // Check if server type exists and is active
+    const serverType = await prisma.serverType.findUnique({
+      where: { id: serverTypeId }
+    });
+
+    if (!serverType) {
+      return res.status(404).json({
+        success: false,
+        message: 'Server type not found'
+      });
+    }
+
+    if (!serverType.isActive) {
+      return res.status(403).json({
+        success: false,
+        message: 'Server ini sedang tidak aktif. Silakan pilih server lain.'
+      });
+    }
+
     // Check if dummy mode is enabled
     const isDummyMode = process.env.DUMMY_MODE === 'true';
     

@@ -19,7 +19,10 @@ import {
   XCircle,
   ChevronDown,
   TrendingUp,
-  Shield
+  Shield,
+  CheckSquare,
+  Square,
+  EyeOff
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
@@ -48,6 +51,39 @@ const ProductsPage = () => {
     type: 'all',
     isActive: 'all'
   });
+
+  // Bulk selection
+  const [selectedIds, setSelectedIds] = useState([]);
+
+  const toggleSelect = (id) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === filteredProducts.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filteredProducts.map(p => p.id));
+    }
+  };
+
+  const handleBulkStatus = async (isActive) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.patch(
+        `${import.meta.env.VITE_API_URL}/products/bulk-status`,
+        { ids: selectedIds, isActive },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success(`${selectedIds.length} product berhasil di-${isActive ? 'aktifkan' : 'nonaktifkan'}`);
+      setSelectedIds([]);
+      fetchData();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Gagal update status");
+    }
+  };
 
   useEffect(() => {
     fetchData();
@@ -368,8 +404,68 @@ const ProductsPage = () => {
               </button>
             </div>
           )}
+
+          {/* Select All */}
+          <div className="mt-4 pt-4 border-t border-gray-800 flex items-center gap-3">
+            <button
+              onClick={toggleSelectAll}
+              className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
+            >
+              {selectedIds.length === filteredProducts.length && filteredProducts.length > 0 ? (
+                <CheckSquare className="w-4 h-4 text-purple-400" />
+              ) : (
+                <Square className="w-4 h-4" />
+              )}
+              Pilih Semua ({filteredProducts.length})
+            </button>
+          </div>
         </CardContent>
       </Card>
+
+      {/* Bulk Action Bar */}
+      {selectedIds.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <Card className="border-purple-500/30 bg-purple-500/5">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <CheckSquare className="w-5 h-5 text-purple-400" />
+                  <span className="text-sm text-white font-medium">
+                    {selectedIds.length} product dipilih
+                  </span>
+                  <button
+                    onClick={() => setSelectedIds([])}
+                    className="text-xs text-gray-400 hover:text-white transition-colors"
+                  >
+                    Batal pilih
+                  </button>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => handleBulkStatus(true)}
+                    size="sm"
+                    className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30"
+                  >
+                    <CheckCircle2 className="w-4 h-4 mr-1" />
+                    Aktifkan
+                  </Button>
+                  <Button
+                    onClick={() => handleBulkStatus(false)}
+                    size="sm"
+                    className="bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30"
+                  >
+                    <EyeOff className="w-4 h-4 mr-1" />
+                    Nonaktifkan
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Products Grid/List */}
       {viewMode === 'grid' ? (
@@ -386,6 +482,17 @@ const ProductsPage = () => {
                 <Card className="group border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-purple-500/30 transition-all overflow-hidden h-full flex flex-col">
                   {/* Image */}
                   <div className="relative h-40 overflow-hidden bg-gray-800/50">
+                    {/* Checkbox */}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); toggleSelect(product.id); }}
+                      className="absolute top-2 left-2 z-10"
+                    >
+                      {selectedIds.includes(product.id) ? (
+                        <CheckSquare className="w-5 h-5 text-purple-400" />
+                      ) : (
+                        <Square className="w-5 h-5 text-gray-400 hover:text-purple-300 transition-colors" />
+                      )}
+                    </button>
                     {product.imageUrl ? (
                       <img
                         src={getImageUrl(product.imageUrl)}
@@ -531,6 +638,15 @@ const ProductsPage = () => {
               <table className="w-full">
                 <thead className="border-b border-gray-800">
                   <tr>
+                    <th className="p-4 w-10">
+                      <button onClick={toggleSelectAll}>
+                        {selectedIds.length === filteredProducts.length && filteredProducts.length > 0 ? (
+                          <CheckSquare className="w-4 h-4 text-purple-400" />
+                        ) : (
+                          <Square className="w-4 h-4 text-gray-500" />
+                        )}
+                      </button>
+                    </th>
                     <th className="text-left p-4 text-sm font-medium text-gray-400">Image</th>
                     <th className="text-left p-4 text-sm font-medium text-gray-400">Name</th>
                     <th className="text-left p-4 text-sm font-medium text-gray-400">Server</th>
@@ -550,6 +666,15 @@ const ProductsPage = () => {
                       transition={{ delay: index * 0.03 }}
                       className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors"
                     >
+                      <td className="p-4 w-10">
+                        <button onClick={() => toggleSelect(product.id)}>
+                          {selectedIds.includes(product.id) ? (
+                            <CheckSquare className="w-4 h-4 text-purple-400" />
+                          ) : (
+                            <Square className="w-4 h-4 text-gray-500" />
+                          )}
+                        </button>
+                      </td>
                       <td className="p-4">
                         <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-800/50">
                           {product.imageUrl ? (

@@ -346,3 +346,31 @@ exports.delete = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.bulkUpdateStatus = async (req, res, next) => {
+  try {
+    const { ids, isActive } = req.body;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Product IDs are required'
+      });
+    }
+
+    const isActiveBool = isActive === true || isActive === 'true';
+
+    const result = await prisma.product.updateMany({
+      where: { id: { in: ids } },
+      data: { isActive: isActiveBool }
+    });
+
+    res.json({
+      success: true,
+      message: `${result.count} product(s) updated successfully`,
+      data: { count: result.count }
+    });
+  } catch (error) {
+    next(error);
+  }
+};

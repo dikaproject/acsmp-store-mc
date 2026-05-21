@@ -1,5 +1,6 @@
  import axios from "axios";
 import toast from "react-hot-toast";
+import { useAuthStore } from "../store/useAuthStore";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -30,10 +31,17 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
+      const isAdmin = window.location.pathname.startsWith("/admin");
+      // Clear Zustand auth store
+      if (isAdmin) {
+        useAuthStore.getState().logout();
+      } else {
+        useAuthStore.getState().logoutUser();
+      }
       // Dispatch a custom event so the global modal can react
       window.dispatchEvent(
         new CustomEvent("session:expired", {
-          detail: { isAdmin: window.location.pathname.startsWith("/admin") },
+          detail: { isAdmin },
         })
       );
     }
@@ -49,7 +57,7 @@ export const authAPI = {
 };
 
 export const serverTypeAPI = {
-  getAll: () => api.get("/server-types"),
+  getAll: (params) => api.get("/server-types", { params }),
   getById: (id) => api.get(`/server-types/${id}`),
   create: (formData) => api.post("/server-types", formData, {
     headers: { 'Content-Type': 'multipart/form-data' }

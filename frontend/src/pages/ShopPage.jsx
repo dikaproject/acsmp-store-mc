@@ -301,8 +301,9 @@ const ShopPage = () => {
         productAPI.getAll({
           serverTypeId: selectedServer !== "all" ? selectedServer : undefined,
           category: selectedCategory !== "all" ? selectedCategory : undefined,
+          isActive: true,
         }),
-        serverTypeAPI.getAll(),
+        serverTypeAPI.getAll({ isActive: true }),
       ]);
 
       setProducts(productsRes.data.data || []);

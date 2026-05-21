@@ -38,8 +38,8 @@ const GalleryPage = () => {
 
   const fetchServerTypes = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/server-types`);
-      setServerTypes((res.data.data || []).filter(s => s.isActive));
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/server-types?isActive=true`);
+      setServerTypes(res.data.data || []);
     } catch {}
   };
 
