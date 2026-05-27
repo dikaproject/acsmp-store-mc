@@ -56,8 +56,8 @@ async function seedOrders() {
   }
 
   // Date range: 20 September 2025 - 6 Oktober 2025
-  const startDate = new Date('2025-09-20T00:00:00');
-  const endDate = new Date('2025-10-06T23:59:59');
+  const startDate = new Date('2026-04-26T00:00:00');
+  const endDate = new Date('2026-05-26T23:59:59');
   
   // Generate 150 orders untuk distribusi yang bagus
   const numberOfOrders = 150;

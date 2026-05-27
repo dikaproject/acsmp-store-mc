@@ -24,7 +24,8 @@ import axios from "axios";
 // Simplified background - no animations
 const StaticBackground = memo(() => (
   <>
-    <div className="absolute inset-0 bg-gradient-to-br from-black via-purple-950/20 to-black" />
+    <div className="absolute inset-0 bg-ink" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(212,165,116,0.04)_0%,transparent_60%)]" />
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.05)_0%,transparent_70%)]" />
     <div className="absolute inset-0 opacity-[0.02]">
       <div className="absolute inset-0" style={{
@@ -136,11 +137,11 @@ const LoginPage = () => {
         <div>
           <p className="font-semibold">Selamat datang, {verifiedName}!</p>
           {currentRank && (
-            <p className="text-xs text-yellow-300 mt-0.5">
-              🏆 Rank aktif: <span className="font-bold">{currentRank}</span>
+            <p className="text-xs text-arcane mt-0.5">
+              Rank aktif: <span className="font-medium">{currentRank}</span>
             </p>
           )}
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-bone-muted mt-1">
             {verification.message}
           </p>
         </div>,
@@ -155,7 +156,7 @@ const LoginPage = () => {
         toast.error(
           <div>
             <p className="font-semibold">Player tidak ditemukan!</p>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-bone-muted mt-1">
               {error.response.data.message}
             </p>
           </div>,
@@ -170,7 +171,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-black" style={{ fontFamily: "'Inter', 'Poppins', sans-serif" }}>
+    <div className="min-h-screen relative overflow-hidden bg-ink">
       <StaticBackground />
 
       <div className="container mx-auto px-4 relative z-10 min-h-screen flex items-center justify-center py-12">
@@ -184,26 +185,26 @@ const LoginPage = () => {
             className="text-center mb-8"
           >
             {/* Logo */}
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500/20 to-violet-500/20 border border-purple-500/30 backdrop-blur-xl mb-4">
-              <img src="/logo.png" alt="Amazing Craft" className="w-12 h-12 object-contain" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-arcane/10 border border-arcane/30 mb-6">
+              <img src="/logo.png" alt="Amazing Craft" className="w-10 h-10 object-contain" />
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-fuchsia-400 mb-2" style={{ fontFamily: "'Orbitron', 'Rajdhani', sans-serif" }}>
-              AMAZING CRAFT
+            <h1 className="font-display text-4xl md:text-5xl text-bone mb-2">
+              Amazing Craft
             </h1>
-            
-            <p className="text-sm text-gray-400 mb-4">
+
+            <p className="text-sm text-bone-muted mb-6">
               Premium Minecraft Server
             </p>
 
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 rounded-full border border-purple-500/30 backdrop-blur-sm">
-              <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
-              <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">
+            <div className="inline-flex items-center gap-3 px-4 py-2 bg-arcane/10 border border-arcane/30">
+              <div className="w-1.5 h-1.5 bg-arcane" />
+              <span className="text-[11px] font-medium text-arcane uppercase tracking-widest">
                 Player Login
               </span>
-              <Sparkles className="w-4 h-4 text-violet-400" />
+              <Sparkles className="w-3.5 h-3.5 text-arcane" />
             </div>
           </motion.div>
 
@@ -215,71 +216,69 @@ const LoginPage = () => {
             className="relative"
           >
             {/* Top accent line */}
-            <div className="absolute -top-1 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-violet-500 to-fuchsia-500 rounded-t-2xl" />
-            
-            <div className="bg-black/60 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-6 md:p-8">
-              
+            <div className="absolute -top-px left-0 right-0 h-px bg-arcane" />
+
+            <div className="bg-ink-elevated border border-ink-border p-6 md:p-8">
+
               {/* Form Title */}
               <div className="mb-6">
-                <h2 className="text-xl font-black text-white mb-1" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
-                  Sign In
+                <h2 className="font-display text-3xl text-bone mb-1">
+                  Sign in
                 </h2>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-bone-muted">
                   Pilih platform dan masukkan username
                 </p>
               </div>
-              
+
               <form onSubmit={handleSubmit} className="space-y-5">
 
                 {/* Server Type Selection */}
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-semibold text-white mb-3">
-                    <Server className="w-4 h-4 text-purple-400" />
+                  <label className="flex items-center gap-2 text-[11px] font-medium text-bone-muted uppercase tracking-widest mb-3">
+                    <Server className="w-3.5 h-3.5 text-arcane" />
                     Pilih Server
                   </label>
                   {serverTypesLoading ? (
-                    <div className="flex items-center gap-2 text-gray-500 text-sm py-2">
+                    <div className="flex items-center gap-2 text-bone-subtle text-sm py-2">
                       <Loader2 className="w-4 h-4 animate-spin" />
                       <span>Memuat server...</span>
                     </div>
                   ) : serverTypes.length === 0 ? (
-                    <p className="text-sm text-gray-500">Tidak ada server tersedia.</p>
+                    <p className="text-sm text-bone-subtle">Tidak ada server tersedia.</p>
                   ) : (
                     <div className="grid grid-cols-2 gap-2">
                       {serverTypes.map(st => (
-                        <motion.button
+                        <button
                           key={st.id}
                           type="button"
                           onClick={() => setServerTypeId(st.id)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className={`relative p-3 rounded-xl border-2 transition-all text-left ${
+                          className={`relative p-3 border transition-colors text-left ${
                             serverTypeId === st.id
-                              ? 'border-purple-500 bg-purple-500/10'
-                              : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                              ? 'border-arcane bg-arcane/10'
+                              : 'border-ink-border bg-ink hover:border-bone-subtle'
                           }`}
                         >
                           <div className="flex items-center gap-2">
                             {st.image ? (
                               <img src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}/uploads/servers/${st.image}`}
-                                alt={st.name} className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
+                                alt={st.name} className="w-8 h-8 object-cover flex-shrink-0" />
                             ) : (
-                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                                serverTypeId === st.id ? 'bg-purple-500/20' : 'bg-gray-700/50'
+                              <div className={`w-8 h-8 flex items-center justify-center flex-shrink-0 ${
+                                serverTypeId === st.id ? 'bg-arcane/20' : 'bg-ink-elevated'
                               }`}>
-                                <Server className={`w-4 h-4 ${serverTypeId === st.id ? 'text-purple-400' : 'text-gray-400'}`} />
+                                <Server className={`w-4 h-4 ${serverTypeId === st.id ? 'text-arcane' : 'text-bone-subtle'}`} strokeWidth={1.75} />
                               </div>
                             )}
-                            <span className={`font-semibold text-sm truncate ${
-                              serverTypeId === st.id ? 'text-purple-300' : 'text-gray-300'
+                            <span className={`text-sm truncate ${
+                              serverTypeId === st.id ? 'text-arcane' : 'text-bone-muted'
                             }`}>{st.name}</span>
                           </div>
                           {serverTypeId === st.id && (
                             <div className="absolute top-2 right-2">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-purple-400" />
+                              <CheckCircle2 className="w-3.5 h-3.5 text-arcane" />
                             </div>
                           )}
-                        </motion.button>
+                        </button>
                       ))}
                     </div>
                   )}
@@ -287,90 +286,70 @@ const LoginPage = () => {
 
                 {/* Platform Selection */}
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-semibold text-white mb-3">
-                    <Sparkles className="w-4 h-4 text-purple-400" />
+                  <label className="flex items-center gap-2 text-[11px] font-medium text-bone-muted uppercase tracking-widest mb-3">
+                    <Sparkles className="w-3.5 h-3.5 text-arcane" />
                     Pilih Platform
                   </label>
-                  
+
                   <div className="grid grid-cols-2 gap-3">
                     {/* Java Button */}
-                    <motion.button
+                    <button
                       type="button"
                       onClick={() => setPlatform('java')}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`relative p-4 rounded-xl border-2 transition-all ${
+                      className={`relative p-4 border transition-colors ${
                         platform === 'java'
-                          ? 'border-emerald-500 bg-emerald-500/10'
-                          : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                          ? 'border-arcane bg-arcane/10'
+                          : 'border-ink-border bg-ink hover:border-bone-subtle'
                       }`}
                     >
-                      {platform === 'java' && (
-                        <motion.div
-                          layoutId="platform-indicator"
-                          className="absolute inset-0 border-2 border-emerald-500 rounded-xl"
-                          initial={false}
-                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                        />
-                      )}
                       <div className="relative flex flex-col items-center gap-2">
-                        <div className={`p-2 rounded-lg ${platform === 'java' ? 'bg-emerald-500/20' : 'bg-gray-700/50'}`}>
-                          <Monitor className={`w-6 h-6 ${platform === 'java' ? 'text-emerald-400' : 'text-gray-400'}`} />
+                        <div className={`p-2 ${platform === 'java' ? 'bg-arcane/20' : 'bg-ink-elevated'}`}>
+                          <Monitor className={`w-5 h-5 ${platform === 'java' ? 'text-arcane' : 'text-bone-subtle'}`} strokeWidth={1.75} />
                         </div>
-                        <span className={`font-bold text-sm ${platform === 'java' ? 'text-emerald-400' : 'text-gray-400'}`}>
+                        <span className={`text-sm ${platform === 'java' ? 'text-arcane' : 'text-bone-muted'}`}>
                           Java Edition
                         </span>
-                        <span className="text-xs text-gray-500">PC / Mac</span>
+                        <span className="text-[10px] text-bone-subtle uppercase tracking-widest">PC / Mac</span>
                       </div>
                       {platform === 'java' && (
                         <div className="absolute top-2 right-2">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-arcane" />
                         </div>
                       )}
-                    </motion.button>
+                    </button>
 
                     {/* Bedrock Button */}
-                    <motion.button
+                    <button
                       type="button"
                       onClick={() => setPlatform('bedrock')}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`relative p-4 rounded-xl border-2 transition-all ${
+                      className={`relative p-4 border transition-colors ${
                         platform === 'bedrock'
-                          ? 'border-orange-500 bg-orange-500/10'
-                          : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                          ? 'border-arcane bg-arcane/10'
+                          : 'border-ink-border bg-ink hover:border-bone-subtle'
                       }`}
                     >
-                      {platform === 'bedrock' && (
-                        <motion.div
-                          layoutId="platform-indicator"
-                          className="absolute inset-0 border-2 border-orange-500 rounded-xl"
-                          initial={false}
-                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                        />
-                      )}
                       <div className="relative flex flex-col items-center gap-2">
-                        <div className={`p-2 rounded-lg ${platform === 'bedrock' ? 'bg-orange-500/20' : 'bg-gray-700/50'}`}>
-                          <Smartphone className={`w-6 h-6 ${platform === 'bedrock' ? 'text-orange-400' : 'text-gray-400'}`} />
+                        <div className={`p-2 ${platform === 'bedrock' ? 'bg-arcane/20' : 'bg-ink-elevated'}`}>
+                          <Smartphone className={`w-5 h-5 ${platform === 'bedrock' ? 'text-arcane' : 'text-bone-subtle'}`} strokeWidth={1.75} />
                         </div>
-                        <span className={`font-bold text-sm ${platform === 'bedrock' ? 'text-orange-400' : 'text-gray-400'}`}>
+                        <span className={`text-sm ${platform === 'bedrock' ? 'text-arcane' : 'text-bone-muted'}`}>
                           Bedrock Edition
                         </span>
-                        <span className="text-xs text-gray-500">Mobile / Console</span>
+                        <span className="text-[10px] text-bone-subtle uppercase tracking-widest">Mobile / Console</span>
                       </div>
                       {platform === 'bedrock' && (
                         <div className="absolute top-2 right-2">
-                          <CheckCircle2 className="w-4 h-4 text-orange-400" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-arcane" />
                         </div>
                       )}
-                    </motion.button>
+                    </button>
                   </div>
                 </div>
 
                 {/* Username Input */}
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-semibold text-white mb-2">
-                    <User className="w-4 h-4 text-purple-400" />
+                  <label className="flex items-center gap-2 text-[11px] font-medium text-bone-muted uppercase tracking-widest mb-2">
+                    <User className="w-3.5 h-3.5 text-arcane" />
                     {platform === 'java' ? 'Java Username' : 'Bedrock Gamertag'}
                   </label>
                   
@@ -384,7 +363,7 @@ const LoginPage = () => {
                           exit={{ opacity: 0, x: -10 }}
                           className="absolute left-3 top-1/2 -translate-y-1/2 z-10"
                         >
-                          <span className="text-orange-400 font-mono font-bold text-lg">_</span>
+                          <span className="text-arcane font-mono font-medium text-lg">_</span>
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -394,7 +373,7 @@ const LoginPage = () => {
                       placeholder={platform === 'java' ? 'Contoh: Steve123' : 'Contoh: Steve123'}
                       value={minecraftName}
                       onChange={(e) => setMinecraftName(e.target.value)}
-                      className={`bg-black/60 border-purple-500/30 focus:border-purple-500/50 h-12 text-base rounded-xl transition-all text-white placeholder:text-gray-500 ${
+                      className={`bg-ink border-ink-border focus:border-arcane h-12 text-base transition-colors text-bone placeholder:text-bone-subtle ${
                         platform === 'bedrock' ? 'pl-8' : ''
                       }`}
                       maxLength={16}
@@ -406,8 +385,8 @@ const LoginPage = () => {
                       <div className="absolute right-3 top-1/2 -translate-y-1/2">
                         <Badge className={`${
                           platform === 'java' 
-                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' 
-                            : 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+                            ? 'bg-arcane/15 text-arcane border-arcane/30'
+                            : 'bg-arcane/15 text-arcane border-arcane/30'
                         } text-xs px-2 py-1`}>
                           {minecraftName.length}/16
                         </Badge>
@@ -415,8 +394,8 @@ const LoginPage = () => {
                     )}
                   </div>
                   
-                  <p className="text-xs text-gray-500 mt-2 flex items-center gap-1.5">
-                    <Info className="w-3.5 h-3.5" />
+                  <p className="text-xs text-bone-subtle mt-2 flex items-center gap-1.5">
+                    <Info className="w-3 h-3" />
                     {platform === 'java' 
                       ? '3-16 karakter (huruf, angka, underscore)'
                       : '3-16 karakter, underscore (_) akan ditambahkan otomatis'
@@ -431,17 +410,15 @@ const LoginPage = () => {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className={`p-3 rounded-xl border ${
+                      className={`p-3 border ${
                         platform === 'java'
-                          ? 'bg-emerald-500/5 border-emerald-500/20'
-                          : 'bg-orange-500/5 border-orange-500/20'
+                          ? 'bg-arcane/5 border-arcane/30'
+                          : 'bg-arcane/5 border-arcane/30'
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-400">Username yang akan digunakan:</span>
-                        <span className={`font-mono font-bold ${
-                          platform === 'java' ? 'text-emerald-400' : 'text-orange-400'
-                        }`}>
+                        <span className="text-xs text-bone-muted">Username yang akan digunakan:</span>
+                        <span className="font-mono text-arcane">
                           {getActualUsername()}
                         </span>
                       </div>
@@ -457,32 +434,28 @@ const LoginPage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className={`p-4 rounded-xl border ${
-                      platform === 'java'
-                        ? 'bg-emerald-500/5 border-emerald-500/20'
-                        : 'bg-orange-500/5 border-orange-500/20'
-                    }`}
+                    className="p-4 bg-arcane/5 border border-arcane/30"
                   >
                     <div className="flex items-start gap-3">
                       {platform === 'java' ? (
                         <>
-                          <Monitor className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                          <Monitor className="w-4 h-4 text-arcane flex-shrink-0 mt-0.5" strokeWidth={1.75} />
                           <div>
-                            <h4 className="text-sm font-bold text-emerald-400 mb-1">Java Edition</h4>
-                            <p className="text-xs text-gray-400 leading-relaxed">
-                              Masukkan username Minecraft Java Anda seperti biasa. 
+                            <h4 className="text-[11px] font-medium text-arcane mb-1 uppercase tracking-widest">Java Edition</h4>
+                            <p className="text-xs text-bone-muted leading-relaxed">
+                              Masukkan username Minecraft Java Anda seperti biasa.
                               Username harus pernah join server minimal 1x.
                             </p>
                           </div>
                         </>
                       ) : (
                         <>
-                          <Smartphone className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
+                          <Smartphone className="w-4 h-4 text-arcane flex-shrink-0 mt-0.5" strokeWidth={1.75} />
                           <div>
-                            <h4 className="text-sm font-bold text-orange-400 mb-1">Bedrock Edition</h4>
-                            <p className="text-xs text-gray-400 leading-relaxed">
-                              Masukkan Gamertag Xbox/PlayStation Anda <span className="font-semibold text-orange-400">tanpa underscore</span>. 
-                              Sistem akan otomatis menambahkan prefix <code className="text-orange-400 font-mono bg-orange-500/10 px-1 rounded">_</code> untuk Bedrock player.
+                            <h4 className="text-[11px] font-medium text-arcane mb-1 uppercase tracking-widest">Bedrock Edition</h4>
+                            <p className="text-xs text-bone-muted leading-relaxed">
+                              Masukkan Gamertag Xbox/PlayStation Anda <span className="text-arcane">tanpa underscore</span>.
+                              Sistem akan otomatis menambahkan prefix <code className="text-arcane font-mono bg-arcane/10 px-1">_</code> untuk Bedrock player.
                             </p>
                           </div>
                         </>
@@ -492,15 +465,15 @@ const LoginPage = () => {
                 </AnimatePresence>
 
                 {/* Info Alert */}
-                <div className="p-4 rounded-xl bg-purple-500/5 border border-purple-500/20">
+                <div className="p-4 bg-arcane/5 border border-arcane/30">
                   <div className="flex items-start gap-3">
-                    <Shield className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
+                    <Shield className="w-4 h-4 text-arcane flex-shrink-0 mt-0.5" strokeWidth={1.75} />
                     <div>
-                      <h4 className="text-sm font-bold text-purple-400 mb-1">Penting!</h4>
-                      <p className="text-xs text-gray-400 leading-relaxed">
+                      <h4 className="text-[11px] font-medium text-arcane mb-1 uppercase tracking-widest">Penting</h4>
+                      <p className="text-xs text-bone-muted leading-relaxed">
                         Username harus pernah join server minimal 1x dan data akan tersinkronisasi otomatis.
                         Login juga akan membaca{" "}
-                        <span className="text-purple-300 font-medium">rank aktif kamu</span>{" "}
+                        <span className="text-arcane">rank aktif kamu</span>{" "}
                         untuk menampilkan harga upgrade rank yang sesuai secara otomatis.
                       </p>
                     </div>
@@ -511,12 +484,7 @@ const LoginPage = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className={`w-full h-12 text-base font-bold rounded-xl transition-all border ${
-                    platform === 'java'
-                      ? 'bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 hover:from-emerald-500 hover:via-green-500 hover:to-emerald-500 shadow-lg shadow-emerald-500/20 border-emerald-400/30'
-                      : 'bg-gradient-to-r from-orange-600 via-amber-600 to-orange-600 hover:from-orange-500 hover:via-amber-500 hover:to-orange-500 shadow-lg shadow-orange-500/20 border-orange-400/30'
-                  } disabled:opacity-50`}
-                  style={{ fontFamily: "'Rajdhani', sans-serif" }}
+                  className="w-full h-12 text-sm font-medium uppercase tracking-widest transition-colors bg-arcane text-bone hover:bg-arcane-glow disabled:opacity-50"
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -543,9 +511,9 @@ const LoginPage = () => {
                     { icon: "🔒", label: "Secure" },
                     { icon: "✓", label: "Verified" }
                   ].map((feature, index) => (
-                    <div key={index} className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-500/5 border border-purple-500/20 rounded-lg">
+                    <div key={index} className="flex items-center gap-1.5 px-3 py-1.5 bg-arcane/5 border border-arcane/30">
                       <span className="text-sm">{feature.icon}</span>
-                      <span className="text-xs font-semibold text-purple-400">
+                      <span className="text-[10px] font-medium text-arcane uppercase tracking-widest">
                         {feature.label}
                       </span>
                     </div>
@@ -554,13 +522,13 @@ const LoginPage = () => {
               </form>
 
               {/* Footer Link */}
-              <div className="mt-6 pt-6 border-t border-white/5 text-center">
+              <div className="mt-6 pt-6 border-t border-ink-border text-center">
                 <button
                   onClick={() => navigate('/admin/login')}
-                  className="inline-flex items-center gap-2 text-xs text-gray-500 hover:text-purple-400 transition-colors font-medium"
+                  className="inline-flex items-center gap-2 text-xs text-bone-subtle hover:text-arcane transition-colors"
                 >
-                  <Shield className="w-3.5 h-3.5" />
-                  <span>Admin Portal</span>
+                  <Shield className="w-3 h-3" />
+                  <span className="uppercase tracking-widest">Admin Portal</span>
                 </button>
               </div>
             </div>
@@ -573,7 +541,7 @@ const LoginPage = () => {
             transition={{ duration: 0.4, delay: 0.2 }}
             className="text-center mt-6"
           >
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-bone-subtle">
               © 2024 Amazing Craft. All rights reserved.
             </p>
           </motion.div>

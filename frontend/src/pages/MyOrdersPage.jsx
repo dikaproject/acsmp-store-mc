@@ -47,13 +47,13 @@ const OrderCard = ({ order }) => {
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden hover:border-purple-500/30 transition-all"
+      className="bg-ink-elevated border border-ink-border rounded-2xl overflow-hidden hover:border-arcane/30 transition-all"
     >
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-purple-500/15 flex items-center justify-center flex-shrink-0">
-            <Package className="w-4 h-4 text-purple-400" />
+          <div className="w-9 h-9 rounded-xl bg-arcane/15 flex items-center justify-center flex-shrink-0">
+            <Package className="w-4 h-4 text-arcane" />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
@@ -92,8 +92,8 @@ const OrderCard = ({ order }) => {
                   className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
                 />
               ) : (
-                <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                  <ShoppingBag className="w-4 h-4 text-purple-400" />
+                <div className="w-8 h-8 rounded-lg bg-arcane/20 flex items-center justify-center flex-shrink-0">
+                  <ShoppingBag className="w-4 h-4 text-arcane" />
                 </div>
               )}
               <span className="text-sm text-gray-300 flex-1 min-w-0 truncate">{item.product?.name || "Item"}</span>
@@ -107,7 +107,7 @@ const OrderCard = ({ order }) => {
         <div className="flex items-center justify-between pt-2 border-t border-white/5">
           <div>
             <p className="text-xs text-gray-500">Total</p>
-            <p className="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400">
+            <p className="text-lg font-black text-arcane">
               {formatCurrency(order.totalAmount)}
             </p>
           </div>
@@ -117,7 +117,7 @@ const OrderCard = ({ order }) => {
                 href={order.paymentUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-violet-500 text-white text-xs font-semibold hover:opacity-90 transition-opacity"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-arcane text-bone text-xs font-semibold hover:bg-arcane-glow transition-colors"
               >
                 <CreditCard className="w-3.5 h-3.5" />
                 Bayar
@@ -176,11 +176,11 @@ const MyOrdersPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black pt-20 pb-16">
+    <div className="min-h-screen bg-ink pt-20 pb-16">
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/10 to-black" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.04)_0%,transparent_60%)]" />
+        <div className="absolute inset-0 bg-ink" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,165,116,0.04)_0%,transparent_60%)]" />
       </div>
 
       <div className="container mx-auto px-4 max-w-3xl relative z-10">
@@ -191,13 +191,13 @@ const MyOrdersPage = () => {
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center border border-purple-500/30">
-              <History className="w-5 h-5 text-purple-400" />
+            <div className="w-10 h-10 rounded-xl bg-arcane/20 flex items-center justify-center border border-arcane/30">
+              <History className="w-5 h-5 text-arcane" />
             </div>
             <div>
               <h1 className="text-2xl font-black text-white">Riwayat Pesanan</h1>
               <p className="text-sm text-gray-500">
-                <span className="text-purple-400 font-semibold">{minecraftName}</span> — {total} pesanan
+                <span className="text-arcane font-semibold">{minecraftName}</span> — {total} pesanan
               </p>
             </div>
           </div>
@@ -206,7 +206,7 @@ const MyOrdersPage = () => {
         {loading ? (
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-48 bg-purple-500/5 rounded-2xl animate-pulse" />
+              <div key={i} className="h-48 bg-ink-elevated rounded-2xl animate-pulse" />
             ))}
           </div>
         ) : orders.length === 0 ? (
@@ -215,14 +215,14 @@ const MyOrdersPage = () => {
             animate={{ opacity: 1 }}
             className="text-center py-24"
           >
-            <div className="w-16 h-16 mx-auto bg-purple-500/10 rounded-2xl flex items-center justify-center mb-4">
-              <ShoppingBag className="w-8 h-8 text-purple-400" />
+            <div className="w-16 h-16 mx-auto bg-arcane/10 rounded-2xl flex items-center justify-center mb-4">
+              <ShoppingBag className="w-8 h-8 text-arcane" />
             </div>
             <h3 className="text-lg font-bold text-white mb-2">Belum ada pesanan</h3>
             <p className="text-gray-500 mb-6">Yuk beli sesuatu di toko kami!</p>
             <Link
               to="/shop"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-violet-500 text-white font-semibold text-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-arcane text-bone font-semibold text-sm hover:bg-arcane-glow transition-colors"
             >
               <Sparkles className="w-4 h-4" />
               Ke Shop
@@ -252,7 +252,7 @@ const MyOrdersPage = () => {
                     onClick={() => handlePage(i + 1)}
                     className={`w-9 h-9 rounded-xl text-sm font-semibold transition-all ${
                       page === i + 1
-                        ? "bg-gradient-to-r from-purple-500 to-violet-500 text-white"
+                        ? "bg-arcane text-bone"
                         : "bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10"
                     }`}
                   >

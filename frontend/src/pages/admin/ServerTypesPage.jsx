@@ -105,8 +105,8 @@ const ServerTypesPage = () => {
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <div className="relative w-16 h-16 mx-auto mb-4">
-            <div className="absolute inset-0 border-4 border-emerald-500/20 rounded-full" />
-            <div className="absolute inset-0 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+            <div className="absolute inset-0 border-2 border-white/10 rounded-full" />
+            <div className="absolute inset-0 border-2 border-arcane border-t-transparent rounded-full animate-spin" />
           </div>
           <p className="text-gray-400">Memuat data...</p>
         </div>
@@ -140,7 +140,7 @@ const ServerTypesPage = () => {
         >
           <Button
             onClick={handleCreate}
-            className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600"
+            className="bg-gradient-to-r bg-arcane hover:bg-arcane-glow"
           >
             <Plus className="w-4 h-4 mr-2" />
             Tambah Server Type
@@ -155,7 +155,7 @@ const ServerTypesPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -175,7 +175,7 @@ const ServerTypesPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -184,7 +184,7 @@ const ServerTypesPage = () => {
                     {serverTypes.filter(s => s.isActive).length}
                   </p>
                 </div>
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                <div className="w-12 h-12 rounded-xl bg-arcane/15 border border-arcane/30 flex items-center justify-center border border-arcane/30">
                   <CheckCircle2 className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -197,7 +197,7 @@ const ServerTypesPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -216,7 +216,7 @@ const ServerTypesPage = () => {
       </div>
 
       {/* Search & View Toggle */}
-      <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+      <Card className="border-white/\[0.06\] bg-[#111318]">
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row gap-4">
             {/* Search */}
@@ -227,18 +227,18 @@ const ServerTypesPage = () => {
                 placeholder="Cari server type..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-gray-800/30 border-gray-700/50 focus:border-emerald-500/50"
+                className="pl-10 bg-[#1a1d24] border-gray-700/50 rounded-xl focus:border-arcane/50"
               />
             </div>
 
             {/* View Toggle */}
-            <div className="flex gap-2 bg-gray-800/30 p-1 rounded-lg">
+            <div className="flex gap-2 bg-white/\[0.03\] p-1 rounded-lg">
               <button
                 onClick={() => setViewMode('grid')}
                 className={`p-2 rounded-lg transition-all ${
                   viewMode === 'grid'
-                    ? 'bg-emerald-500/20 text-emerald-400'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                    ? 'bg-arcane/10 text-arcane'
+                    : 'text-gray-400 hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 <Grid3x3 className="w-5 h-5" />
@@ -247,8 +247,8 @@ const ServerTypesPage = () => {
                 onClick={() => setViewMode('list')}
                 className={`p-2 rounded-lg transition-all ${
                   viewMode === 'list'
-                    ? 'bg-emerald-500/20 text-emerald-400'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                    ? 'bg-arcane/10 text-arcane'
+                    : 'text-gray-400 hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 <List className="w-5 h-5" />
@@ -270,9 +270,9 @@ const ServerTypesPage = () => {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Card className="group border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-emerald-500/30 transition-all overflow-hidden">
+                <Card className="group border-white/\[0.06\] bg-[#111318] hover:border-arcane/20 transition-all overflow-hidden">
                   {/* Image */}
-                  <div className="relative h-48 overflow-hidden bg-gray-800/50">
+                  <div className="relative h-48 overflow-hidden bg-white/\[0.05\]">
                     {server.imageUrl ? (
                       <img
                         src={getImageUrl(server.imageUrl)}
@@ -289,7 +289,7 @@ const ServerTypesPage = () => {
                     <div className="absolute top-3 right-3">
                       <Badge className={`${
                         server.isActive
-                          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                          ? 'bg-arcane/10 text-arcane border-emerald-500/30'
                           : 'bg-red-500/20 text-red-400 border-red-500/30'
                       }`}>
                         {server.isActive ? (
@@ -308,7 +308,7 @@ const ServerTypesPage = () => {
                   </div>
 
                   <CardContent className="p-6">
-                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-arcane transition-colors">
                       {server.name}
                     </h3>
                     <p className="text-sm text-gray-400 mb-4 line-clamp-2">
@@ -331,7 +331,7 @@ const ServerTypesPage = () => {
                         onClick={() => handleView(server)}
                         variant="outline"
                         size="sm"
-                        className="flex-1 border-gray-700 hover:bg-gray-800 hover:border-blue-500/50 hover:text-blue-400"
+                        className="flex-1 border-gray-700 hover:bg-white/\[0.07\] hover:border-blue-500/50 hover:text-blue-400"
                       >
                         <Eye className="w-4 h-4 mr-1" />
                         View
@@ -340,7 +340,7 @@ const ServerTypesPage = () => {
                         onClick={() => handleEdit(server)}
                         variant="outline"
                         size="sm"
-                        className="flex-1 border-gray-700 hover:bg-gray-800 hover:border-emerald-500/50 hover:text-emerald-400"
+                        className="flex-1 border-gray-700 hover:bg-white/\[0.07\] hover:border-arcane/30 hover:text-arcane"
                       >
                         <Edit2 className="w-4 h-4 mr-1" />
                         Edit
@@ -361,7 +361,7 @@ const ServerTypesPage = () => {
           </AnimatePresence>
         </div>
       ) : (
-        <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+        <Card className="border-white/\[0.06\] bg-[#111318]">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -382,10 +382,10 @@ const ServerTypesPage = () => {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors"
+                      className="border-b border-white/\[0.06\] hover:bg-white/\[0.03\] transition-colors"
                     >
                       <td className="p-4">
-                        <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-800/50">
+                        <div className="w-16 h-16 rounded-lg overflow-hidden bg-white/\[0.05\]">
                           {server.imageUrl ? (
                             <img
                               src={getImageUrl(server.imageUrl)}
@@ -416,7 +416,7 @@ const ServerTypesPage = () => {
                       <td className="p-4">
                         <Badge className={`${
                           server.isActive
-                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                            ? 'bg-arcane/10 text-arcane border-emerald-500/30'
                             : 'bg-red-500/20 text-red-400 border-red-500/30'
                         }`}>
                           {server.isActive ? 'Active' : 'Inactive'}
@@ -428,7 +428,7 @@ const ServerTypesPage = () => {
                             onClick={() => handleView(server)}
                             variant="outline"
                             size="sm"
-                            className="border-gray-700 hover:bg-gray-800 hover:border-blue-500/50 hover:text-blue-400"
+                            className="border-gray-700 hover:bg-white/\[0.07\] hover:border-blue-500/50 hover:text-blue-400"
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
@@ -436,7 +436,7 @@ const ServerTypesPage = () => {
                             onClick={() => handleEdit(server)}
                             variant="outline"
                             size="sm"
-                            className="border-gray-700 hover:bg-gray-800 hover:border-emerald-500/50 hover:text-emerald-400"
+                            className="border-gray-700 hover:bg-white/\[0.07\] hover:border-arcane/30 hover:text-arcane"
                           >
                             <Edit2 className="w-4 h-4" />
                           </Button>
@@ -478,7 +478,7 @@ const ServerTypesPage = () => {
           {!searchQuery && (
             <Button
               onClick={handleCreate}
-              className="bg-gradient-to-r from-emerald-500 to-teal-500"
+              className="bg-arcane"
             >
               <Plus className="w-4 h-4 mr-2" />
               Tambah Server Type
@@ -508,3 +508,8 @@ const ServerTypesPage = () => {
 };
 
 export default ServerTypesPage;
+
+
+
+
+

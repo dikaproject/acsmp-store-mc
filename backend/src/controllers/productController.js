@@ -84,11 +84,12 @@ exports.create = async (req, res, next) => {
   try {
     const { 
       name, description, type, price, discount, amount, groupName, permission,
-      serverTypeId, isActive, benefits, commands, infoCommands
+      serverTypeId, isActive, isOutOfStock, benefits, commands, infoCommands
     } = req.body;
 
     // Parse isActive properly
     const activeStatus = isActive === 'true' || isActive === true;
+    const outOfStockStatus = isOutOfStock === 'true' || isOutOfStock === true;
 
     // Parse benefits, commands and infoCommands
     let parsedBenefits = null;
@@ -137,6 +138,7 @@ exports.create = async (req, res, next) => {
       serverTypeId,
       imageUrl,
       isActive: activeStatus,
+      isOutOfStock: outOfStockStatus,
       benefits: parsedBenefits,
       commands: parsedCommands
     };
@@ -179,7 +181,7 @@ exports.update = async (req, res, next) => {
     const { id } = req.params;
     const { 
       name, description, type, price, discount, amount, groupName, permission,
-      serverTypeId, isActive, benefits, commands, infoCommands
+      serverTypeId, isActive, isOutOfStock, benefits, commands, infoCommands
     } = req.body;
 
     const existing = await prisma.product.findUnique({
@@ -214,6 +216,9 @@ exports.update = async (req, res, next) => {
     
     if (isActive !== undefined) {
       updateData.isActive = isActive === 'true' || isActive === true;
+    }
+    if (isOutOfStock !== undefined) {
+      updateData.isOutOfStock = isOutOfStock === 'true' || isOutOfStock === true;
     }
     
     // Parse benefits
@@ -349,7 +354,7 @@ exports.delete = async (req, res, next) => {
 
 exports.bulkUpdateStatus = async (req, res, next) => {
   try {
-    const { ids, isActive } = req.body;
+    const { ids, isActive, isOutOfStock } = req.body;
 
     if (!Array.isArray(ids) || ids.length === 0) {
       return res.status(400).json({
@@ -358,11 +363,24 @@ exports.bulkUpdateStatus = async (req, res, next) => {
       });
     }
 
-    const isActiveBool = isActive === true || isActive === 'true';
+    const data = {};
+    if (isActive !== undefined) {
+      data.isActive = isActive === true || isActive === 'true';
+    }
+    if (isOutOfStock !== undefined) {
+      data.isOutOfStock = isOutOfStock === true || isOutOfStock === 'true';
+    }
+
+    if (Object.keys(data).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'At least one field (isActive or isOutOfStock) is required'
+      });
+    }
 
     const result = await prisma.product.updateMany({
       where: { id: { in: ids } },
-      data: { isActive: isActiveBool }
+      data
     });
 
     res.json({

@@ -17,7 +17,8 @@ import {
   Terminal,
   Shield,
   AlertTriangle,
-  BookOpen
+  BookOpen,
+  PackageX
 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
@@ -40,6 +41,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
     permission: '',
     serverTypeId: '',
     isActive: true,
+    isOutOfStock: false,
     benefits: [],
     commands: []
   });
@@ -69,6 +71,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
         permission: product.permission || '',
         serverTypeId: product.serverTypeId || '',
         isActive: product.isActive ?? true,
+        isOutOfStock: product.isOutOfStock ?? false,
         benefits: product.benefits || [],
         commands: product.commands || [],
         infoCommands: product.infoCommands || []
@@ -88,6 +91,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
         permission: '',
         serverTypeId: serverTypes[0]?.id || '',
         isActive: true,
+        isOutOfStock: false,
         benefits: [],
         commands: [],
         infoCommands: []
@@ -187,6 +191,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
       formDataToSend.append('amount', formData.amount || '0');
       formDataToSend.append('serverTypeId', formData.serverTypeId);
       formDataToSend.append('isActive', formData.isActive.toString());
+      formDataToSend.append('isOutOfStock', formData.isOutOfStock.toString());
       
       // Warn if any command is missing {player}
       const commandsMissingPlayer = (formData.commands || []).filter(c => c.trim() && !c.includes('{player}'));
@@ -277,9 +282,9 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto"
         >
-          <Card className="border-gray-800/50 bg-[#13151a] shadow-2xl">
+          <Card className="border-white/\[0.06\] bg-[#13151a] shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-800/50">
+            <div className="flex items-center justify-between p-6 border-b border-white/\[0.06\]">
               <div>
                 <h2 className="text-2xl font-bold text-white">
                   {mode === 'create' ? 'Tambah Product' : mode === 'edit' ? 'Edit Product' : 'Detail Product'}
@@ -290,7 +295,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
               </div>
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                className="p-2 hover:bg-white/\[0.07\] rounded-lg transition-colors"
               >
                 <X className="w-5 h-5 text-gray-400" />
               </button>
@@ -307,7 +312,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                       Product Image
                     </label>
                     <div className="flex flex-col items-center gap-4">
-                      <div className="relative w-full h-48 rounded-xl overflow-hidden bg-gray-800/50 border-2 border-dashed border-gray-700 hover:border-purple-500/50 transition-colors">
+                      <div className="relative w-full h-48 rounded-xl overflow-hidden bg-white/\[0.05\] border-2 border-dashed border-gray-700 hover:border-purple-500/50 transition-colors">
                         {imagePreview ? (
                           <>
                             <img
@@ -355,7 +360,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                     <select
                       value={formData.serverTypeId}
                       onChange={(e) => setFormData({ ...formData, serverTypeId: e.target.value })}
-                      className="w-full px-3 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-colors"
+                      className="w-full px-3 py-2 bg-[#1a1d24] border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors appearance-none cursor-pointer [&_option]:bg-[#1a1d24] [&_option]:text-white [color-scheme:dark]"
                       required
                       disabled={isViewMode}
                     >
@@ -379,7 +384,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         className={`flex-1 p-4 rounded-lg border-2 transition-all ${
                           formData.type === 'COIN'
                             ? 'border-yellow-500 bg-yellow-500/10'
-                            : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                            : 'border-gray-700 bg-white/\[0.03\] hover:border-gray-600'
                         } ${isViewMode ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         <div className="flex flex-col items-center gap-2">
@@ -394,7 +399,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         className={`flex-1 p-4 rounded-lg border-2 transition-all ${
                           formData.type === 'FEATURE'
                             ? 'border-purple-500 bg-purple-500/10'
-                            : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                            : 'border-gray-700 bg-white/\[0.03\] hover:border-gray-600'
                         } ${isViewMode ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         <div className="flex flex-col items-center gap-2">
@@ -409,7 +414,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         className={`flex-1 p-4 rounded-lg border-2 transition-all ${
                           formData.type === 'RANK'
                             ? 'border-orange-500 bg-orange-500/10'
-                            : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                            : 'border-gray-700 bg-white/\[0.03\] hover:border-gray-600'
                         } ${isViewMode ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         <div className="flex flex-col items-center gap-2">
@@ -423,7 +428,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                   {/* Status */}
                   <div>
                     <label className="text-sm font-medium text-gray-300 mb-2 block">
-                      Status
+                      Visibility
                     </label>
                     <div className="flex items-center gap-4">
                       <button
@@ -433,7 +438,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         className={`flex-1 p-3 rounded-lg border-2 transition-all ${
                           formData.isActive
                             ? 'border-emerald-500 bg-emerald-500/10'
-                            : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                            : 'border-gray-700 bg-white/\[0.03\] hover:border-gray-600'
                         } ${isViewMode ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         <div className="flex items-center justify-center gap-2">
@@ -448,12 +453,51 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         className={`flex-1 p-3 rounded-lg border-2 transition-all ${
                           !formData.isActive
                             ? 'border-red-500 bg-red-500/10'
-                            : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                            : 'border-gray-700 bg-white/\[0.03\] hover:border-gray-600'
                         } ${isViewMode ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         <div className="flex items-center justify-center gap-2">
                           <X className="w-5 h-5 text-red-400" />
-                          <span className="font-medium text-white">Inactive</span>
+                          <span className="font-medium text-white">Hidden</span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Out of Stock */}
+                  <div>
+                    <label className="text-sm font-medium text-gray-300 mb-2 block">
+                      Stock Status
+                    </label>
+                    <div className="flex items-center gap-4">
+                      <button
+                        type="button"
+                        onClick={() => !isViewMode && setFormData({ ...formData, isOutOfStock: false })}
+                        disabled={isViewMode}
+                        className={`flex-1 p-3 rounded-lg border-2 transition-all ${
+                          !formData.isOutOfStock
+                            ? 'border-emerald-500 bg-emerald-500/10'
+                            : 'border-gray-700 bg-white/\[0.03\] hover:border-gray-600'
+                        } ${isViewMode ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                      >
+                        <div className="flex items-center justify-center gap-2">
+                          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                          <span className="font-medium text-white">In Stock</span>
+                        </div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => !isViewMode && setFormData({ ...formData, isOutOfStock: true })}
+                        disabled={isViewMode}
+                        className={`flex-1 p-3 rounded-lg border-2 transition-all ${
+                          formData.isOutOfStock
+                            ? 'border-amber-500 bg-amber-500/10'
+                            : 'border-gray-700 bg-white/\[0.03\] hover:border-gray-600'
+                        } ${isViewMode ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                      >
+                        <div className="flex items-center justify-center gap-2">
+                          <PackageX className="w-5 h-5 text-amber-400" />
+                          <span className="font-medium text-white">Out of Stock</span>
                         </div>
                       </button>
                     </div>
@@ -472,7 +516,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder={formData.type === 'COIN' ? 'e.g., 1000 Coins' : 'e.g., VIP Rank (30 Hari)'}
-                      className="bg-gray-800/50 border-gray-700 focus:border-purple-500"
+                      className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500"
                       required
                       disabled={isViewMode}
                     />
@@ -488,7 +532,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       placeholder="Deskripsi product..."
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors resize-none"
+                      className="w-full px-3 py-2 bg-[#1a1d24] border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors resize-none"
                       disabled={isViewMode}
                     />
                   </div>
@@ -505,7 +549,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                         placeholder="10000"
                         min="0"
-                        className="bg-gray-800/50 border-gray-700 focus:border-purple-500"
+                        className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500"
                         required
                         disabled={isViewMode}
                       />
@@ -525,7 +569,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         placeholder="0"
                         min="0"
                         max="100"
-                        className="bg-gray-800/50 border-gray-700 focus:border-purple-500"
+                        className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500"
                         disabled={isViewMode}
                       />
                     </div>
@@ -563,7 +607,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         value={formData.groupName}
                         onChange={(e) => setFormData({ ...formData, groupName: e.target.value })}
                         placeholder="vip, mvp, elite"
-                        className="bg-gray-800/50 border-gray-700 focus:border-purple-500"
+                        className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500"
                         required
                         disabled={isViewMode}
                       />
@@ -585,7 +629,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         value={formData.permission}
                         onChange={(e) => setFormData({ ...formData, permission: e.target.value })}
                         placeholder="contoh essentials.home.2"
-                        className="bg-gray-800/50 border-gray-700 focus:border-purple-500"
+                        className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500"
                         required
                         disabled={isViewMode}
                       />
@@ -616,7 +660,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                       onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                       placeholder={formData.type === 'COIN' ? '1000' : '30'}
                       min="0"
-                      className="bg-gray-800/50 border-gray-700 focus:border-purple-500"
+                      className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500"
                       required
                       disabled={isViewMode}
                     />
@@ -699,7 +743,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         onChange={(e) => setNewBenefit(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addBenefit())}
                         placeholder="e.g., Access to /fly command"
-                        className="bg-gray-800/50 border-gray-700 focus:border-purple-500 flex-1"
+                        className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500 flex-1"
                       />
                       <Button type="button" onClick={addBenefit}
                         className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border border-purple-500/30">
@@ -736,12 +780,12 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                 <div className="pt-6 border-t border-gray-800">
                   <div className="flex items-center justify-between mb-3">
                     <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                      <BookOpen className="w-4 h-4 text-emerald-400" />
+                      <BookOpen className="w-4 h-4 text-arcane" />
                       Info Commands
                       <span className="text-xs font-normal text-gray-500">(ditampilkan ke pembeli)</span>
                     </label>
                     {(formData.infoCommands || []).length > 0 && (
-                      <span className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                      <span className="text-xs text-arcane bg-arcane/10 border border-arcane/20 px-2 py-0.5 rounded-full">
                         {formData.infoCommands.length} command
                       </span>
                     )}
@@ -755,10 +799,10 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         onChange={(e) => setNewInfoCommand(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addInfoCommand())}
                         placeholder="e.g., /fly, /home set, /nick"
-                        className="bg-gray-800/50 border-gray-700 focus:border-emerald-500 flex-1 font-mono text-sm"
+                        className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-arcane flex-1 font-mono text-sm"
                       />
                       <Button type="button" onClick={addInfoCommand}
-                        className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/30">
+                        className="bg-arcane/15 hover:bg-arcane/25 text-arcane border border-arcane/30">
                         <Plus className="w-4 h-4" />
                       </Button>
                     </div>
@@ -767,8 +811,8 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                   <div className="space-y-2 max-h-40 overflow-y-auto">
                     {(formData.infoCommands || []).length > 0 ? formData.infoCommands.map((cmd, index) => (
                       <motion.div key={index} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-                        className="flex items-center gap-2 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                        <BookOpen className="w-3 h-3 text-emerald-400 flex-shrink-0" />
+                        className="flex items-center gap-2 p-2 rounded-lg bg-arcane/10 border border-arcane/20">
+                        <BookOpen className="w-3 h-3 text-arcane flex-shrink-0" />
                         <code className="text-sm text-gray-300 flex-1 font-mono break-all">{cmd}</code>
                         {!isViewMode && (
                           <button type="button" onClick={() => removeInfoCommand(index)}
@@ -857,7 +901,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                       onChange={(e) => setNewCommand(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCommand())}
                       placeholder="e.g., points give {player} {amount}"
-                      className="bg-gray-800/50 border-gray-700 focus:border-cyan-500 flex-1 font-mono text-sm"
+                      className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-cyan-500 flex-1 font-mono text-sm"
                     />
                     <Button type="button" onClick={addCommand}
                       className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30">
@@ -941,7 +985,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                   type="button"
                   onClick={onClose}
                   variant="outline"
-                  className="flex-1 border-gray-700 hover:bg-gray-800"
+                  className="flex-1 border-gray-700 hover:bg-white/\[0.07\]"
                 >
                   {isViewMode ? 'Tutup' : 'Batal'}
                 </Button>
@@ -974,3 +1018,8 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
 };
 
 export default ProductModal;
+
+
+
+
+

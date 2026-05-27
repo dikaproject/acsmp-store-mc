@@ -88,6 +88,7 @@ model Product {
   permission   String?     // Permission node for FEATURE type (e.g., essentials.home.2)
   imageUrl     String?
   isActive     Boolean     @default(true)
+  isOutOfStock Boolean     @default(false)
 
   benefits     Json?       
   commands     Json?       

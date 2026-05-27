@@ -199,29 +199,13 @@ const CheckoutPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black pt-20 pb-16">
+    <div className="min-h-screen bg-ink pt-20 pb-16">
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/10 to-black" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.03)_0%,transparent_60%)]" />
-        <div className="absolute inset-0 opacity-[0.02]">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `linear-gradient(to right, rgba(139,92,246,0.3) 1px, transparent 1px),
-                             linear-gradient(to bottom, rgba(139,92,246,0.3) 1px, transparent 1px)`,
-            backgroundSize: '100px 100px'
-          }} />
-        </div>
+        <div className="absolute inset-0 bg-ink" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,165,116,0.03)_0%,transparent_60%)]" />
       </div>
 
-      {/* Subtle animated orb */}
-      <motion.div
-        className="fixed top-20 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl pointer-events-none"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.05, 0.1, 0.05],
-        }}
-        transition={{ duration: 10, repeat: Infinity }}
-      />
 
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
         {/* Header */}
@@ -234,16 +218,16 @@ const CheckoutPage = () => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/5 backdrop-blur-xl border border-purple-500/20 rounded-full mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-arcane/5 border border-arcane/20 rounded-full mb-6"
           >
-            <CreditCard className="w-4 h-4 text-purple-400/70" />
-            <span className="text-sm text-purple-400/70 font-medium">Checkout</span>
-            <Sparkles className="w-4 h-4 text-purple-400/70" />
+            <CreditCard className="w-4 h-4 text-arcane/70" />
+            <span className="text-sm text-arcane/70 font-medium">Checkout</span>
+            <Sparkles className="w-4 h-4 text-arcane/70" />
           </motion.div>
           
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
+          <h1 className="text-4xl md:text-5xl font-bold text-bone mb-3">
             Selesaikan{" "}
-            <span className="bg-gradient-to-r from-purple-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
+            <span className="text-arcane">
               Pembelian
             </span>
           </h1>
@@ -261,9 +245,9 @@ const CheckoutPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <div className="p-8 bg-black/60 backdrop-blur-xl rounded-2xl border border-purple-500/10">
-                  <h3 className="flex items-center gap-2 text-xl font-bold text-white mb-2">
-                    <User className="w-5 h-5 text-purple-400" />
+                <div className="p-8 bg-ink-elevated border border-ink-border rounded-2xl">
+                  <h3 className="flex items-center gap-2 text-xl font-bold text-bone mb-2">
+                    <User className="w-5 h-5 text-arcane" />
                     Data Pembeli
                   </h3>
                   <p className="text-gray-400 text-sm mb-6">
@@ -273,14 +257,14 @@ const CheckoutPage = () => {
                     {/* Minecraft Name */}
                     <div>
                       <label className="text-sm font-medium text-white mb-2 flex items-center gap-2">
-                        <GamepadIcon className="w-4 h-4 text-purple-400" />
+                        <GamepadIcon className="w-4 h-4 text-arcane" />
                         Minecraft Name
                       </label>
-                      <div className="flex items-center gap-3 p-4 rounded-xl bg-purple-500/5 border border-purple-500/20">
-                        <CheckCircle2 className="w-5 h-5 text-purple-400 flex-shrink-0" />
+                      <div className="flex items-center gap-3 p-4 rounded-xl bg-arcane/5 border border-arcane/20">
+                        <CheckCircle2 className="w-5 h-5 text-arcane flex-shrink-0" />
                         <div>
-                          <p className="font-semibold text-purple-400">{minecraftName}</p>
-                          <p className="text-xs text-purple-400/70">
+                          <p className="font-semibold text-arcane">{minecraftName}</p>
+                          <p className="text-xs text-arcane/70">
                             Item akan dikirim ke karakter ini
                           </p>
                         </div>
@@ -290,7 +274,7 @@ const CheckoutPage = () => {
                     {/* WhatsApp */}
                     <div>
                       <label className="text-sm font-medium text-white mb-2 flex items-center gap-2">
-                        <Phone className="w-4 h-4 text-purple-400" />
+                        <Phone className="w-4 h-4 text-arcane" />
                         WhatsApp <span className="text-red-400">*</span>
                       </label>
                       <Input
@@ -300,9 +284,9 @@ const CheckoutPage = () => {
                         value={contactInfo.whatsapp}
                         onChange={handleInputChange}
                         required
-                        className="bg-black/40 border-purple-500/20 focus:border-purple-500/40 text-white placeholder:text-gray-500"
+                        className="bg-ink/40 border-ink-border focus:border-arcane/40 text-bone placeholder:text-bone-subtle"
                       />
-                      <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
+                      <p className="text-xs text-bone-subtle mt-2 flex items-center gap-1">
                         <Shield className="w-3 h-3" />
                         Untuk konfirmasi pesanan dan notifikasi pembayaran
                       </p>
@@ -311,7 +295,7 @@ const CheckoutPage = () => {
                     {/* Email */}
                     <div>
                       <label className="text-sm font-medium text-white mb-2 flex items-center gap-2">
-                        <Mail className="w-4 h-4 text-purple-400" />
+                        <Mail className="w-4 h-4 text-arcane" />
                         Email (Wajib)
                       </label>
                       <Input
@@ -320,9 +304,9 @@ const CheckoutPage = () => {
                         placeholder="email@example.com"
                         value={contactInfo.email}
                         onChange={handleInputChange}
-                        className="bg-black/40 border-purple-500/20 focus:border-purple-500/40 text-white placeholder:text-gray-500"
+                        className="bg-ink/40 border-ink-border focus:border-arcane/40 text-bone placeholder:text-bone-subtle"
                       />
-                      <p className="text-xs text-gray-500 mt-2">
+                      <p className="text-xs text-bone-subtle mt-2">
                         Email untuk notifikasi pembayaran
                       </p>
                     </div>
@@ -336,9 +320,9 @@ const CheckoutPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
               >
-                <div className="p-8 bg-black/60 backdrop-blur-xl rounded-2xl border border-purple-500/10">
-                  <h3 className="flex items-center gap-2 text-xl font-bold text-white mb-2">
-                    <CreditCard className="w-5 h-5 text-purple-400" />
+                <div className="p-8 bg-ink-elevated border border-ink-border rounded-2xl">
+                  <h3 className="flex items-center gap-2 text-xl font-bold text-bone mb-2">
+                    <CreditCard className="w-5 h-5 text-arcane" />
                     Metode Pembayaran <span className="text-red-400">*</span>
                   </h3>
                   <p className="text-gray-400 text-sm mb-4">
@@ -364,13 +348,13 @@ const CheckoutPage = () => {
 
                   {loadingChannels ? (
                     <div className="flex items-center justify-center py-12">
-                      <Loader2 className="w-8 h-8 animate-spin text-purple-400" />
+                      <Loader2 className="w-8 h-8 animate-spin text-arcane" />
                     </div>
                   ) : (
                     <div className="space-y-6">
                       {Object.entries(groupedChannels).map(([group, channels]) => (
                         <div key={group}>
-                          <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                          <h3 className="text-sm font-semibold text-bone mb-4 flex items-center gap-2">
                             <span className="text-xl">{getGroupIcon(group)}</span>
                             {group}
                           </h3>
@@ -389,10 +373,10 @@ const CheckoutPage = () => {
                                   whileTap={isActive ? { scale: 0.98 } : {}}
                                   className={`relative p-4 rounded-xl border-2 transition-all ${
                                     isSelected
-                                      ? 'border-purple-500/50 bg-purple-500/10 shadow-lg shadow-purple-500/10'
+                                      ? 'border-arcane/50 bg-arcane/10 shadow-lg shadow-arcane/10'
                                       : isActive
-                                      ? 'border-purple-500/20 hover:border-purple-500/30 bg-black/40'
-                                      : 'border-gray-800 bg-black/20 opacity-50 cursor-not-allowed'
+                                      ? 'border-ink-border hover:border-arcane/30 bg-ink/40'
+                                      : 'border-ink-border bg-ink/20 opacity-50 cursor-not-allowed'
                                   }`}
                                 >
                                   <div className="flex flex-col items-center text-center gap-3">
@@ -403,8 +387,8 @@ const CheckoutPage = () => {
                                         className="w-12 h-12 object-contain"
                                       />
                                     ) : (
-                                      <div className="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                                        <CreditCard className="w-6 h-6 text-purple-400" />
+                                      <div className="w-12 h-12 rounded-lg bg-arcane/10 flex items-center justify-center">
+                                        <CreditCard className="w-6 h-6 text-arcane" />
                                       </div>
                                     )}
                                     
@@ -423,7 +407,7 @@ const CheckoutPage = () => {
                                     </div>
                                     
                                     {isSelected && (
-                                      <CheckCircle2 className="w-5 h-5 text-purple-400 absolute top-2 right-2" />
+                                      <CheckCircle2 className="w-5 h-5 text-arcane absolute top-2 right-2" />
                                     )}
                                   </div>
                                 </motion.button>
@@ -445,12 +429,12 @@ const CheckoutPage = () => {
                 animate={{ opacity: 1, x: 0 }}
                 className="sticky top-24"
               >
-                <div className="relative overflow-hidden bg-black/60 backdrop-blur-xl rounded-2xl border border-purple-500/20">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.03),transparent_70%)]" />
+                <div className="relative overflow-hidden bg-ink-elevated border border-ink-border rounded-2xl">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,165,116,0.03),transparent_70%)]" />
                   
                   <div className="relative p-6">
-                    <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                      <ShoppingBag className="w-5 h-5 text-purple-400" />
+                    <h3 className="text-xl font-bold text-bone mb-6 flex items-center gap-2">
+                      <ShoppingBag className="w-5 h-5 text-arcane" />
                       Ringkasan Pesanan
                     </h3>
                     {/* Items */}
@@ -461,11 +445,11 @@ const CheckoutPage = () => {
                           : item.price;
                         
                         return (
-                          <div key={item.id} className="flex gap-3 p-3 rounded-lg bg-black/40 border border-purple-500/10">
+                          <div key={item.id} className="flex gap-3 p-3 rounded-lg bg-ink/40 border border-ink-border">
                             <img
                               src={getImageUrl(item.imageUrl)}
                               alt={item.name}
-                              className="w-14 h-14 rounded-lg object-cover border border-purple-500/20"
+                              className="w-14 h-14 rounded-lg object-cover border border-ink-border"
                             />
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium text-white truncate">{item.name}</p>
@@ -495,7 +479,7 @@ const CheckoutPage = () => {
                     </div>
 
                     {/* Price Summary */}
-                    <div className="border-t border-purple-500/10 pt-4 space-y-3">
+                    <div className="border-t border-ink-border pt-4 space-y-3">
                       {/* Voucher Input */}
                       {!voucher ? (
                         <div className="flex gap-2">
@@ -505,13 +489,13 @@ const CheckoutPage = () => {
                             value={voucherCode}
                             onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
                             onKeyDown={(e) => e.key === 'Enter' && handleApplyVoucher()}
-                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 font-mono"
+                            className="flex-1 bg-ink/40 border border-ink-border rounded-xl px-3 py-2 text-sm text-bone placeholder:text-bone-subtle focus:outline-none focus:border-arcane/50 font-mono"
                           />
                           <button
                             type="button"
                             onClick={handleApplyVoucher}
                             disabled={voucherLoading || !voucherCode}
-                            className="px-3 py-2 rounded-xl bg-purple-500/20 border border-purple-500/30 text-purple-400 text-sm font-semibold hover:bg-purple-500/30 transition-colors disabled:opacity-40"
+                            className="px-3 py-2 rounded-xl bg-arcane/20 border border-arcane/30 text-arcane text-sm font-semibold hover:bg-arcane/30 transition-colors disabled:opacity-40"
                           >
                             {voucherLoading ? '...' : 'Pakai'}
                           </button>
@@ -551,9 +535,9 @@ const CheckoutPage = () => {
                           </span>
                         </div>
                       )}
-                      <div className="flex justify-between text-lg font-bold pt-3 border-t border-purple-500/10">
-                        <span className="text-white">Total</span>
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400">
+                      <div className="flex justify-between text-lg font-bold pt-3 border-t border-ink-border">
+                        <span className="text-bone">Total</span>
+                        <span className="text-arcane">
                           {(() => {
                             const subtotal = getTotalPrice();
                             const discount = voucher ? Math.floor(subtotal * voucher.discount / 100) : 0;
@@ -577,9 +561,9 @@ const CheckoutPage = () => {
                         </div>
                       </div>
                       
-                      <div className="flex items-center gap-2 p-3 rounded-xl bg-purple-500/5 border border-purple-500/10">
-                        <Shield className="w-4 h-4 text-purple-400/70 flex-shrink-0" />
-                        <p className="text-xs text-purple-400/70 font-medium">
+                      <div className="flex items-center gap-2 p-3 rounded-xl bg-arcane/5 border border-arcane/10">
+                        <Shield className="w-4 h-4 text-arcane/70 flex-shrink-0" />
+                        <p className="text-xs text-arcane/70 font-medium">
                           Pembayaran aman & terenkripsi
                         </p>
                       </div>
@@ -589,7 +573,7 @@ const CheckoutPage = () => {
                     <Button
                       type="submit"
                       disabled={loading || !selectedPaymentMethod || !contactInfo.whatsapp}
-                      className="w-full bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 shadow-lg shadow-purple-500/20 group"
+                      className="w-full shadow-lg shadow-arcane/20 group"
                       size="lg"
                     >
                       {loading ? (
@@ -618,15 +602,15 @@ const CheckoutPage = () => {
           width: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(139, 92, 246, 0.05);
+          background: rgba(212, 165, 116, 0.05);
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(139, 92, 246, 0.2);
+          background: rgba(212, 165, 116, 0.2);
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(139, 92, 246, 0.3);
+          background: rgba(212, 165, 116, 0.3);
         }
       `}</style>
     </div>

@@ -103,10 +103,10 @@ const VoucherModal = ({ isOpen, onClose, mode, voucher, onSuccess }) => {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative z-10 w-full max-w-md bg-[#13151a] rounded-2xl border border-gray-800/50 shadow-2xl overflow-hidden"
+            className="relative z-10 w-full max-w-md bg-[#13151a] rounded-2xl border border-white/\[0.06\] shadow-2xl overflow-hidden"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-800/50">
+            <div className="flex items-center justify-between p-6 border-b border-white/\[0.06\]">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-xl bg-emerald-500/10">
                   <Ticket className="w-5 h-5 text-emerald-400" />
@@ -117,7 +117,7 @@ const VoucherModal = ({ isOpen, onClose, mode, voucher, onSuccess }) => {
               </div>
               <button
                 onClick={onClose}
-                className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all"
+                className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/\[0.05\] transition-all"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -139,7 +139,7 @@ const VoucherModal = ({ isOpen, onClose, mode, voucher, onSuccess }) => {
                     }))
                   }
                   placeholder="mis. DISKON20"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm font-mono placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 uppercase"
+                  className="w-full bg-[#1a1d24] border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm font-mono placeholder-gray-500 focus:outline-none focus:border-arcane/50 uppercase"
                   maxLength={32}
                 />
               </div>
@@ -159,7 +159,7 @@ const VoucherModal = ({ isOpen, onClose, mode, voucher, onSuccess }) => {
                     min="1"
                     max="100"
                     placeholder="10"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-emerald-500/50"
+                    className="w-full bg-[#1a1d24] border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-arcane/50"
                   />
                 </div>
                 <div>
@@ -174,7 +174,7 @@ const VoucherModal = ({ isOpen, onClose, mode, voucher, onSuccess }) => {
                     }
                     min="1"
                     placeholder="1"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-emerald-500/50"
+                    className="w-full bg-[#1a1d24] border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-arcane/50"
                   />
                 </div>
               </div>
@@ -190,7 +190,7 @@ const VoucherModal = ({ isOpen, onClose, mode, voucher, onSuccess }) => {
                   onChange={(e) =>
                     setFormData((p) => ({ ...p, expiredAt: e.target.value }))
                   }
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500/50"
+                  className="w-full bg-[#1a1d24] border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-arcane/50 [color-scheme:dark]"
                 />
               </div>
 
@@ -227,7 +227,7 @@ const VoucherModal = ({ isOpen, onClose, mode, voucher, onSuccess }) => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white"
+                  className="flex-1 bg-arcane hover:bg-arcane-glow text-bone"
                 >
                   {loading ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -311,7 +311,7 @@ const VouchersPage = () => {
     if (!v.isActive) return { label: "Nonaktif", color: "bg-gray-500/20 text-gray-400 border-gray-500/30" };
     if (isExpired(v)) return { label: "Kadaluarsa", color: "bg-red-500/20 text-red-400 border-red-500/30" };
     if (isExhausted(v)) return { label: "Habis", color: "bg-orange-500/20 text-orange-400 border-orange-500/30" };
-    return { label: "Aktif", color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" };
+    return { label: "Aktif", color: "bg-arcane/10 text-arcane border-emerald-500/30" };
   };
 
   return (
@@ -333,7 +333,7 @@ const VouchersPage = () => {
           </Button>
           <Button
             onClick={handleCreate}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/25"
+            className="bg-arcane hover:bg-arcane-glow text-bone shadow-lg shadow-emerald-500/25"
           >
             <Plus className="w-4 h-4 mr-2" />
             Buat Voucher
@@ -349,16 +349,16 @@ const VouchersPage = () => {
           placeholder="Cari kode voucher..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50"
+          className="w-full pl-9 pr-4 py-2 bg-[#1a1d24] border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-arcane/50"
         />
       </div>
 
       {/* Table */}
-      <Card className="bg-gray-900/50 border-gray-800/50">
+      <Card className="bg-gray-900/50 border-white/\[0.06\]">
         <CardContent className="p-0">
           {loading ? (
             <div className="flex justify-center py-16">
-              <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
+              <Loader2 className="w-6 h-6 text-arcane animate-spin" />
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-16 text-gray-500">
@@ -369,7 +369,7 @@ const VouchersPage = () => {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-800/50">
+                  <tr className="border-b border-white/\[0.06\]">
                     <th className="text-left px-6 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                       Kode
                     </th>
@@ -508,3 +508,9 @@ const VouchersPage = () => {
 };
 
 export default VouchersPage;
+
+
+
+
+
+

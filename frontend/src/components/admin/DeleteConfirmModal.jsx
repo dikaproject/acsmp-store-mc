@@ -43,7 +43,7 @@ const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
                 <Button
                   onClick={onClose}
                   variant="outline"
-                  className="flex-1 border-gray-700 hover:bg-gray-800"
+                  className="flex-1 border-gray-700 hover:bg-white/\[0.07\]"
                 >
                   Batal
                 </Button>
@@ -63,3 +63,8 @@ const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
 };
 
 export default DeleteConfirmModal;
+
+
+
+
+

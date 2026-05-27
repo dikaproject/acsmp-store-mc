@@ -87,8 +87,8 @@ const VotePage = () => {
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
           >
-            <div className="absolute inset-0 border-4 border-purple-500/20 rounded-full" />
-            <div className="absolute inset-0 border-4 border-purple-500 border-t-transparent rounded-full" />
+            <div className="absolute inset-0 border-4 border-arcane/20 rounded-full" />
+            <div className="absolute inset-0 border-4 border-arcane border-t-transparent rounded-full" />
           </motion.div>
           <p className="text-gray-400">Loading...</p>
         </div>
@@ -100,26 +100,17 @@ const VotePage = () => {
     <div className="min-h-screen bg-black">
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/10 to-black" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.03)_0%,transparent_60%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-arcane/5 to-black" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(116,80,163,0.06)_0%,transparent_60%)]" />
         <div className="absolute inset-0 opacity-[0.02]">
           <div className="absolute inset-0" style={{
-            backgroundImage: `linear-gradient(to right, rgba(139,92,246,0.3) 1px, transparent 1px),
-                             linear-gradient(to bottom, rgba(139,92,246,0.3) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(to right, rgba(116,80,163,0.2) 1px, transparent 1px),
+                             linear-gradient(to bottom, rgba(116,80,163,0.2) 1px, transparent 1px)`,
             backgroundSize: '100px 100px'
           }} />
         </div>
       </div>
 
-      {/* Subtle animated orb */}
-      <motion.div
-        className="fixed top-20 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl pointer-events-none"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.05, 0.1, 0.05],
-        }}
-        transition={{ duration: 10, repeat: Infinity }}
-      />
 
       {/* Hero Section with Photo Highlight */}
       <section className="relative pt-24 pb-16 overflow-hidden">
@@ -133,23 +124,23 @@ const VotePage = () => {
               transition={{ duration: 0.6 }}
             >
               {/* Badge */}
-              <motion.div 
-                className="inline-flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-xl border border-purple-500/20 rounded-full mb-6"
+              <motion.div
+                className="inline-flex items-center gap-2 px-4 py-2 bg-ink/80 border border-arcane/30 rounded-full mb-6"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", delay: 0.2 }}
               >
-                <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-                <TrendingUp className="w-4 h-4 text-purple-400" />
-                <span className="text-sm text-purple-400 font-semibold">Support Us</span>
-                <Sparkles className="w-4 h-4 text-purple-400" />
+                <div className="w-2 h-2 rounded-full bg-arcane animate-pulse" />
+                <TrendingUp className="w-4 h-4 text-arcane" />
+                <span className="text-sm text-arcane font-semibold">Support Us</span>
+                <Sparkles className="w-4 h-4 text-arcane" />
               </motion.div>
               
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 leading-tight md:leading-[1.2] overflow-visible">
                 <span className="block text-white ">
                   Vote & Get
                 </span>
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-purple-400 py-2 pb-3">
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-arcane via-arcane-glow to-arcane py-2 pb-3">
                   Amazing Rewards
                 </span>
               </h1>
@@ -168,9 +159,9 @@ const VotePage = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 + 0.3 }}
-                      className="text-center p-3 md:p-4 rounded-xl bg-black/40 backdrop-blur-xl border border-purple-500/10"
+                      className="text-center p-3 md:p-4 rounded-xl bg-ink-elevated border border-arcane/20"
                     >
-                      <Icon className="w-5 h-5 md:w-6 md:h-6 text-purple-400 mx-auto mb-2" />
+                      <Icon className="w-5 h-5 md:w-6 md:h-6 text-arcane mx-auto mb-2" />
                       <p className="text-xl md:text-2xl font-bold text-white mb-1">
                         {stat.value}
                       </p>
@@ -187,7 +178,7 @@ const VotePage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button className="bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 shadow-lg shadow-purple-500/20 px-6 md:px-8 py-5 md:py-6 text-sm md:text-base font-bold">
+                  <Button className="bg-arcane text-bone hover:bg-arcane-glow shadow-lg shadow-arcane/20 px-6 md:px-8 py-5 md:py-6 text-sm md:text-base font-bold">
                     <Heart className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                     Vote Sekarang
                     <ChevronRight className="w-4 h-4 md:w-5 md:h-5 ml-2" />
@@ -198,7 +189,7 @@ const VotePage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button variant="outline" className="border-purple-500/20 hover:bg-purple-500/5 px-6 md:px-8 py-5 md:py-6 text-sm md:text-base font-semibold text-gray-300">
+                  <Button variant="outline" className="px-6 md:px-8 py-5 md:py-6 text-sm md:text-base font-semibold">
                     <Trophy className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                     Lihat Rewards
                   </Button>
@@ -216,9 +207,9 @@ const VotePage = () => {
               {/* Main Photo Card */}
               <div className="relative group">
                 {/* Glow effect */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-violet-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity" />
+                <div className="absolute -inset-1 bg-arcane rounded-3xl blur-xl opacity-15 group-hover:opacity-25 transition-opacity" />
                 
-                <div className="relative overflow-hidden rounded-3xl border border-purple-500/20 bg-black/60 backdrop-blur-xl">
+                <div className="relative overflow-hidden rounded-3xl border border-arcane/30 bg-black/60 backdrop-blur-xl">
                   {/* Image */}
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <img
@@ -237,7 +228,7 @@ const VotePage = () => {
                       transition={{ delay: 0.5 }}
                       className="absolute top-4 left-4"
                     >
-                      <Badge className="bg-black/60 backdrop-blur-xl border-purple-500/30 text-white px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm">
+                      <Badge className="bg-black/60 backdrop-blur-xl border-arcane/30 text-white px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm">
                         <Camera className="w-3 h-3 md:w-4 md:h-4 mr-1.5 md:mr-2" />
                         Community Highlight
                       </Badge>
@@ -249,7 +240,7 @@ const VotePage = () => {
                       transition={{ delay: 0.6 }}
                       className="absolute top-4 right-4"
                     >
-                      <Badge className="bg-purple-500/20 backdrop-blur-xl border-purple-500/30 text-purple-400 px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm">
+                      <Badge className="bg-arcane/15 backdrop-blur-xl border-arcane/40 text-arcane px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm">
                         <Users className="w-3 h-3 md:w-4 md:h-4 mr-1.5 md:mr-2" />
                         850+ Players
                       </Badge>
@@ -257,7 +248,7 @@ const VotePage = () => {
                   </div>
 
                   {/* Caption */}
-                  <div className="p-4 md:p-6 bg-gradient-to-b from-black/80 to-black/95 backdrop-blur-xl border-t border-purple-500/10">
+                  <div className="p-4 md:p-6 bg-gradient-to-b from-black/80 to-black/95 backdrop-blur-xl border-t border-arcane/20">
                     <div className="flex items-start justify-between gap-3 md:gap-4">
                       <div className="flex-1">
                         <h3 className="text-base md:text-lg font-bold text-white mb-2">
@@ -270,9 +261,9 @@ const VotePage = () => {
                       <motion.button
                         whileHover={{ scale: 1.1, rotate: 5 }}
                         whileTap={{ scale: 0.9 }}
-                        className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center flex-shrink-0 hover:bg-purple-500/30 transition-colors"
+                        className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-arcane/15 border border-arcane/30 flex items-center justify-center flex-shrink-0 hover:bg-arcane/25 transition-colors"
                       >
-                        <Heart className="w-4 h-4 md:w-5 md:h-5 text-purple-400" />
+                        <Heart className="w-4 h-4 md:w-5 md:h-5 text-arcane" />
                       </motion.button>
                     </div>
                   </div>
@@ -292,20 +283,20 @@ const VotePage = () => {
             viewport={{ once: true }}
             className="text-center mb-10 md:mb-12"
           >
-            <motion.div 
-              className="inline-flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-xl border border-purple-500/20 rounded-full mb-6"
+            <motion.div
+              className="inline-flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-xl border border-arcane/30 rounded-full mb-6"
               initial={{ scale: 0 }}
               whileInView={{ scale: 1 }}
               viewport={{ once: true }}
               transition={{ type: "spring" }}
             >
-              <Gift className="w-4 h-4 text-purple-400" />
-              <span className="text-sm text-purple-400 font-semibold">Rewards</span>
+              <Gift className="w-4 h-4 text-arcane" />
+              <span className="text-sm text-arcane font-semibold">Rewards</span>
             </motion.div>
 
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 px-4 overflow-visible leading-tight">
               Dapatkan{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400 inline-block py-1">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-arcane to-arcane-glow inline-block py-1">
                 Hadiah Menarik
               </span>
             </h2>
@@ -324,11 +315,10 @@ const VotePage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -5 }}
                 >
-                  <div className="relative p-5 md:p-6 rounded-2xl bg-black/60 backdrop-blur-xl border border-purple-500/10 hover:border-purple-500/30 transition-all group">
+                  <div className="relative p-5 md:p-6 rounded-2xl bg-ink-elevated border border-arcane/20 hover:border-arcane/40 hover:-translate-y-1 transition-all group">
                     {/* Glow on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-arcane/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
                     
                     <div className="relative">
                       <div className={`w-12 h-12 md:w-14 md:h-14 rounded-xl bg-gradient-to-br from-${reward.color}-500/20 to-${reward.color}-600/20 border border-${reward.color}-500/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
@@ -358,20 +348,20 @@ const VotePage = () => {
             viewport={{ once: true }}
             className="text-center mb-10 md:mb-12"
           >
-            <motion.div 
-              className="inline-flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-xl border border-purple-500/20 rounded-full mb-6"
+            <motion.div
+              className="inline-flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-xl border border-arcane/30 rounded-full mb-6"
               initial={{ scale: 0 }}
               whileInView={{ scale: 1 }}
               viewport={{ once: true }}
               transition={{ type: "spring" }}
             >
-              <Heart className="w-4 h-4 text-purple-400" />
-              <span className="text-sm text-purple-400 font-semibold">Vote Links</span>
+              <Heart className="w-4 h-4 text-arcane" />
+              <span className="text-sm text-arcane font-semibold">Vote Links</span>
             </motion.div>
-            
+
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 px-4 overflow-visible leading-tight">
               Dukung{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400 inline-block py-1">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-arcane to-arcane-glow inline-block py-1">
                 Server Kami
               </span>
             </h2>
@@ -386,7 +376,7 @@ const VotePage = () => {
               animate={{ opacity: 1 }}
               className="text-center py-16"
             >
-              <div className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 rounded-2xl bg-purple-500/5 border border-purple-500/20 flex items-center justify-center">
+              <div className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 rounded-2xl bg-arcane/10 border border-arcane/30 flex items-center justify-center">
                 <ExternalLink className="w-10 h-10 md:w-12 md:h-12 text-gray-600" />
               </div>
               <h3 className="text-lg md:text-xl font-bold text-white mb-2">
@@ -405,17 +395,16 @@ const VotePage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -5 }}
                 >
-                  <div className="relative p-6 md:p-8 rounded-2xl bg-black/60 backdrop-blur-xl border border-purple-500/20 hover:border-purple-500/40 transition-all group overflow-hidden">
+                  <div className="relative p-6 md:p-8 rounded-2xl bg-ink-elevated border border-arcane/30 hover:border-arcane/50 hover:-translate-y-1 transition-all group overflow-hidden">
                     {/* Subtle glow */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-arcane/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     
                     <div className="relative">
                       {/* Header */}
                       <div className="flex items-start justify-between mb-6">
                         <div className="flex-1">
-                          <h3 className="font-bold text-white text-lg md:text-xl mb-3 group-hover:text-purple-300 transition-colors">
+                          <h3 className="font-bold text-white text-lg md:text-xl mb-3 group-hover:text-arcane transition-colors">
                             {link.name}
                           </h3>
                           <div className="flex items-center gap-3 md:gap-4 text-xs text-gray-500">
@@ -424,13 +413,13 @@ const VotePage = () => {
                               Setiap 24 jam
                             </span>
                             <span className="flex items-center gap-1.5">
-                              <Star className="w-3.5 h-3.5 text-purple-400" />
+                              <Star className="w-3.5 h-3.5 text-arcane" />
                               +1 Point
                             </span>
                           </div>
                         </div>
-                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-gradient-to-br from-purple-500/20 to-violet-500/20 border border-purple-500/30 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                          <ExternalLink className="w-5 h-5 md:w-6 md:h-6 text-purple-400" />
+                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-arcane/15 border border-arcane/30 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                          <ExternalLink className="w-5 h-5 md:w-6 md:h-6 text-arcane" />
                         </div>
                       </div>
                       
@@ -441,13 +430,13 @@ const VotePage = () => {
                         rel="noopener noreferrer"
                         className="block"
                       >
-                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                          <Button className="w-full bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 shadow-lg shadow-purple-500/20 py-5 md:py-6 font-bold text-sm md:text-base">
+                        <div>
+                          <Button className="w-full bg-arcane text-bone hover:bg-arcane-glow shadow-lg shadow-arcane/20 py-5 md:py-6 font-bold text-sm md:text-base">
                             <Heart className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                             Vote Sekarang
                             <ChevronRight className="w-4 h-4 md:w-5 md:h-5 ml-2" />
                           </Button>
-                        </motion.div>
+                        </div>
                       </a>
                     </div>
                   </div>

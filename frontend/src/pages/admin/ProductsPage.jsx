@@ -22,7 +22,8 @@ import {
   Shield,
   CheckSquare,
   Square,
-  EyeOff
+  EyeOff,
+  PackageX
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
@@ -49,7 +50,8 @@ const ProductsPage = () => {
   const [filters, setFilters] = useState({
     serverType: 'all',
     type: 'all',
-    isActive: 'all'
+    isActive: 'all',
+    isOutOfStock: 'all'
   });
 
   // Bulk selection
@@ -82,6 +84,22 @@ const ProductsPage = () => {
       fetchData();
     } catch (error) {
       toast.error(error.response?.data?.message || "Gagal update status");
+    }
+  };
+
+  const handleBulkOutOfStock = async (isOutOfStock) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.patch(
+        `${import.meta.env.VITE_API_URL}/products/bulk-status`,
+        { ids: selectedIds, isOutOfStock },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success(`${selectedIds.length} product berhasil di-set ${isOutOfStock ? 'out of stock' : 'in stock'}`);
+      setSelectedIds([]);
+      fetchData();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Gagal update stock status");
     }
   };
 
@@ -160,14 +178,16 @@ const ProductsPage = () => {
     const matchServerType = filters.serverType === 'all' || product.serverTypeId === filters.serverType;
     const matchType = filters.type === 'all' || product.type === filters.type;
     const matchActive = filters.isActive === 'all' || product.isActive.toString() === filters.isActive;
+    const matchOOS = filters.isOutOfStock === 'all' || (product.isOutOfStock ?? false).toString() === filters.isOutOfStock;
 
-    return matchSearch && matchServerType && matchType && matchActive;
+    return matchSearch && matchServerType && matchType && matchActive && matchOOS;
   });
 
   // Calculate stats
   const stats = {
     total: products.length,
     active: products.filter(p => p.isActive).length,
+    outOfStock: products.filter(p => p.isOutOfStock).length,
     coins: products.filter(p => p.type === 'COIN').length,
     features: products.filter(p => p.type === 'FEATURE').length,
     ranks: products.filter(p => p.type === 'RANK').length,
@@ -223,13 +243,13 @@ const ProductsPage = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Total</p>
@@ -245,7 +265,7 @@ const ProductsPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Active</p>
@@ -259,9 +279,25 @@ const ProductsPage = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+        >
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs text-gray-400">Out of Stock</p>
+                <PackageX className="w-4 h-4 text-amber-400" />
+              </div>
+              <p className="text-2xl font-bold text-amber-400">{stats.outOfStock}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Coins</p>
@@ -277,7 +313,7 @@ const ProductsPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Ranks</p>
@@ -293,7 +329,7 @@ const ProductsPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Total Value</p>
@@ -308,27 +344,27 @@ const ProductsPage = () => {
       </div>
 
       {/* Filters & Search */}
-      <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+      <Card className="border-white/\[0.06\] bg-[#111318]">
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* Search */}
-            <div className="md:col-span-4 relative">
+            <div className="md:col-span-3 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
                 type="text"
                 placeholder="Cari product..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-gray-800/30 border-gray-700/50 focus:border-purple-500/50"
+                className="pl-10 bg-[#1a1d24] border-gray-700/50 rounded-xl focus:border-purple-500/50"
               />
             </div>
 
             {/* Server Type Filter */}
-            <div className="md:col-span-3">
+            <div className="md:col-span-2">
               <select
                 value={filters.serverType}
                 onChange={(e) => setFilters({ ...filters, serverType: e.target.value })}
-                className="w-full px-3 py-2 bg-gray-800/30 border border-gray-700/50 rounded-lg text-white focus:outline-none focus:border-purple-500/50 transition-colors appearance-none cursor-pointer"
+                className="w-full px-3 py-2 bg-[#1a1d24] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-purple-500/50 transition-colors appearance-none cursor-pointer [&_option]:bg-[#1a1d24] [&_option]:text-white [color-scheme:dark]"
               >
                 <option value="all">All Servers</option>
                 {serverTypes.map(st => (
@@ -342,7 +378,7 @@ const ProductsPage = () => {
               <select
                 value={filters.type}
                 onChange={(e) => setFilters({ ...filters, type: e.target.value })}
-                className="w-full px-3 py-2 bg-gray-800/30 border border-gray-700/50 rounded-lg text-white focus:outline-none focus:border-purple-500/50 transition-colors appearance-none cursor-pointer"
+                className="w-full px-3 py-2 bg-[#1a1d24] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-purple-500/50 transition-colors appearance-none cursor-pointer [&_option]:bg-[#1a1d24] [&_option]:text-white [color-scheme:dark]"
               >
                 <option value="all">All Types</option>
                 <option value="COIN">Coins</option>
@@ -356,22 +392,35 @@ const ProductsPage = () => {
               <select
                 value={filters.isActive}
                 onChange={(e) => setFilters({ ...filters, isActive: e.target.value })}
-                className="w-full px-3 py-2 bg-gray-800/30 border border-gray-700/50 rounded-lg text-white focus:outline-none focus:border-purple-500/50 transition-colors appearance-none cursor-pointer"
+                className="w-full px-3 py-2 bg-[#1a1d24] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-purple-500/50 transition-colors appearance-none cursor-pointer [&_option]:bg-[#1a1d24] [&_option]:text-white [color-scheme:dark]"
               >
-                <option value="all">All Status</option>
+                <option value="all">All Visibility</option>
                 <option value="true">Active</option>
-                <option value="false">Inactive</option>
+                <option value="false">Hidden</option>
+              </select>
+            </div>
+
+            {/* Stock Filter */}
+            <div className="md:col-span-2">
+              <select
+                value={filters.isOutOfStock}
+                onChange={(e) => setFilters({ ...filters, isOutOfStock: e.target.value })}
+                className="w-full px-3 py-2 bg-[#1a1d24] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-purple-500/50 transition-colors appearance-none cursor-pointer [&_option]:bg-[#1a1d24] [&_option]:text-white [color-scheme:dark]"
+              >
+                <option value="all">All Stock</option>
+                <option value="false">In Stock</option>
+                <option value="true">Out of Stock</option>
               </select>
             </div>
 
             {/* View Toggle */}
-            <div className="md:col-span-1 flex gap-2 bg-gray-800/30 p-1 rounded-lg">
+            <div className="md:col-span-1 flex gap-2 bg-white/\[0.03\] p-1 rounded-lg">
               <button
                 onClick={() => setViewMode('grid')}
                 className={`flex-1 p-2 rounded-lg transition-all ${
                   viewMode === 'grid'
                     ? 'bg-purple-500/20 text-purple-400'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                    : 'text-gray-400 hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 <Grid3x3 className="w-5 h-5 mx-auto" />
@@ -381,7 +430,7 @@ const ProductsPage = () => {
                 className={`flex-1 p-2 rounded-lg transition-all ${
                   viewMode === 'list'
                     ? 'bg-purple-500/20 text-purple-400'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                    : 'text-gray-400 hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 <List className="w-5 h-5 mx-auto" />
@@ -390,12 +439,12 @@ const ProductsPage = () => {
           </div>
 
           {/* Active Filters Info */}
-          {(filters.serverType !== 'all' || filters.type !== 'all' || filters.isActive !== 'all' || searchQuery) && (
+          {(filters.serverType !== 'all' || filters.type !== 'all' || filters.isActive !== 'all' || filters.isOutOfStock !== 'all' || searchQuery) && (
             <div className="mt-4 pt-4 border-t border-gray-800 flex items-center gap-2">
               <p className="text-sm text-gray-400">Showing {filteredProducts.length} of {products.length} products</p>
               <button
                 onClick={() => {
-                  setFilters({ serverType: 'all', type: 'all', isActive: 'all' });
+                  setFilters({ serverType: 'all', type: 'all', isActive: 'all', isOutOfStock: 'all' });
                   setSearchQuery('');
                 }}
                 className="text-xs text-purple-400 hover:text-purple-300 transition-colors ml-auto"
@@ -443,11 +492,11 @@ const ProductsPage = () => {
                     Batal pilih
                   </button>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   <Button
                     onClick={() => handleBulkStatus(true)}
                     size="sm"
-                    className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30"
+                    className="bg-arcane/10 text-arcane border border-emerald-500/30 hover:bg-emerald-500/30"
                   >
                     <CheckCircle2 className="w-4 h-4 mr-1" />
                     Aktifkan
@@ -458,7 +507,23 @@ const ProductsPage = () => {
                     className="bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30"
                   >
                     <EyeOff className="w-4 h-4 mr-1" />
-                    Nonaktifkan
+                    Sembunyikan
+                  </Button>
+                  <Button
+                    onClick={() => handleBulkOutOfStock(true)}
+                    size="sm"
+                    className="bg-amber-500/20 text-amber-400 border border-amber-500/30 hover:bg-amber-500/30"
+                  >
+                    <PackageX className="w-4 h-4 mr-1" />
+                    Out of Stock
+                  </Button>
+                  <Button
+                    onClick={() => handleBulkOutOfStock(false)}
+                    size="sm"
+                    className="bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500/30"
+                  >
+                    <CheckCircle2 className="w-4 h-4 mr-1" />
+                    In Stock
                   </Button>
                 </div>
               </div>
@@ -479,9 +544,9 @@ const ProductsPage = () => {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ delay: index * 0.03 }}
               >
-                <Card className="group border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-purple-500/30 transition-all overflow-hidden h-full flex flex-col">
+                <Card className="group border-white/\[0.06\] bg-[#111318] hover:border-purple-500/30 transition-all overflow-hidden h-full flex flex-col">
                   {/* Image */}
-                  <div className="relative h-40 overflow-hidden bg-gray-800/50">
+                  <div className="relative h-40 overflow-hidden bg-white/\[0.05\]">
                     {/* Checkbox */}
                     <button
                       onClick={(e) => { e.stopPropagation(); toggleSelect(product.id); }}
@@ -534,14 +599,20 @@ const ProductsPage = () => {
                     </div>
 
                     {/* Status Badge */}
-                    <div className="absolute top-2 right-2">
+                    <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
                       <Badge className={`${
                         product.isActive
-                          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                          ? 'bg-arcane/10 text-arcane border-emerald-500/30'
                           : 'bg-red-500/20 text-red-400 border-red-500/30'
                       }`}>
-                        {product.isActive ? 'Active' : 'Inactive'}
+                        {product.isActive ? 'Active' : 'Hidden'}
                       </Badge>
+                      {product.isOutOfStock && (
+                        <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">
+                          <PackageX className="w-3 h-3 mr-1" />
+                          OOS
+                        </Badge>
+                      )}
                     </div>
                   </div>
 
@@ -604,7 +675,7 @@ const ProductsPage = () => {
                         onClick={() => handleView(product)}
                         variant="outline"
                         size="sm"
-                        className="flex-1 border-gray-700 hover:bg-gray-800 hover:border-blue-500/50 hover:text-blue-400"
+                        className="flex-1 border-gray-700 hover:bg-white/\[0.07\] hover:border-blue-500/50 hover:text-blue-400"
                       >
                         <Eye className="w-4 h-4" />
                       </Button>
@@ -612,7 +683,7 @@ const ProductsPage = () => {
                         onClick={() => handleEdit(product)}
                         variant="outline"
                         size="sm"
-                        className="flex-1 border-gray-700 hover:bg-gray-800 hover:border-purple-500/50 hover:text-purple-400"
+                        className="flex-1 border-gray-700 hover:bg-white/\[0.07\] hover:border-purple-500/50 hover:text-purple-400"
                       >
                         <Edit2 className="w-4 h-4" />
                       </Button>
@@ -632,7 +703,7 @@ const ProductsPage = () => {
           </AnimatePresence>
         </div>
       ) : (
-        <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+        <Card className="border-white/\[0.06\] bg-[#111318]">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -664,7 +735,7 @@ const ProductsPage = () => {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.03 }}
-                      className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors"
+                      className="border-b border-white/\[0.06\] hover:bg-white/\[0.03\] transition-colors"
                     >
                       <td className="p-4 w-10">
                         <button onClick={() => toggleSelect(product.id)}>
@@ -676,7 +747,7 @@ const ProductsPage = () => {
                         </button>
                       </td>
                       <td className="p-4">
-                        <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-800/50">
+                        <div className="w-12 h-12 rounded-lg overflow-hidden bg-white/\[0.05\]">
                           {product.imageUrl ? (
                             <img
                               src={getImageUrl(product.imageUrl)}
@@ -752,13 +823,21 @@ const ProductsPage = () => {
                         </p>
                       </td>
                       <td className="p-4">
-                        <Badge className={`${
-                          product.isActive
-                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-                            : 'bg-red-500/20 text-red-400 border-red-500/30'
-                        }`}>
-                          {product.isActive ? 'Active' : 'Inactive'}
-                        </Badge>
+                        <div className="flex flex-col gap-1">
+                          <Badge className={`${
+                            product.isActive
+                              ? 'bg-arcane/10 text-arcane border-emerald-500/30'
+                              : 'bg-red-500/20 text-red-400 border-red-500/30'
+                          }`}>
+                            {product.isActive ? 'Active' : 'Hidden'}
+                          </Badge>
+                          {product.isOutOfStock && (
+                            <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">
+                              <PackageX className="w-3 h-3 mr-1" />
+                              Out of Stock
+                            </Badge>
+                          )}
+                        </div>
                       </td>
                       <td className="p-4">
                         <div className="flex justify-end gap-2">
@@ -766,7 +845,7 @@ const ProductsPage = () => {
                             onClick={() => handleView(product)}
                             variant="outline"
                             size="sm"
-                            className="border-gray-700 hover:bg-gray-800 hover:border-blue-500/50 hover:text-blue-400"
+                            className="border-gray-700 hover:bg-white/\[0.07\] hover:border-blue-500/50 hover:text-blue-400"
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
@@ -774,7 +853,7 @@ const ProductsPage = () => {
                             onClick={() => handleEdit(product)}
                             variant="outline"
                             size="sm"
-                            className="border-gray-700 hover:bg-gray-800 hover:border-purple-500/50 hover:text-purple-400"
+                            className="border-gray-700 hover:bg-white/\[0.07\] hover:border-purple-500/50 hover:text-purple-400"
                           >
                             <Edit2 className="w-4 h-4" />
                           </Button>
@@ -806,16 +885,16 @@ const ProductsPage = () => {
         >
           <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-400 mb-2">
-            {searchQuery || filters.serverType !== 'all' || filters.type !== 'all' || filters.isActive !== 'all'
+            {searchQuery || filters.serverType !== 'all' || filters.type !== 'all' || filters.isActive !== 'all' || filters.isOutOfStock !== 'all'
               ? 'Tidak ada hasil'
               : 'Belum ada product'}
           </h3>
           <p className="text-sm text-gray-500 mb-6">
-            {searchQuery || filters.serverType !== 'all' || filters.type !== 'all' || filters.isActive !== 'all'
+            {searchQuery || filters.serverType !== 'all' || filters.type !== 'all' || filters.isActive !== 'all' || filters.isOutOfStock !== 'all'
               ? 'Coba ubah filter atau kata kunci pencarian'
               : 'Mulai dengan menambahkan product pertama'}
           </p>
-          {!searchQuery && filters.serverType === 'all' && filters.type === 'all' && filters.isActive === 'all' && (
+          {!searchQuery && filters.serverType === 'all' && filters.type === 'all' && filters.isActive === 'all' && filters.isOutOfStock === 'all' && (
             <Button
               onClick={handleCreate}
               className="bg-gradient-to-r from-purple-500 to-pink-500"
@@ -849,3 +928,8 @@ const ProductsPage = () => {
 };
 
 export default ProductsPage;
+
+
+
+
+

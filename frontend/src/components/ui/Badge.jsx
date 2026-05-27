@@ -3,19 +3,19 @@ import { cn } from "../../lib/utils";
 
 const Badge = React.forwardRef(({ className, variant = "default", ...props }, ref) => {
   const variants = {
-    default: "bg-primary text-primary-foreground hover:bg-primary/80",
-    secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-    destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/80",
-    outline: "text-foreground border border-input",
-    success: "bg-emerald-500 text-white",
-    warning: "bg-amber-500 text-white",
+    default: "bg-arcane/15 text-arcane border-arcane/30",
+    secondary: "bg-ink-elevated text-bone-muted border-ink-border",
+    destructive: "bg-[hsl(var(--danger))]/15 text-[hsl(var(--danger))] border-[hsl(var(--danger))]/30",
+    outline: "text-bone border-ink-border bg-transparent",
+    success: "bg-[hsl(var(--success))]/15 text-[hsl(var(--success))] border-[hsl(var(--success))]/30",
+    warning: "bg-arcane/15 text-arcane border-arcane/30",
   };
 
   return (
     <div
       ref={ref}
       className={cn(
-        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+        "inline-flex items-center border px-2.5 py-0.5 text-[11px] font-medium tracking-wide uppercase transition-colors",
         variants[variant],
         className
       )}

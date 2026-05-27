@@ -169,7 +169,7 @@ const OrdersPage = () => {
         label: 'Processing'
       },
       COMPLETED: {
-        color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+        color: 'bg-arcane/10 text-arcane border-emerald-500/30',
         icon: CheckCircle2,
         label: 'Completed'
       },
@@ -229,7 +229,7 @@ const OrdersPage = () => {
           <Button
             onClick={() => fetchData()}
             variant="outline"
-            className="border-gray-700 hover:bg-gray-800"
+            className="border-gray-700 hover:bg-white/\[0.07\]"
           >
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
@@ -250,7 +250,7 @@ const OrdersPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Total Orders</p>
@@ -270,7 +270,7 @@ const OrdersPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Pending</p>
@@ -287,7 +287,7 @@ const OrdersPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Paid</p>
@@ -304,7 +304,7 @@ const OrdersPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Completed</p>
@@ -321,7 +321,7 @@ const OrdersPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Revenue</p>
@@ -337,7 +337,7 @@ const OrdersPage = () => {
       </div>
 
       {/* Filters & Search */}
-      <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+      <Card className="border-white/\[0.06\] bg-[#111318]">
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* Search */}
@@ -348,7 +348,7 @@ const OrdersPage = () => {
                 placeholder="Cari order code, player, email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-gray-800/30 border-gray-700/50 focus:border-blue-500/50"
+                className="pl-10 bg-[#1a1d24] border-gray-700/50 rounded-xl focus:border-blue-500/50"
               />
             </div>
 
@@ -357,7 +357,7 @@ const OrdersPage = () => {
               <select
                 value={filters.status}
                 onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                className="w-full px-3 py-2 bg-gray-800/30 border border-gray-700/50 rounded-lg text-white focus:outline-none focus:border-blue-500/50 transition-colors appearance-none cursor-pointer"
+                className="w-full px-3 py-2 bg-[#1a1d24] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-blue-500/50 transition-colors appearance-none cursor-pointer [&_option]:bg-[#1a1d24] [&_option]:text-white [color-scheme:dark]"
               >
                 <option value="all">All Status</option>
                 <option value="PENDING">Pending</option>
@@ -374,7 +374,7 @@ const OrdersPage = () => {
               <select
                 value={filters.serverType}
                 onChange={(e) => setFilters({ ...filters, serverType: e.target.value })}
-                className="w-full px-3 py-2 bg-gray-800/30 border border-gray-700/50 rounded-lg text-white focus:outline-none focus:border-blue-500/50 transition-colors appearance-none cursor-pointer"
+                className="w-full px-3 py-2 bg-[#1a1d24] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-blue-500/50 transition-colors appearance-none cursor-pointer [&_option]:bg-[#1a1d24] [&_option]:text-white [color-scheme:dark]"
               >
                 <option value="all">All Servers</option>
                 {serverTypes.map(st => (
@@ -385,7 +385,7 @@ const OrdersPage = () => {
 
             {/* Date Range */}
             <div className="md:col-span-1">
-              <button className="w-full p-2 bg-gray-800/30 border border-gray-700/50 rounded-lg hover:bg-gray-800/50 transition-colors">
+              <button className="w-full p-2 bg-white/\[0.03\] border border-gray-700/50 rounded-lg hover:bg-white/\[0.05\] transition-colors">
                 <Calendar className="w-5 h-5 text-gray-400 mx-auto" />
               </button>
             </div>
@@ -412,7 +412,7 @@ const OrdersPage = () => {
       </Card>
 
       {/* Orders Table */}
-      <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+      <Card className="border-white/\[0.06\] bg-[#111318]">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -457,7 +457,7 @@ const OrdersPage = () => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 20 }}
                         transition={{ delay: index * 0.02 }}
-                        className="hover:bg-gray-800/20 transition-colors group"
+                        className="hover:bg-white/\[0.07\]/20 transition-colors group"
                       >
                         {/* Order Code */}
                         <td className="p-4">
@@ -547,7 +547,7 @@ const OrdersPage = () => {
                               onClick={() => handleViewDetail(order)}
                               variant="outline"
                               size="sm"
-                              className="border-gray-700 hover:bg-gray-800 hover:border-blue-500/50 hover:text-blue-400"
+                              className="border-gray-700 hover:bg-white/\[0.07\] hover:border-blue-500/50 hover:text-blue-400"
                             >
                               <Eye className="w-4 h-4" />
                             </Button>
@@ -557,7 +557,7 @@ const OrdersPage = () => {
                                 onClick={() => handleCheckPayment(order.id)}
                                 variant="outline"
                                 size="sm"
-                                className="border-gray-700 hover:bg-gray-800 hover:border-yellow-500/50 hover:text-yellow-400"
+                                className="border-gray-700 hover:bg-white/\[0.07\] hover:border-yellow-500/50 hover:text-yellow-400"
                                 title="Check Payment"
                               >
                                 <RefreshCw className="w-4 h-4" />
@@ -569,7 +569,7 @@ const OrdersPage = () => {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="border-gray-700 hover:bg-gray-800"
+                                className="border-gray-700 hover:bg-white/\[0.07\]"
                               >
                                 <ChevronDown className="w-4 h-4" />
                               </Button>
@@ -579,7 +579,7 @@ const OrdersPage = () => {
                                   <button
                                     key={status}
                                     onClick={() => handleUpdateStatus(order.id, status)}
-                                    className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                                    className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-white/\[0.07\] hover:text-white transition-colors"
                                   >
                                     Set as {status}
                                   </button>
@@ -663,3 +663,8 @@ const OrdersPage = () => {
 };
 
 export default OrdersPage;
+
+
+
+
+

@@ -21,10 +21,10 @@ const AboutSection = () => {
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   const stats = [
-    { icon: Users, value: "1K+", label: "Active Players", color: "purple" },
-    { icon: Trophy, value: "156", label: "Events Held", color: "violet" },
-    { icon: Shield, value: "99.9%", label: "Uptime", color: "fuchsia" },
-    { icon: Star, value: "4.9", label: "Rating", color: "purple" }
+    { icon: Users, value: "1K+", label: "Active Players" },
+    { icon: Trophy, value: "156", label: "Events Held" },
+    { icon: Shield, value: "99.9%", label: "Uptime" },
+    { icon: Star, value: "4.9", label: "Rating" }
   ];
 
   const values = [
@@ -51,20 +51,19 @@ const AboutSection = () => {
   ];
 
   return (
-    <section 
+    <section
       ref={sectionRef}
-      className="relative py-24 md:py-32 bg-black overflow-hidden"
-      style={{ fontFamily: "'Inter', 'Poppins', sans-serif" }}
+      className="relative py-24 md:py-32 bg-ink overflow-hidden"
     >
-      {/* Deep Dark Purple Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.08)_0%,transparent_60%)]" />
+      {/* Background */}
+      <div className="absolute inset-0 bg-ink" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,165,116,0.04)_0%,transparent_60%)]" />
       
       {/* Grid Pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div className="absolute inset-0" style={{
-          backgroundImage: `linear-gradient(to right, rgba(139,92,246,0.3) 1px, transparent 1px),
-                           linear-gradient(to bottom, rgba(139,92,246,0.3) 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(to right, rgba(212,165,116,0.2) 1px, transparent 1px),
+                           linear-gradient(to bottom, rgba(212,165,116,0.2) 1px, transparent 1px)`,
           backgroundSize: '80px 80px'
         }} />
       </div>
@@ -83,30 +82,27 @@ const AboutSection = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-purple-500/10 backdrop-blur-xl border border-purple-500/30"
+            className="inline-flex items-center gap-3 px-4 py-2 bg-arcane/10 border border-arcane/30"
           >
-            <div className="relative">
-              <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-              <div className="absolute inset-0 w-2 h-2 rounded-full bg-purple-400 animate-ping" />
-            </div>
-            <span className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-fuchsia-400 uppercase tracking-widest">
+            <div className="w-1.5 h-1.5 bg-arcane" />
+            <span className="text-[11px] font-medium text-arcane uppercase tracking-widest">
               About Us
             </span>
-            <Sparkles className="w-4 h-4 text-purple-400" />
+            <Sparkles className="w-3.5 h-3.5 text-arcane" />
           </motion.div>
 
           {/* Title */}
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight" style={{ fontFamily: "'Orbitron', 'Rajdhani', 'Inter', sans-serif" }}>
-            <span className="block text-white mb-3">
-              The Ultimate Minecraft
+          <h2 className="font-display text-5xl md:text-6xl lg:text-7xl leading-[1.05]">
+            <span className="block text-bone mb-2">
+              The ultimate Minecraft
             </span>
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-fuchsia-400">
-              Gaming Experience
+            <span className="block italic text-arcane">
+              gaming experience
             </span>
           </h2>
 
-          <p className="text-base md:text-lg text-gray-400 font-medium max-w-3xl mx-auto">
-            Join thousands of players in our premium Minecraft server with custom features, 
+          <p className="text-base md:text-lg text-bone-muted max-w-2xl mx-auto leading-relaxed">
+            Join thousands of players in our premium Minecraft server with custom features,
             active community, and unforgettable adventures
           </p>
         </motion.div>
@@ -123,43 +119,31 @@ const AboutSection = () => {
           >
             {/* Logo Container */}
             <div className="relative">
-              <motion.div
-                animate={{
-                  opacity: [0.3, 0.6, 0.3]
-                }}
-                transition={{ duration: 4, repeat: Infinity }}
-                className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-violet-500/20 to-fuchsia-500/20 blur-3xl rounded-full"
-              />
+              <div className="absolute inset-0 bg-arcane/10 blur-3xl" />
               
-              <div className="relative p-8 rounded-3xl bg-black/60 backdrop-blur-xl border border-purple-500/30">
-                <motion.img
+              <div className="relative p-8 bg-ink-elevated border border-ink-border">
+                <img
                   src="/logo.png"
                   alt="Amazing Craft Logo"
                   className="w-full h-auto max-w-md mx-auto drop-shadow-2xl"
-                  animate={{
-                    y: [0, -10, 0],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
+                  loading="lazy"
                 />
               </div>
             </div>
 
             {/* Description */}
-            <div className="space-y-4 bg-gradient-to-br from-purple-500/5 to-violet-500/5 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-8">
-              <h3 className="text-2xl font-black text-white" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
-                Our Story
-              </h3>
-              <p className="text-gray-300 leading-relaxed">
-                Founded in 2020, Amazing Craft has grown into one of the most beloved Minecraft communities. 
-                We started with a simple vision: create a server where creativity meets competition, 
+            <div className="space-y-4 bg-ink-elevated border border-ink-border p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-6 h-px bg-arcane" />
+                <span className="text-[11px] font-medium text-arcane uppercase tracking-widest">Our Story</span>
+              </div>
+              <p className="text-bone-muted leading-relaxed">
+                Founded in 2020, Amazing Craft has grown into one of the most beloved Minecraft communities.
+                We started with a simple vision: create a server where creativity meets competition,
                 and every player feels at home.
               </p>
-              <p className="text-gray-300 leading-relaxed">
-                Today, we're proud to host thousands of active players, run weekly events, 
+              <p className="text-bone-muted leading-relaxed">
+                Today, we're proud to host thousands of active players, run weekly events,
                 and continuously innovate with custom plugins and features that make your gameplay unique.
               </p>
             </div>
@@ -177,59 +161,50 @@ const AboutSection = () => {
               {stats.map((stat, index) => {
                 const Icon = stat.icon;
                 return (
-                  <motion.div
+                  <div
                     key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                    whileHover={{ y: -5, scale: 1.02 }}
-                    className={`relative group p-6 rounded-2xl bg-gradient-to-br from-${stat.color}-500/10 to-${stat.color}-600/5 backdrop-blur-xl border border-${stat.color}-500/30 overflow-hidden`}
+                    className="relative group p-6 bg-ink-elevated border border-ink-border hover:border-arcane/40 transition-colors duration-200"
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-br from-${stat.color}-400/10 to-${stat.color}-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
-                    
-                    <Icon className={`w-8 h-8 text-${stat.color}-400 mb-3`} />
-                    <div className={`text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-${stat.color}-400 to-${stat.color}-300`} style={{ fontFamily: "'Rajdhani', sans-serif" }}>
+                    <Icon className="w-6 h-6 text-arcane mb-3" strokeWidth={1.75} />
+                    <div className="font-mono text-3xl text-bone mb-1">
                       {stat.value}
                     </div>
-                    <div className="text-sm text-gray-400 font-semibold uppercase tracking-wider">
+                    <div className="text-[11px] text-bone-subtle uppercase tracking-widest">
                       {stat.label}
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
 
             {/* Core Values */}
             <div className="space-y-4">
-              <h3 className="text-2xl font-black text-white mb-6" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
-                Our Core Values
-              </h3>
-              
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-6 h-px bg-arcane" />
+                <span className="text-[11px] font-medium text-arcane uppercase tracking-widest">Core Values</span>
+              </div>
+
               <div className="space-y-3">
                 {values.map((value, index) => {
                   const Icon = value.icon;
                   return (
-                    <motion.div
+                    <div
                       key={index}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={isInView ? { opacity: 1, x: 0 } : {}}
-                      transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
-                      whileHover={{ x: 5 }}
-                      className="flex items-start gap-4 p-4 rounded-xl bg-black/40 backdrop-blur-xl border border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 group"
+                      className="flex items-start gap-4 p-4 bg-ink-elevated border border-ink-border hover:border-arcane/40 transition-colors duration-200 group"
                     >
-                      <div className="p-3 rounded-xl bg-purple-500/20 border border-purple-500/30 group-hover:scale-110 transition-transform duration-300">
-                        <Icon className="w-5 h-5 text-purple-400" />
+                      <div className="p-2.5 bg-arcane/15 border border-arcane/30 flex-shrink-0">
+                        <Icon className="w-4 h-4 text-arcane" strokeWidth={1.75} />
                       </div>
-                      
+
                       <div className="flex-1">
-                        <h4 className="text-lg font-bold text-white mb-1" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
+                        <h4 className="font-display text-lg text-bone mb-1">
                           {value.title}
                         </h4>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-bone-muted leading-relaxed">
                           {value.description}
                         </p>
                       </div>
-                    </motion.div>
+                    </div>
                   );
                 })}
               </div>
@@ -244,40 +219,26 @@ const AboutSection = () => {
           transition={{ duration: 0.7, delay: 0.8 }}
           className="text-center"
         >
-          <div className="inline-block p-8 rounded-3xl bg-gradient-to-br from-purple-500/10 via-violet-500/10 to-fuchsia-500/10 backdrop-blur-xl border border-purple-500/30">
+          <div className="inline-block p-10 bg-ink-elevated border border-ink-border">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <Globe className="w-6 h-6 text-purple-400" />
-              <h3 className="text-2xl font-black text-white" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
-                Ready to Join the Adventure?
+              <Globe className="w-5 h-5 text-arcane" strokeWidth={1.75} />
+              <h3 className="font-display text-3xl text-bone">
+                Ready to join the adventure?
               </h3>
             </div>
-            
-            <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
+
+            <p className="text-bone-muted mb-8 max-w-2xl mx-auto leading-relaxed">
               Be part of our growing community and experience Minecraft like never before
             </p>
 
             <a href={`minecraft://?addExternalServer=${encodeURIComponent('Amazing Craft')}|${SERVER_IP}:${SERVER_PORT}`}>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="group relative inline-flex items-center gap-3 px-10 py-4 rounded-xl bg-gradient-to-r from-purple-600 via-violet-600 to-purple-600 text-white font-black text-base uppercase tracking-wider overflow-hidden shadow-lg shadow-purple-500/30 border border-purple-400/30"
-                style={{ fontFamily: "'Rajdhani', 'Inter', sans-serif" }}
+              <button
+                className="group inline-flex items-center gap-3 px-10 py-4 bg-arcane text-bone font-medium text-sm uppercase tracking-widest hover:bg-arcane-glow transition-colors"
               >
-                {/* Animated background */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-violet-600"
-                  initial={{ x: '-100%' }}
-                  whileHover={{ x: '100%' }}
-                  transition={{ duration: 0.6 }}
-                />
-                
-                <Sparkles className="w-5 h-5 relative z-10" />
-                <span className="relative z-10">JOIN NOW</span>
-                <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-                
-                {/* Glow effect */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/10 blur-xl" />
-              </motion.button>
+                <Sparkles className="w-4 h-4" />
+                <span>Join Now</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
             </a>
           </div>
         </motion.div>

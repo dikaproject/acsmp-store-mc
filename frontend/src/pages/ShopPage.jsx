@@ -25,7 +25,7 @@ const ProductImage = ({ src, alt, className }) => {
     <div className="relative w-full h-full bg-gradient-to-br from-gray-900 to-black">
       {!isLoaded && !error && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-purple-500/30 border-t-purple-500 rounded-full animate-spin" />
+          <div className="w-8 h-8 border border-ink-border border-t-arcane animate-spin" />
         </div>
       )}
       
@@ -74,36 +74,28 @@ const RankDetailModal = ({ product, isOpen, onClose }) => {
               transition={{ duration: 0.2 }}
               className="relative w-full max-w-2xl max-h-[90vh] overflow-hidden"
             >
-              <div className="relative bg-black/95 backdrop-blur-xl border border-purple-500/20 rounded-2xl shadow-2xl">
+              <div className="relative bg-ink-elevated border border-ink-border">
                 {/* Header */}
-                <div className="relative p-6 border-b border-white/10">
+                <div className="relative p-6 border-b border-ink-border">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
-                          product.type === 'FEATURE' 
-                            ? 'bg-gradient-to-br from-purple-500/20 to-violet-500/20 border-purple-500/30'
-                            : 'bg-gradient-to-br from-orange-500/20 to-amber-500/20 border-orange-500/30'
-                        }`}>
+                        <div className="w-12 h-12 flex items-center justify-center border bg-arcane/15 border-arcane/30">
                           {product.type === 'FEATURE' ? (
-                            <Shield className="w-6 h-6 text-purple-400" />
+                            <Shield className="w-5 h-5 text-arcane" strokeWidth={1.75} />
                           ) : (
-                            <TrendingUp className="w-6 h-6 text-orange-400" />
+                            <TrendingUp className="w-5 h-5 text-arcane" strokeWidth={1.75} />
                           )}
                         </div>
                         <div>
-                          <h2 className="text-2xl font-black text-white">
+                          <h2 className="font-display text-2xl text-bone">
                             {product.name}
                           </h2>
                           <div className="flex items-center gap-2 mt-1">
-                            <Badge className={`border-0 ${
-                              product.type === 'FEATURE'
-                                ? 'bg-purple-500/20 text-purple-400'
-                                : 'bg-orange-500/20 text-orange-400'
-                            }`}>
+                            <Badge variant="default">
                               {product.type === 'FEATURE' ? 'Feature' : 'Rank'}
                             </Badge>
-                            <Badge className="bg-blue-500/20 text-blue-400 border-0">
+                            <Badge variant="secondary">
                               {product.ServerType?.name}
                             </Badge>
                           </div>
@@ -130,24 +122,21 @@ const RankDetailModal = ({ product, isOpen, onClose }) => {
                   {product.benefits && Array.isArray(product.benefits) && product.benefits.length > 0 && (
                     <div>
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
-                          <Gift className="w-4 h-4 text-emerald-400" />
+                        <div className="w-8 h-8 bg-arcane/15 flex items-center justify-center border border-arcane/30">
+                          <Gift className="w-4 h-4 text-arcane" strokeWidth={1.75} />
                         </div>
-                        <h3 className="text-lg font-bold text-white">Benefits</h3>
+                        <h3 className="font-display text-xl text-bone">Benefits</h3>
                       </div>
-                      
+
                       <div className="grid gap-3">
                         {product.benefits.map((benefit, index) => (
-                          <motion.div
+                          <div
                             key={index}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.05 }}
-                            className="flex items-start gap-3 p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20"
+                            className="flex items-start gap-3 p-3 bg-arcane/5 border border-arcane/20"
                           >
-                            <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                            <span className="text-sm text-gray-300 leading-relaxed">{benefit}</span>
-                          </motion.div>
+                            <CheckCircle className="w-4 h-4 text-arcane flex-shrink-0 mt-0.5" strokeWidth={1.75} />
+                            <span className="text-sm text-bone-muted leading-relaxed">{benefit}</span>
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -157,10 +146,10 @@ const RankDetailModal = ({ product, isOpen, onClose }) => {
                   {product.infoCommands && Array.isArray(product.infoCommands) && product.infoCommands.length > 0 && (
                     <div>
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-8 h-8 rounded-lg bg-violet-500/20 flex items-center justify-center border border-violet-500/30">
-                          <Command className="w-4 h-4 text-violet-400" />
+                        <div className="w-8 h-8 bg-arcane/15 flex items-center justify-center border border-arcane/30">
+                          <Command className="w-4 h-4 text-arcane" strokeWidth={1.75} />
                         </div>
-                        <h3 className="text-lg font-bold text-white">Commands yang Tersedia</h3>
+                        <h3 className="font-display text-xl text-bone">Commands yang Tersedia</h3>
                       </div>
                       
                       <div className="grid gap-2">
@@ -170,7 +159,7 @@ const RankDetailModal = ({ product, isOpen, onClose }) => {
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: index * 0.05 }}
-                            className="p-3 rounded-xl bg-violet-500/5 border border-violet-500/20 font-mono text-sm text-violet-300"
+                            className="p-3 bg-arcane/5 border border-arcane/20 font-mono text-sm text-arcane"
                           >
                             {command}
                           </motion.div>
@@ -183,13 +172,13 @@ const RankDetailModal = ({ product, isOpen, onClose }) => {
                   {product.groupName && (
                     <div>
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center border border-orange-500/30">
-                          <Tag className="w-4 h-4 text-orange-400" />
+                        <div className="w-8 h-8 bg-arcane/15 flex items-center justify-center border border-arcane/30">
+                          <Tag className="w-4 h-4 text-arcane" strokeWidth={1.75} />
                         </div>
-                        <h3 className="text-lg font-bold text-white">Group Name</h3>
+                        <h3 className="font-display text-xl text-bone">Group Name</h3>
                       </div>
-                      <div className="p-4 rounded-xl bg-orange-500/5 border border-orange-500/20">
-                        <code className="text-orange-300 font-mono">{product.groupName}</code>
+                      <div className="p-4 bg-arcane/5 border border-arcane/20">
+                        <code className="text-arcane font-mono">{product.groupName}</code>
                       </div>
                     </div>
                   )}
@@ -198,13 +187,13 @@ const RankDetailModal = ({ product, isOpen, onClose }) => {
                   {product.permission && (
                     <div>
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center border border-purple-500/30">
-                          <Shield className="w-4 h-4 text-purple-400" />
+                        <div className="w-8 h-8 bg-arcane/15 flex items-center justify-center border border-arcane/30">
+                          <Shield className="w-4 h-4 text-arcane" strokeWidth={1.75} />
                         </div>
-                        <h3 className="text-lg font-bold text-white">Permission Node</h3>
+                        <h3 className="font-display text-xl text-bone">Permission Node</h3>
                       </div>
-                      <div className="p-4 rounded-xl bg-purple-500/5 border border-purple-500/20">
-                        <code className="text-purple-300 font-mono">{product.permission}</code>
+                      <div className="p-4 bg-arcane/5 border border-arcane/20">
+                        <code className="text-arcane font-mono">{product.permission}</code>
                       </div>
                     </div>
                   )}
@@ -213,13 +202,13 @@ const RankDetailModal = ({ product, isOpen, onClose }) => {
                   {product.amount && product.type !== 'COIN' && (
                     <div>
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center border border-cyan-500/30">
-                          <Clock className="w-4 h-4 text-cyan-400" />
+                        <div className="w-8 h-8 bg-arcane/15 flex items-center justify-center border border-arcane/30">
+                          <Clock className="w-4 h-4 text-arcane" strokeWidth={1.75} />
                         </div>
-                        <h3 className="text-lg font-bold text-white">Duration</h3>
+                        <h3 className="font-display text-xl text-bone">Duration</h3>
                       </div>
-                      <div className="p-4 rounded-xl bg-cyan-500/5 border border-cyan-500/20">
-                        <span className="text-cyan-300 font-bold">{product.amount} Hari</span>
+                      <div className="p-4 bg-arcane/5 border border-arcane/20">
+                        <span className="text-arcane font-mono">{product.amount} Hari</span>
                       </div>
                     </div>
                   )}
@@ -229,26 +218,26 @@ const RankDetailModal = ({ product, isOpen, onClose }) => {
                 <div className="p-6 border-t border-white/10">
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <p className="text-xs text-gray-500 mb-1">Price</p>
+                      <p className="text-[10px] text-bone-subtle uppercase tracking-widest mb-1">Price</p>
                       {product.discount > 0 ? (
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-sm text-gray-500 line-through">
+                            <span className="text-sm text-bone-subtle line-through font-mono">
                               {formatCurrency(product.price)}
                             </span>
-                            <Badge className="bg-green-500/20 text-green-400 border-0">
+                            <Badge variant="success">
                               -{product.discount}%
                             </Badge>
                           </div>
-                          <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+                          <p className="font-mono text-2xl text-arcane">
                             {formatCurrency(Math.floor(product.price - (product.price * product.discount / 100)))}
                           </p>
-                          <p className="text-xs text-green-400">
+                          <p className="text-xs text-[hsl(var(--success))]">
                             Hemat {formatCurrency(Math.floor(product.price * product.discount / 100))}
                           </p>
                         </div>
                       ) : (
-                        <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400">
+                        <p className="font-mono text-2xl text-arcane">
                           {formatCurrency(product.price)}
                         </p>
                       )}
@@ -256,7 +245,7 @@ const RankDetailModal = ({ product, isOpen, onClose }) => {
                     
                     <Button
                       onClick={onClose}
-                      className="px-6 py-3 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white font-bold rounded-xl"
+                      className="px-6 py-3 bg-arcane text-bone hover:bg-arcane-glow font-medium uppercase text-sm tracking-widest"
                     >
                       Close
                     </Button>
@@ -489,13 +478,13 @@ const ShopPage = () => {
 
       {/* Background Elements */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.08)_0%,transparent_60%)]" />
+        <div className="absolute inset-0 bg-ink" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,165,116,0.04)_0%,transparent_60%)]" />
         
         <div className="absolute inset-0 opacity-[0.03]">
           <div className="absolute inset-0" style={{
-            backgroundImage: `linear-gradient(to right, rgba(139,92,246,0.3) 1px, transparent 1px),
-                             linear-gradient(to bottom, rgba(139,92,246,0.3) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(to right, rgba(212,165,116,0.2) 1px, transparent 1px),
+                             linear-gradient(to bottom, rgba(212,165,116,0.2) 1px, transparent 1px)`,
             backgroundSize: '80px 80px'
           }} />
         </div>
@@ -510,22 +499,22 @@ const ShopPage = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <motion.div 
-              className="inline-flex items-center gap-3 px-6 py-3 bg-black/40 backdrop-blur-xl border border-purple-500/20 rounded-full mb-6"
+            <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
+              className="inline-flex items-center gap-3 px-4 py-2 bg-arcane/10 border border-arcane/30 mb-6"
             >
-              <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-              <ShoppingCart className="w-4 h-4 text-purple-400" />
-              <span className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400 uppercase tracking-wider">
+              <div className="w-1.5 h-1.5 bg-arcane" />
+              <ShoppingCart className="w-3.5 h-3.5 text-arcane" strokeWidth={1.75} />
+              <span className="text-[11px] font-medium text-arcane uppercase tracking-widest">
                 Premium Shop
               </span>
-              <Sparkles className="w-4 h-4 text-violet-400" />
+              <Sparkles className="w-3.5 h-3.5 text-arcane" strokeWidth={1.75} />
             </motion.div>
 
-            <h1 className="text-4xl md:text-6xl font-black mb-6 text-white">
-              Explore Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-fuchsia-400">Premium Collection</span>
+            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl mb-6 text-bone leading-[1.05]">
+              Explore our <span className="italic text-arcane">premium collection</span>
             </h1>
             
             <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
@@ -542,8 +531,8 @@ const ShopPage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-2xl mx-auto mb-8"
         >
-          <div className="relative p-4 bg-black/60 backdrop-blur-xl border border-purple-500/20 rounded-2xl">
-            <Search className="absolute left-7 top-1/2 transform -translate-y-1/2 h-5 w-5 text-purple-400" />
+          <div className="relative p-4 bg-ink-elevated border border-ink-border">
+            <Search className="absolute left-7 top-1/2 transform -translate-y-1/2 h-4 w-4 text-arcane" strokeWidth={1.75} />
             <Input
               placeholder="Search products..."
               value={searchQuery}
@@ -559,10 +548,10 @@ const ShopPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-6 bg-black/60 backdrop-blur-xl border border-purple-500/20 rounded-2xl"
+            className="p-6 bg-ink-elevated border border-ink-border"
           >
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <Filter className="w-4 h-4 text-purple-400" />
+            <h3 className="text-[11px] font-medium text-bone-muted uppercase tracking-widest mb-4 flex items-center gap-2">
+              <Filter className="w-3.5 h-3.5 text-arcane" strokeWidth={1.75} />
               Server Type
             </h3>
             <div className="flex flex-wrap gap-3">
@@ -570,7 +559,7 @@ const ShopPage = () => {
                 onClick={() => handleServerChange("all")}
                 className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                   selectedServer === "all"
-                    ? "bg-gradient-to-r from-purple-500 to-violet-500 text-white"
+                    ? "bg-arcane text-bone"
                     : "bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10"
                 }`}
               >
@@ -582,7 +571,7 @@ const ShopPage = () => {
                   onClick={() => handleServerChange(server.id.toString())}
                   className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                     selectedServer === server.id.toString()
-                      ? "bg-gradient-to-r from-purple-500 to-violet-500 text-white"
+                      ? "bg-arcane text-bone"
                       : "bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10"
                   }`}
                 >
@@ -596,10 +585,10 @@ const ShopPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-6 bg-black/60 backdrop-blur-xl border border-purple-500/20 rounded-2xl"
+            className="p-6 bg-ink-elevated border border-ink-border"
           >
             <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-              <Tag className="w-4 h-4 text-purple-400" />
+              <Tag className="w-3.5 h-3.5 text-arcane" strokeWidth={1.75} />
               Category
             </h3>
             <div className="flex flex-wrap gap-3">
@@ -611,7 +600,7 @@ const ShopPage = () => {
                     onClick={() => handleCategoryChange(category.value)}
                     className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                       selectedCategory === category.value
-                        ? "bg-gradient-to-r from-purple-500 to-violet-500 text-white"
+                        ? "bg-arcane text-bone"
                         : "bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10"
                     }`}
                   >
@@ -628,19 +617,19 @@ const ShopPage = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-5 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 backdrop-blur-xl border border-blue-500/30 rounded-2xl"
+              className="p-5 bg-arcane/5 border border-arcane/30"
             >
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center border border-blue-500/30 flex-shrink-0">
-                  <TrendingUp className="w-6 h-6 text-blue-400" />
+                <div className="w-10 h-10 bg-arcane/15 flex items-center justify-center border border-arcane/30 flex-shrink-0">
+                  <TrendingUp className="w-5 h-5 text-arcane" strokeWidth={1.75} />
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-base font-bold text-blue-400 mb-1.5">
-                    🏆 Rank Aktif Kamu: <span className="text-white">{rankName}</span>
+                  <h4 className="text-[11px] font-medium text-arcane mb-1.5 uppercase tracking-widest">
+                    Rank Aktif Kamu: <span className="text-bone">{rankName}</span>
                   </h4>
-                  <p className="text-sm text-blue-300/80 leading-relaxed">
+                  <p className="text-sm text-bone-muted leading-relaxed">
                     Harga upgrade ditampilkan otomatis pada rank yang lebih tinggi — kamu hanya membayar{" "}
-                    <span className="font-semibold text-blue-300">selisih harga</span>. Rank yang setara atau lebih rendah dikunci karena sudah kamu miliki.
+                    <span className="text-arcane">selisih harga</span>. Rank yang setara atau lebih rendah dikunci karena sudah kamu miliki.
                   </p>
                 </div>
               </div>
@@ -649,17 +638,17 @@ const ShopPage = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-5 bg-gradient-to-r from-amber-500/10 to-orange-500/10 backdrop-blur-xl border border-amber-500/30 rounded-2xl"
+              className="p-5 bg-arcane/5 border border-arcane/30"
             >
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center border border-amber-500/30 flex-shrink-0">
-                  <Info className="w-6 h-6 text-amber-400" />
+                <div className="w-10 h-10 bg-arcane/15 flex items-center justify-center border border-arcane/30 flex-shrink-0">
+                  <Info className="w-5 h-5 text-arcane" strokeWidth={1.75} />
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-base font-bold text-amber-400 mb-1.5">
-                    🔍 Rank Terdeteksi: <span className="text-white">{rankName}</span>
+                  <h4 className="text-[11px] font-medium text-arcane mb-1.5 uppercase tracking-widest">
+                    Rank Terdeteksi: <span className="text-bone">{rankName}</span>
                   </h4>
-                  <p className="text-sm text-amber-300/80 leading-relaxed">
+                  <p className="text-sm text-bone-muted leading-relaxed">
                     Rank kamu terdeteksi tetapi belum terdaftar di toko ini. Hubungi Admin melalui Discord atau WhatsApp jika ada pertanyaan mengenai upgrade.
                   </p>
                 </div>
@@ -669,18 +658,18 @@ const ShopPage = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-5 bg-gradient-to-r from-amber-500/10 to-orange-500/10 backdrop-blur-xl border border-amber-500/30 rounded-2xl"
+              className="p-5 bg-arcane/5 border border-arcane/30"
             >
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center border border-amber-500/30 flex-shrink-0">
-                  <Info className="w-6 h-6 text-amber-400" />
+                <div className="w-10 h-10 bg-arcane/15 flex items-center justify-center border border-arcane/30 flex-shrink-0">
+                  <Info className="w-5 h-5 text-arcane" strokeWidth={1.75} />
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-base font-bold text-amber-400 mb-1.5">
-                    💎 Ingin Upgrade Rank?
+                  <h4 className="text-[11px] font-medium text-arcane mb-1.5 uppercase tracking-widest">
+                    Ingin Upgrade Rank?
                   </h4>
-                  <p className="text-sm text-amber-300/80 leading-relaxed">
-                    <span className="font-semibold text-amber-300">Login</span> terlebih dahulu untuk melihat harga upgrade rank secara otomatis. Kamu hanya perlu membayar selisih harga dari rank saat ini ke rank yang dituju.
+                  <p className="text-sm text-bone-muted leading-relaxed">
+                    <span className="text-arcane">Login</span> terlebih dahulu untuk melihat harga upgrade rank secara otomatis. Kamu hanya perlu membayar selisih harga dari rank saat ini ke rank yang dituju.
                   </p>
                 </div>
               </div>
@@ -692,18 +681,18 @@ const ShopPage = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-5 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 backdrop-blur-xl border border-cyan-500/30 rounded-2xl"
+              className="p-5 bg-arcane/5 border border-arcane/30"
             >
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center border border-cyan-500/30 flex-shrink-0">
-                  <Lock className="w-6 h-6 text-cyan-400" />
+                <div className="w-10 h-10 bg-arcane/15 flex items-center justify-center border border-arcane/30 flex-shrink-0">
+                  <Lock className="w-5 h-5 text-arcane" strokeWidth={1.75} />
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-base font-bold text-cyan-400 mb-1.5">
-                    🎮 Server: {userServerName}
+                  <h4 className="text-[11px] font-medium text-arcane mb-1.5 uppercase tracking-widest">
+                    Server: {userServerName}
                   </h4>
-                  <p className="text-sm text-cyan-300/80 leading-relaxed">
-                    Kamu sedang berbelanja untuk server <span className="font-semibold text-cyan-300">{userServerName}</span>. Produk dari server lain tidak bisa ditambahkan ke keranjang. Untuk membeli produk server lain, silakan logout dan login ulang dengan memilih server yang sesuai.
+                  <p className="text-sm text-bone-muted leading-relaxed">
+                    Kamu sedang berbelanja untuk server <span className="text-arcane">{userServerName}</span>. Produk dari server lain tidak bisa ditambahkan ke keranjang. Untuk membeli produk server lain, silakan logout dan login ulang dengan memilih server yang sesuai.
                   </p>
                 </div>
               </div>
@@ -715,7 +704,7 @@ const ShopPage = () => {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => (
-              <div key={i} className="h-96 bg-purple-500/10 rounded-2xl animate-pulse" />
+              <div key={i} className="h-96 bg-ink-elevated rounded-2xl animate-pulse" />
             ))}
           </div>
         ) : filteredProducts.length === 0 ? (
@@ -733,7 +722,7 @@ const ShopPage = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="group relative bg-black/60 backdrop-blur-xl border border-purple-500/20 rounded-2xl overflow-hidden hover:border-purple-500/40 transition-all"
+                  className="group relative bg-ink-elevated border border-ink-border overflow-hidden hover:border-arcane/40 transition-colors"
                 >
                   {/* Product Image */}
                   <div className="relative h-56 overflow-hidden">
@@ -751,7 +740,7 @@ const ShopPage = () => {
                       </Badge>
                     </div>
 
-                    {/* Info Button for Ranks and Features - Changed to white/cyan */}
+                    {/* Info Button for Ranks and Features */}
                     {(product.type === 'RANK' || product.type === 'FEATURE') && (
                       <button
                         onClick={() => handleShowDetail(product)}
@@ -782,14 +771,14 @@ const ShopPage = () => {
                           return (
                             <div className="space-y-2">
                               <div className="flex items-center gap-1.5 flex-wrap">
-                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30">
-                                  <TrendingUp className="w-3.5 h-3.5 text-blue-400" />
-                                  <span className="text-xs font-bold text-blue-400">UPGRADE</span>
+                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-arcane/15 border border-arcane/30">
+                                  <TrendingUp className="w-3 h-3 text-arcane" strokeWidth={1.75} />
+                                  <span className="text-[10px] font-medium text-arcane uppercase tracking-widest">Upgrade</span>
                                 </div>
                                 {product.discount > 0 && (
-                                  <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30">
-                                    <Tag className="w-3 h-3 text-green-400" />
-                                    <span className="text-xs font-bold text-green-400">{product.discount}% OFF</span>
+                                  <div className="inline-flex items-center gap-1 px-2.5 py-1 bg-[hsl(var(--success))]/15 border border-[hsl(var(--success))]/30">
+                                    <Tag className="w-3 h-3 text-[hsl(var(--success))]" />
+                                    <span className="text-[10px] font-medium text-[hsl(var(--success))] uppercase tracking-widest">{product.discount}% Off</span>
                                   </div>
                                 )}
                               </div>
@@ -798,23 +787,23 @@ const ShopPage = () => {
                                   {formatCurrency(product.discount > 0 ? originalUpgrade : product.price)}
                                 </p>
                               </div>
-                              <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+                              <p className="font-mono text-2xl text-arcane">
                                 {formatCurrency(upgradePrice)}
                               </p>
-                              <p className="text-xs text-blue-400/70">Selisih dari rank saat ini</p>
+                              <p className="text-xs text-arcane/70">Selisih dari rank saat ini</p>
                             </div>
                           );
                         }
                         if (product.discount > 0) {
                           return (
                             <div className="space-y-2">
-                              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 w-fit">
-                                <Tag className="w-3.5 h-3.5 text-green-400" />
-                                <span className="text-xs font-bold text-green-400">{product.discount}% OFF</span>
+                              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[hsl(var(--success))]/15 border border-[hsl(var(--success))]/30 w-fit">
+                                <Tag className="w-3 h-3 text-[hsl(var(--success))]" />
+                                <span className="text-[10px] font-medium text-[hsl(var(--success))] uppercase tracking-widest">{product.discount}% Off</span>
                               </div>
                               <div className="flex items-center gap-2">
                                 <p className="text-sm text-gray-500 line-through">{formatCurrency(product.price)}</p>
-                                <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+                                <p className="font-mono text-2xl text-[hsl(var(--success))]">
                                   {formatCurrency(Math.floor(product.price - (product.price * product.discount / 100)))}
                                 </p>
                               </div>
@@ -822,7 +811,7 @@ const ShopPage = () => {
                           );
                         }
                         return (
-                          <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400">
+                          <p className="font-mono text-2xl text-arcane">
                             {formatCurrency(product.price)}
                           </p>
                         );
@@ -839,7 +828,7 @@ const ShopPage = () => {
                         return (
                           <button
                             disabled
-                            className="w-full py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 cursor-not-allowed"
+                            className="w-full py-3 px-4 font-medium text-xs uppercase tracking-widest flex items-center justify-center gap-2 bg-arcane/10 border border-arcane/30 text-arcane cursor-not-allowed"
                           >
                             <Lock className="w-4 h-4" />
                             Server Berbeda
@@ -851,9 +840,9 @@ const ShopPage = () => {
                         return (
                           <button
                             disabled
-                            className="w-full py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 bg-gray-800/60 border border-gray-600/30 text-gray-500 cursor-not-allowed"
+                            className="w-full py-3 px-4 font-medium text-xs uppercase tracking-widest flex items-center justify-center gap-2 bg-ink border border-ink-border text-bone-subtle cursor-not-allowed"
                           >
-                            <CheckCircle className="w-4 h-4 text-emerald-600" />
+                            <CheckCircle className="w-4 h-4 text-[hsl(var(--success))]" />
                             Sudah Dimiliki
                           </button>
                         );
@@ -863,7 +852,7 @@ const ShopPage = () => {
                         return (
                           <button
                             onClick={() => handleAddToCart(product)}
-                            className="w-full py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white transition-all"
+                            className="w-full py-3 px-4 font-medium text-xs uppercase tracking-widest flex items-center justify-center gap-2 bg-arcane text-bone hover:bg-arcane-glow transition-colors"
                           >
                             <TrendingUp className="w-4 h-4" />
                             Upgrade
@@ -874,15 +863,15 @@ const ShopPage = () => {
                       return (
                         <button
                           onClick={() => handleAddToCart(product)}
-                          disabled={!product.isActive}
+                          disabled={!!product.isOutOfStock}
                           className={`w-full py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all ${
-                            product.isActive
-                              ? "bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white"
+                            !product.isOutOfStock
+                              ? "bg-arcane text-bone hover:bg-arcane-glow"
                               : "bg-gray-800 text-gray-500 cursor-not-allowed"
                           }`}
                         >
                           <ShoppingCart className="w-4 h-4" />
-                          {product.isActive ? "Add to Cart" : "Out of Stock"}
+                          {!product.isOutOfStock ? "Add to Cart" : "Out of Stock"}
                         </button>
                       );
                     })()}
@@ -916,7 +905,7 @@ const ShopPage = () => {
                         onClick={() => handlePageChange(pageNumber)}
                         className={`min-w-[40px] h-10 rounded-xl font-semibold transition-all ${
                           currentPage === pageNumber
-                            ? 'bg-gradient-to-r from-purple-500 to-violet-500 text-white'
+                            ? 'bg-arcane text-bone'
                             : 'bg-white/5 text-gray-400 hover:bg-white/10'
                         }`}
                       >

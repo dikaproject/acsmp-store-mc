@@ -100,12 +100,12 @@ const LinktreeModal = ({ isOpen, onClose, onSubmit, link = null }) => {
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 10 }}
-          className="relative w-full max-w-lg bg-[#13151a] border border-gray-800/50 rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
+          className="relative w-full max-w-lg bg-[#13151a] border border-white/\[0.06\] rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
         >
           {/* Header */}
-          <div className="sticky top-0 z-10 bg-[#13151a]/95 backdrop-blur-xl border-b border-gray-800/50 px-6 py-4 flex items-center justify-between">
+          <div className="sticky top-0 z-10 bg-[#13151a]/95 backdrop-blur-xl border-b border-white/\[0.06\] px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-400 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-arcane/15 border border-arcane/30 flex items-center justify-center">
                 <LinkIcon className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -119,7 +119,7 @@ const LinktreeModal = ({ isOpen, onClose, onSubmit, link = null }) => {
             </div>
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+              className="w-8 h-8 rounded-lg bg-white/\[0.05\] hover:bg-gray-700/50 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -130,8 +130,7 @@ const LinktreeModal = ({ isOpen, onClose, onSubmit, link = null }) => {
             {/* Title */}
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-                <Type className="w-4 h-4 text-emerald-400" />
-                Title <span className="text-red-400">*</span>
+                <Type className="w-4 h-4 text-arcane" /> <span className="text-red-400">*</span>
               </label>
               <Input
                 name="title"
@@ -139,14 +138,14 @@ const LinktreeModal = ({ isOpen, onClose, onSubmit, link = null }) => {
                 onChange={handleChange}
                 placeholder="My Website"
                 required
-                className="bg-gray-800/50 border-gray-700/50 text-white placeholder:text-gray-500 focus:border-emerald-500/50 focus:ring-emerald-500/20"
+                className="bg-[#1a1d24] border-gray-700/50 rounded-xl placeholder:text-gray-500 focus:border-arcane/50"
               />
             </div>
 
             {/* URL */}
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-                <ExternalLink className="w-4 h-4 text-emerald-400" />
+                <ExternalLink className="w-4 h-4 text-arcane" />
                 URL <span className="text-red-400">*</span>
               </label>
               <Input
@@ -155,36 +154,34 @@ const LinktreeModal = ({ isOpen, onClose, onSubmit, link = null }) => {
                 onChange={handleChange}
                 placeholder="https://example.com"
                 required
-                className="bg-gray-800/50 border-gray-700/50 text-white placeholder:text-gray-500 focus:border-emerald-500/50 focus:ring-emerald-500/20"
+                className="bg-[#1a1d24] border-gray-700/50 rounded-xl placeholder:text-gray-500 focus:border-arcane/50"
               />
             </div>
 
             {/* Description */}
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-                <FileText className="w-4 h-4 text-emerald-400" />
-                Description
+                <FileText className="w-4 h-4 text-arcane" />
               </label>
               <Input
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Short description (optional)"
-                className="bg-gray-800/50 border-gray-700/50 text-white placeholder:text-gray-500 focus:border-emerald-500/50 focus:ring-emerald-500/20"
+                className="bg-[#1a1d24] border-gray-700/50 rounded-xl placeholder:text-gray-500 focus:border-arcane/50"
               />
             </div>
 
             {/* Icon Picker */}
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-                <Palette className="w-4 h-4 text-emerald-400" />
-                Icon
+                <Palette className="w-4 h-4 text-arcane" />
               </label>
               <div className="flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => setShowIconPicker(!showIconPicker)}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-800/50 border border-gray-700/50 text-gray-300 hover:border-emerald-500/30 hover:text-white transition-all"
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/\[0.05\] border border-gray-700/50 text-gray-300 hover:border-arcane/20 hover:text-white transition-all"
                 >
                   <SelectedIcon className="w-5 h-5" />
                   <span className="text-sm">{formData.icon || "Select Icon"}</span>
@@ -209,12 +206,12 @@ const LinktreeModal = ({ isOpen, onClose, onSubmit, link = null }) => {
                     exit={{ opacity: 0, height: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="mt-3 p-3 rounded-xl bg-gray-800/30 border border-gray-700/30">
+                    <div className="mt-3 p-3 rounded-xl bg-white/\[0.03\] border border-gray-700/30">
                       <Input
                         value={iconSearch}
                         onChange={(e) => setIconSearch(e.target.value)}
                         placeholder="Search icons..."
-                        className="mb-3 bg-gray-900/50 border-gray-700/50 text-white text-sm placeholder:text-gray-500"
+                        className="mb-3 bg-[#1a1d24] border-gray-700/50 rounded-xl text-sm placeholder:text-gray-500"
                       />
                       <div className="grid grid-cols-6 gap-1.5 max-h-40 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
                         {filteredIcons.map((iconName) => {
@@ -260,7 +257,7 @@ const LinktreeModal = ({ isOpen, onClose, onSubmit, link = null }) => {
                   onClick={() => setFormData((prev) => ({ ...prev, backgroundColor: "" }))}
                   className={`relative h-10 rounded-xl border-2 transition-all flex items-center justify-center ${
                     !formData.backgroundColor
-                      ? "border-emerald-400 shadow-lg shadow-emerald-500/20"
+                      ? "border-emerald-400 border border-arcane/30"
                       : "border-gray-700/50 hover:border-gray-600"
                   } bg-[#0f1015]`}
                 >
@@ -282,7 +279,7 @@ const LinktreeModal = ({ isOpen, onClose, onSubmit, link = null }) => {
                     }
                     className={`relative h-10 rounded-xl border-2 transition-all ${
                       formData.backgroundColor === preset.value
-                        ? "border-emerald-400 shadow-lg shadow-emerald-500/20 scale-105"
+                        ? "border-emerald-400 border border-arcane/30 scale-105"
                         : "border-transparent hover:border-gray-600"
                     }`}
                     style={{
@@ -311,7 +308,7 @@ const LinktreeModal = ({ isOpen, onClose, onSubmit, link = null }) => {
                   value={formData.order}
                   onChange={handleChange}
                   min="0"
-                  className="bg-gray-800/50 border-gray-700/50 text-white focus:border-emerald-500/50 focus:ring-emerald-500/20"
+                  className="bg-[#1a1d24] border-gray-700/50 rounded-xl focus:border-arcane/50"
                 />
               </div>
               <div>
@@ -331,7 +328,7 @@ const LinktreeModal = ({ isOpen, onClose, onSubmit, link = null }) => {
                   className={`w-full h-10 rounded-lg border text-sm font-medium transition-all ${
                     formData.isActive
                       ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                      : "bg-gray-800/50 border-gray-700/50 text-gray-400"
+                      : "bg-white/\[0.05\] border-gray-700/50 text-gray-400"
                   }`}
                 >
                   {formData.isActive ? "Active" : "Inactive"}
@@ -392,13 +389,13 @@ const LinktreeModal = ({ isOpen, onClose, onSubmit, link = null }) => {
                 type="button"
                 variant="ghost"
                 onClick={onClose}
-                className="flex-1 text-gray-400 hover:text-white hover:bg-gray-800"
+                className="flex-1 text-gray-400 hover:text-white hover:bg-white/\[0.07\]"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white border-0"
+                className="flex-1 bg-gradient-to-r bg-arcane hover:bg-arcane-glow text-white border-0"
               >
                 {link ? "Update Link" : "Create Link"}
               </Button>
@@ -411,3 +408,9 @@ const LinktreeModal = ({ isOpen, onClose, onSubmit, link = null }) => {
 };
 
 export default LinktreeModal;
+
+
+
+
+
+

@@ -166,9 +166,9 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           className="relative w-full max-w-6xl max-h-[95vh] overflow-y-auto"
         >
-          <Card className="border-gray-800/50 bg-[#13151a] shadow-2xl">
+          <Card className="border-white/\[0.06\] bg-[#13151a] shadow-2xl">
             {/* Header */}
-            <div className="sticky top-0 bg-[#13151a] border-b border-gray-800/50 p-6 z-10">
+            <div className="sticky top-0 bg-[#13151a] border-b border-white/\[0.06\] p-6 z-10">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold text-white">
@@ -180,7 +180,7 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
                 </div>
                 <button
                   onClick={onClose}
-                  className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                  className="p-2 hover:bg-white/\[0.07\] rounded-lg transition-colors"
                 >
                   <X className="w-5 h-5 text-gray-400" />
                 </button>
@@ -198,7 +198,7 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
                       Featured Image
                     </label>
                     <div className="space-y-3">
-                      <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-gray-800/50 border-2 border-dashed border-gray-700 hover:border-indigo-500/50 transition-colors">
+                      <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-white/\[0.05\] border-2 border-dashed border-gray-700 hover:border-indigo-500/50 transition-colors">
                         {imagePreview ? (
                           <>
                             <img
@@ -249,7 +249,7 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
                       value={formData.order}
                       onChange={(e) => setFormData({ ...formData, order: e.target.value })}
                       placeholder="0"
-                      className="bg-gray-800/50 border-gray-700 focus:border-indigo-500"
+                      className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-indigo-500"
                       disabled={isViewMode}
                     />
                     <p className="text-xs text-gray-500 mt-1">Lower numbers appear first</p>
@@ -268,7 +268,7 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
                         className={`w-full p-4 rounded-lg border-2 transition-all ${
                           formData.isActive
                             ? 'border-emerald-500 bg-emerald-500/10'
-                            : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                            : 'border-gray-700 bg-white/\[0.03\] hover:border-gray-600'
                         }`}
                       >
                         <div className="flex items-center gap-3">
@@ -286,7 +286,7 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
                         className={`w-full p-4 rounded-lg border-2 transition-all ${
                           !formData.isActive
                             ? 'border-yellow-500 bg-yellow-500/10'
-                            : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                            : 'border-gray-700 bg-white/\[0.03\] hover:border-gray-600'
                         }`}
                       >
                         <div className="flex items-center gap-3">
@@ -302,7 +302,7 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
 
                   {/* View Mode Info */}
                   {isViewMode && guide && (
-                    <div className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                    <div className="p-4 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                       <div className="space-y-3 text-sm">
                         <div>
                           <p className="text-gray-400 mb-1">Created</p>
@@ -334,7 +334,7 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
                       value={formData.title}
                       onChange={handleTitleChange}
                       placeholder="e.g., How to Install Mods"
-                      className="bg-gray-800/50 border-gray-700 focus:border-indigo-500 text-lg font-medium"
+                      className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-indigo-500 text-lg font-medium"
                       required
                       disabled={isViewMode}
                     />
@@ -352,7 +352,7 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
                         value={formData.slug}
                         onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                         placeholder="how-to-install-mods"
-                        className="flex-1 bg-gray-800/50 border-gray-700 focus:border-indigo-500 font-mono text-sm"
+                        className="flex-1 bg-[#1a1d24] border-gray-700 rounded-xl focus:border-indigo-500 font-mono text-sm"
                         required
                         disabled={isViewMode}
                       />
@@ -370,7 +370,7 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
                     
                     {isViewMode ? (
                       <div 
-                        className="prose prose-invert max-w-none p-6 bg-gray-800/30 rounded-lg border border-gray-700/50"
+                        className="prose prose-invert max-w-none p-6 bg-white/\[0.03\] rounded-lg border border-gray-700/50"
                         dangerouslySetInnerHTML={{ __html: formData.content }}
                       />
                     ) : (
@@ -440,7 +440,7 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
                   type="button"
                   onClick={onClose}
                   variant="outline"
-                  className="flex-1 border-gray-700 hover:bg-gray-800"
+                  className="flex-1 border-gray-700 hover:bg-white/\[0.07\]"
                 >
                   {isViewMode ? 'Tutup' : 'Batal'}
                 </Button>
@@ -473,3 +473,8 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
 };
 
 export default GuideModal;
+
+
+
+
+

@@ -184,7 +184,7 @@ const GuidesPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Total Guides</p>
@@ -204,7 +204,7 @@ const GuidesPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Published</p>
@@ -221,7 +221,7 @@ const GuidesPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Draft</p>
@@ -238,7 +238,7 @@ const GuidesPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">With Image</p>
@@ -252,7 +252,7 @@ const GuidesPage = () => {
       </div>
 
       {/* Filters & Search */}
-      <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+      <Card className="border-white/\[0.06\] bg-[#111318]">
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* Search */}
@@ -263,7 +263,7 @@ const GuidesPage = () => {
                 placeholder="Cari guide berdasarkan judul atau slug..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-gray-800/30 border-gray-700/50 focus:border-indigo-500/50"
+                className="pl-10 bg-[#1a1d24] border-gray-700/50 rounded-xl focus:border-indigo-500/50"
               />
             </div>
 
@@ -272,7 +272,7 @@ const GuidesPage = () => {
               <select
                 value={filters.isActive}
                 onChange={(e) => setFilters({ ...filters, isActive: e.target.value })}
-                className="w-full px-3 py-2 bg-gray-800/30 border border-gray-700/50 rounded-lg text-white focus:outline-none focus:border-indigo-500/50 transition-colors appearance-none cursor-pointer"
+                className="w-full px-3 py-2 bg-[#1a1d24] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-indigo-500/50 transition-colors appearance-none cursor-pointer [&_option]:bg-[#1a1d24] [&_option]:text-white [color-scheme:dark]"
               >
                 <option value="all">All Status</option>
                 <option value="true">Published</option>
@@ -281,13 +281,13 @@ const GuidesPage = () => {
             </div>
 
             {/* View Toggle */}
-            <div className="md:col-span-1 flex gap-2 bg-gray-800/30 p-1 rounded-lg">
+            <div className="md:col-span-1 flex gap-2 bg-white/\[0.03\] p-1 rounded-lg">
               <button
                 onClick={() => setViewMode('grid')}
                 className={`flex-1 p-2 rounded-lg transition-all ${
                   viewMode === 'grid'
                     ? 'bg-indigo-500/20 text-indigo-400'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                    : 'text-gray-400 hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 <Grid3x3 className="w-5 h-5 mx-auto" />
@@ -297,7 +297,7 @@ const GuidesPage = () => {
                 className={`flex-1 p-2 rounded-lg transition-all ${
                   viewMode === 'list'
                     ? 'bg-indigo-500/20 text-indigo-400'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                    : 'text-gray-400 hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 <List className="w-5 h-5 mx-auto" />
@@ -337,9 +337,9 @@ const GuidesPage = () => {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Card className="group border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-indigo-500/30 transition-all overflow-hidden h-full flex flex-col">
+                <Card className="group border-white/\[0.06\] bg-[#111318] hover:border-indigo-500/30 transition-all overflow-hidden h-full flex flex-col">
                   {/* Image */}
-                  <div className="relative h-48 overflow-hidden bg-gray-800/50">
+                  <div className="relative h-48 overflow-hidden bg-white/\[0.05\]">
                     {guide.imageUrl ? (
                       <img
                         src={getImageUrl(guide.imageUrl)}
@@ -356,7 +356,7 @@ const GuidesPage = () => {
                     <div className="absolute top-3 right-3">
                       <Badge className={`${
                         guide.isActive
-                          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                          ? 'bg-arcane/10 text-arcane border-emerald-500/30'
                           : 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
                       }`}>
                         {guide.isActive ? (
@@ -384,7 +384,7 @@ const GuidesPage = () => {
                   <CardContent className="p-6 flex-1 flex flex-col">
                     {/* Slug */}
                     <div className="flex items-center gap-2 mb-2">
-                      <code className="text-xs px-2 py-1 bg-gray-800/50 rounded text-indigo-400 border border-gray-700/50">
+                      <code className="text-xs px-2 py-1 bg-white/\[0.05\] rounded text-indigo-400 border border-gray-700/50">
                         /{guide.slug}
                       </code>
                     </div>
@@ -421,7 +421,7 @@ const GuidesPage = () => {
                         onClick={() => handleView(guide)}
                         variant="outline"
                         size="sm"
-                        className="flex-1 border-gray-700 hover:bg-gray-800 hover:border-blue-500/50 hover:text-blue-400"
+                        className="flex-1 border-gray-700 hover:bg-white/\[0.07\] hover:border-blue-500/50 hover:text-blue-400"
                       >
                         <Eye className="w-4 h-4 mr-1" />
                         View
@@ -430,7 +430,7 @@ const GuidesPage = () => {
                         onClick={() => handleEdit(guide)}
                         variant="outline"
                         size="sm"
-                        className="flex-1 border-gray-700 hover:bg-gray-800 hover:border-indigo-500/50 hover:text-indigo-400"
+                        className="flex-1 border-gray-700 hover:bg-white/\[0.07\] hover:border-indigo-500/50 hover:text-indigo-400"
                       >
                         <Edit2 className="w-4 h-4 mr-1" />
                         Edit
@@ -451,7 +451,7 @@ const GuidesPage = () => {
           </AnimatePresence>
         </div>
       ) : (
-        <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+        <Card className="border-white/\[0.06\] bg-[#111318]">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -474,7 +474,7 @@ const GuidesPage = () => {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors"
+                      className="border-b border-white/\[0.06\] hover:bg-white/\[0.03\] transition-colors"
                     >
                       <td className="p-4">
                         <Badge variant="outline" className="border-gray-700">
@@ -482,7 +482,7 @@ const GuidesPage = () => {
                         </Badge>
                       </td>
                       <td className="p-4">
-                        <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-800/50">
+                        <div className="w-16 h-16 rounded-lg overflow-hidden bg-white/\[0.05\]">
                           {guide.imageUrl ? (
                             <img
                               src={getImageUrl(guide.imageUrl)}
@@ -502,7 +502,7 @@ const GuidesPage = () => {
                         </p>
                       </td>
                       <td className="p-4">
-                        <code className="text-xs px-2 py-1 bg-gray-800/50 rounded text-indigo-400">
+                        <code className="text-xs px-2 py-1 bg-white/\[0.05\] rounded text-indigo-400">
                           /{guide.slug}
                         </code>
                       </td>
@@ -514,7 +514,7 @@ const GuidesPage = () => {
                       <td className="p-4">
                         <Badge className={`${
                           guide.isActive
-                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                            ? 'bg-arcane/10 text-arcane border-emerald-500/30'
                             : 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
                         }`}>
                           {guide.isActive ? 'Published' : 'Draft'}
@@ -531,7 +531,7 @@ const GuidesPage = () => {
                             onClick={() => handleView(guide)}
                             variant="outline"
                             size="sm"
-                            className="border-gray-700 hover:bg-gray-800 hover:border-blue-500/50 hover:text-blue-400"
+                            className="border-gray-700 hover:bg-white/\[0.07\] hover:border-blue-500/50 hover:text-blue-400"
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
@@ -539,7 +539,7 @@ const GuidesPage = () => {
                             onClick={() => handleEdit(guide)}
                             variant="outline"
                             size="sm"
-                            className="border-gray-700 hover:bg-gray-800 hover:border-indigo-500/50 hover:text-indigo-400"
+                            className="border-gray-700 hover:bg-white/\[0.07\] hover:border-indigo-500/50 hover:text-indigo-400"
                           >
                             <Edit2 className="w-4 h-4" />
                           </Button>
@@ -613,3 +613,8 @@ const GuidesPage = () => {
 };
 
 export default GuidesPage;
+
+
+
+
+

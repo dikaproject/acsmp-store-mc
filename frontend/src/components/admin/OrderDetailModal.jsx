@@ -44,7 +44,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
         label: 'Processing'
       },
       COMPLETED: {
-        color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+        color: 'bg-arcane/10 text-arcane border-emerald-500/30',
         icon: CheckCircle2,
         label: 'Completed'
       },
@@ -89,9 +89,9 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto"
         >
-          <Card className="border-gray-800/50 bg-[#13151a] shadow-2xl">
+          <Card className="border-white/\[0.06\] bg-[#13151a] shadow-2xl">
             {/* Header */}
-            <div className="sticky top-0 bg-[#13151a] border-b border-gray-800/50 p-6 z-10">
+            <div className="sticky top-0 bg-[#13151a] border-b border-white/\[0.06\] p-6 z-10">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
@@ -105,7 +105,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                     <p className="font-mono text-gray-400">{order.orderCode}</p>
                     <button
                       onClick={() => copyToClipboard(order.orderCode)}
-                      className="p-1 hover:bg-gray-800 rounded transition-colors"
+                      className="p-1 hover:bg-white/\[0.07\] rounded transition-colors"
                     >
                       <Copy className="w-3 h-3 text-gray-500" />
                     </button>
@@ -113,7 +113,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                 </div>
                 <button
                   onClick={onClose}
-                  className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                  className="p-2 hover:bg-white/\[0.07\] rounded-lg transition-colors"
                 >
                   <X className="w-5 h-5 text-gray-400" />
                 </button>
@@ -128,7 +128,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                   Customer Information
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                  <div className="p-4 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                     <p className="text-xs text-gray-400 mb-1">Minecraft Name</p>
                     <div className="flex items-center gap-2">
                       <p className="font-medium text-white">{order.minecraftName}</p>
@@ -142,7 +142,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                   </div>
 
                   {order.email && (
-                    <div className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                    <div className="p-4 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                       <p className="text-xs text-gray-400 mb-1">Email</p>
                       <div className="flex items-center gap-2">
                         <Mail className="w-4 h-4 text-gray-500" />
@@ -152,7 +152,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                   )}
 
                   {order.whatsapp && (
-                    <div className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                    <div className="p-4 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                       <p className="text-xs text-gray-400 mb-1">WhatsApp</p>
                       <div className="flex items-center gap-2">
                         <Phone className="w-4 h-4 text-gray-500" />
@@ -161,7 +161,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                     </div>
                   )}
 
-                  <div className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                  <div className="p-4 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                     <p className="text-xs text-gray-400 mb-1">Server Type</p>
                     <Badge variant="outline" className="border-blue-500/30 text-blue-400">
                       <Server className="w-3 h-3 mr-1" />
@@ -181,7 +181,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                   {order.items?.map((item) => (
                     <div
                       key={item.id}
-                      className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50 flex items-center justify-between"
+                      className="p-4 bg-white/\[0.03\] rounded-lg border border-gray-700/50 flex items-center justify-between"
                     >
                       <div className="flex items-center gap-4">
                         {item.product?.imageUrl && (
@@ -228,7 +228,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                     Payment Information
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                    <div className="p-4 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                       <p className="text-xs text-gray-400 mb-1">Payment Reference</p>
                       <div className="flex items-center gap-2">
                         <p className="font-mono text-sm text-white">{order.tripayReference}</p>
@@ -242,14 +242,14 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                     </div>
 
                     {order.tripayMethod && (
-                      <div className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                      <div className="p-4 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                         <p className="text-xs text-gray-400 mb-1">Payment Method</p>
                         <p className="font-medium text-white uppercase">{order.tripayMethod}</p>
                       </div>
                     )}
 
                     {order.paymentUrl && (
-                      <div className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                      <div className="p-4 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                         <p className="text-xs text-gray-400 mb-1">Payment URL</p>
                         <a
                           href={order.paymentUrl}
@@ -264,7 +264,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                     )}
 
                     {order.expiredAt && (
-                      <div className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                      <div className="p-4 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                         <p className="text-xs text-gray-400 mb-1">Payment Expires</p>
                         <p className="text-sm text-white">
                           {new Date(order.expiredAt).toLocaleString('id-ID')}
@@ -282,7 +282,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                   Timeline
                 </h3>
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                  <div className="flex items-center gap-3 p-3 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                     <Calendar className="w-4 h-4 text-gray-400" />
                     <div className="flex-1">
                       <p className="text-xs text-gray-400">Created</p>
@@ -304,7 +304,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                     </div>
                   )}
 
-                  <div className="flex items-center gap-3 p-3 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                  <div className="flex items-center gap-3 p-3 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                     <RefreshCw className="w-4 h-4 text-gray-400" />
                     <div className="flex-1">
                       <p className="text-xs text-gray-400">Last Updated</p>
@@ -321,7 +321,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                 <Button
                   onClick={onClose}
                   variant="outline"
-                  className="border-gray-700 hover:bg-gray-800"
+                  className="border-gray-700 hover:bg-white/\[0.07\]"
                 >
                   Close
                 </Button>
@@ -332,7 +332,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                       onUpdateStatus(order.id, 'COMPLETED');
                       onClose();
                     }}
-                    className="bg-gradient-to-r from-emerald-500 to-teal-500"
+                    className="bg-arcane"
                   >
                     <CheckCircle2 className="w-4 h-4 mr-2" />
                     Mark as Completed
@@ -371,7 +371,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                     toast.success("Order refreshed");
                   }}
                   variant="outline"
-                  className="border-gray-700 hover:bg-gray-800 ml-auto"
+                  className="border-gray-700 hover:bg-white/\[0.07\] ml-auto"
                 >
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Refresh
@@ -386,3 +386,8 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
 };
 
 export default OrderDetailModal;
+
+
+
+
+

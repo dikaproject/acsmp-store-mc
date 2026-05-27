@@ -286,8 +286,8 @@ const AdminLinktreePage = () => {
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
           >
-            <div className="absolute inset-0 border-4 border-emerald-500/20 rounded-full" />
-            <div className="absolute inset-0 border-4 border-emerald-500 border-t-transparent rounded-full" />
+            <div className="absolute inset-0 border-2 border-white/10 rounded-full" />
+            <div className="absolute inset-0 border-2 border-arcane border-t-transparent rounded-full" />
           </motion.div>
           <p className="text-gray-400">Loading linktree...</p>
         </div>
@@ -329,7 +329,7 @@ const AdminLinktreePage = () => {
               setEditingLink(null);
               setShowModal(true);
             }}
-            className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white border-0"
+            className="bg-gradient-to-r bg-arcane hover:bg-arcane-glow text-white border-0"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Link
@@ -346,7 +346,7 @@ const AdminLinktreePage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
           >
-            <Card className="bg-gradient-to-br from-[#13151a] to-[#0a0b0f] border-gray-800/50">
+            <Card className="bg-[#111318] border-white/\[0.06\]">
               <CardContent className="p-5">
                 <div className="flex items-center justify-between">
                   <div>
@@ -369,7 +369,7 @@ const AdminLinktreePage = () => {
       </div>
 
       {/* Profile Settings */}
-      <Card className="bg-gradient-to-br from-[#13151a] to-[#0a0b0f] border-gray-800/50">
+      <Card className="bg-[#111318] border-white/\[0.06\]">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-3">
@@ -385,7 +385,7 @@ const AdminLinktreePage = () => {
               size="sm"
               onClick={handleSaveSettings}
               disabled={saving}
-              className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white border-0"
+              className="bg-gradient-to-r bg-arcane hover:bg-arcane-glow text-white border-0"
             >
               <Save className="w-4 h-4 mr-2" />
               {saving ? "Saving..." : "Save"}
@@ -406,7 +406,7 @@ const AdminLinktreePage = () => {
                   }))
                 }
                 placeholder="Your Name / Server Name"
-                className="bg-gray-800/50 border-gray-700/50 text-white placeholder:text-gray-500"
+                className="bg-[#1a1d24] border-gray-700/50 rounded-xl placeholder:text-gray-500"
               />
             </div>
             <div>
@@ -422,7 +422,7 @@ const AdminLinktreePage = () => {
                   }))
                 }
                 placeholder="Short bio or tagline"
-                className="bg-gray-800/50 border-gray-700/50 text-white placeholder:text-gray-500"
+                className="bg-[#1a1d24] border-gray-700/50 rounded-xl placeholder:text-gray-500"
               />
             </div>
             <div>
@@ -438,7 +438,7 @@ const AdminLinktreePage = () => {
                   }))
                 }
                 placeholder="https://example.com/avatar.png"
-                className="bg-gray-800/50 border-gray-700/50 text-white placeholder:text-gray-500"
+                className="bg-[#1a1d24] border-gray-700/50 rounded-xl placeholder:text-gray-500"
               />
             </div>
           </div>
@@ -446,7 +446,7 @@ const AdminLinktreePage = () => {
       </Card>
 
       {/* Background Customization */}
-      <Card className="bg-gradient-to-br from-[#13151a] to-[#0a0b0f] border-gray-800/50">
+      <Card className="bg-[#111318] border-white/\[0.06\]">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-3">
@@ -462,7 +462,7 @@ const AdminLinktreePage = () => {
               size="sm"
               onClick={handleSaveSettings}
               disabled={saving}
-              className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white border-0"
+              className="bg-gradient-to-r bg-arcane hover:bg-arcane-glow text-white border-0"
             >
               <Save className="w-4 h-4 mr-2" />
               {saving ? "Saving..." : "Save"}
@@ -500,7 +500,7 @@ const AdminLinktreePage = () => {
                         }))
                       }
                       placeholder="#050507 or any CSS color"
-                      className="bg-gray-800/50 border-gray-700/50 text-white placeholder:text-gray-500 font-mono text-sm"
+                      className="bg-[#1a1d24] border-gray-700/50 rounded-xl placeholder:text-gray-500 font-mono text-sm"
                     />
                   </div>
                   {profileSettings.linktreeBgColor && (
@@ -511,7 +511,7 @@ const AdminLinktreePage = () => {
                           linktreeBgColor: "",
                         }))
                       }
-                      className="w-10 h-10 rounded-lg bg-gray-800/50 hover:bg-red-500/10 text-gray-500 hover:text-red-400 flex items-center justify-center transition-all"
+                      className="w-10 h-10 rounded-lg bg-white/\[0.05\] hover:bg-red-500/10 text-gray-500 hover:text-red-400 flex items-center justify-center transition-all"
                       title="Reset to default"
                     >
                       <X className="w-4 h-4" />
@@ -542,7 +542,7 @@ const AdminLinktreePage = () => {
                       }
                       className={`group relative w-8 h-8 rounded-lg border-2 transition-all hover:scale-110 ${
                         profileSettings.linktreeBgColor === preset.color
-                          ? "border-emerald-400 shadow-lg shadow-emerald-500/20"
+                          ? "border-emerald-400 border border-arcane/30"
                           : "border-gray-700 hover:border-gray-500"
                       }`}
                       style={{ backgroundColor: preset.color }}
@@ -653,7 +653,7 @@ const AdminLinktreePage = () => {
       </Card>
 
       {/* Search & Filter */}
-      <Card className="bg-gradient-to-br from-[#13151a] to-[#0a0b0f] border-gray-800/50">
+      <Card className="bg-[#111318] border-white/\[0.06\]">
         <CardContent className="p-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -661,7 +661,7 @@ const AdminLinktreePage = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search links..."
-              className="pl-10 bg-gray-800/50 border-gray-700/50 text-white placeholder:text-gray-500"
+              className="pl-10 bg-[#1a1d24] border-gray-700/50 rounded-xl placeholder:text-gray-500"
             />
           </div>
         </CardContent>
@@ -681,7 +681,7 @@ const AdminLinktreePage = () => {
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Card className="bg-gradient-to-br from-[#13151a] to-[#0a0b0f] border-gray-800/50 hover:border-gray-700/50 transition-all group">
+                <Card className="bg-[#111318] border-white/\[0.06\] hover:border-gray-700/50 transition-all group">
                   <CardContent className="p-4">
                     <div className="flex items-center gap-4">
                       {/* Drag handle & Order */}
@@ -689,7 +689,7 @@ const AdminLinktreePage = () => {
                         <button
                           onClick={() => handleMoveUp(index)}
                           disabled={index === 0}
-                          className="w-7 h-7 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 flex items-center justify-center text-gray-500 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                          className="w-7 h-7 rounded-lg bg-white/\[0.05\] hover:bg-white/[0.05] flex items-center justify-center text-gray-500 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                         >
                           <ArrowUp className="w-3.5 h-3.5" />
                         </button>
@@ -697,7 +697,7 @@ const AdminLinktreePage = () => {
                         <button
                           onClick={() => handleMoveDown(index)}
                           disabled={index === links.length - 1}
-                          className="w-7 h-7 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 flex items-center justify-center text-gray-500 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                          className="w-7 h-7 rounded-lg bg-white/\[0.05\] hover:bg-white/[0.05] flex items-center justify-center text-gray-500 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                         >
                           <ArrowDown className="w-3.5 h-3.5" />
                         </button>
@@ -742,7 +742,7 @@ const AdminLinktreePage = () => {
                           className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
                             link.isActive
                               ? "bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20"
-                              : "bg-gray-800/50 text-gray-500 hover:bg-gray-700/50 hover:text-white"
+                              : "bg-white/\[0.05\] text-gray-500 hover:bg-white/[0.05] hover:text-white"
                           }`}
                           title={link.isActive ? "Deactivate" : "Activate"}
                         >
@@ -798,7 +798,7 @@ const AdminLinktreePage = () => {
                   setEditingLink(null);
                   setShowModal(true);
                 }}
-                className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white border-0"
+                className="bg-gradient-to-r bg-arcane hover:bg-arcane-glow text-white border-0"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add First Link
@@ -831,3 +831,9 @@ const AdminLinktreePage = () => {
 };
 
 export default AdminLinktreePage;
+
+
+
+
+
+

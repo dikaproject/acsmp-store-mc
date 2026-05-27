@@ -62,17 +62,17 @@ function SkinPreview3D({ source, model }) {
         ref={canvasRef}
         width={220}
         height={340}
-        className={`rounded-xl border border-purple-500/30 bg-black/40 shadow-lg shadow-purple-900/20 transition-opacity duration-300 ${
+        className={`rounded-xl border border-arcane/30 bg-black/40 shadow-lg shadow-arcane/10 transition-opacity duration-300 ${
           status === "ready" ? "opacity-100" : "opacity-0 absolute pointer-events-none"
         }`}
       />
       {status === "loading" && (
         <div className="flex flex-col items-center gap-3 text-gray-500 py-8">
           <div className="relative w-16 h-16">
-            <div className="absolute inset-0 rounded-full border-2 border-purple-500/20 animate-ping" />
-            <div className="absolute inset-0 rounded-full border-2 border-purple-500/30" />
-            <div className="relative w-full h-full rounded-full bg-purple-500/10 flex items-center justify-center">
-              <Loader2 className="w-7 h-7 text-purple-400 animate-spin" />
+            <div className="absolute inset-0 rounded-full border-2 border-arcane/20 animate-ping" />
+            <div className="absolute inset-0 rounded-full border-2 border-arcane/30" />
+            <div className="relative w-full h-full rounded-full bg-arcane/10 flex items-center justify-center">
+              <Loader2 className="w-7 h-7 text-arcane animate-spin" />
             </div>
           </div>
           <p className="text-xs text-gray-500">Memuat preview 3D…</p>
@@ -109,15 +109,15 @@ function UploadProgress({ step }) {
         initial={{ scale: 0.92, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.92, y: 20 }}
-        className="bg-[#0d0d12] border border-purple-500/30 rounded-2xl p-8 w-full max-w-sm mx-4 shadow-2xl shadow-purple-900/40"
+        className="bg-[#0d0d12] border border-arcane/30 rounded-2xl p-8 w-full max-w-sm mx-4 shadow-2xl shadow-arcane/20"
       >
         <div className="flex flex-col items-center gap-6">
           {/* Spinner */}
           <div className="relative w-20 h-20">
-            <div className="absolute inset-0 rounded-full border-2 border-purple-500/20 animate-ping" />
-            <div className="absolute inset-0 rounded-full border-2 border-purple-500/40" />
-            <div className="relative w-full h-full rounded-full bg-purple-500/10 flex items-center justify-center">
-              <Loader2 className="w-8 h-8 text-purple-400 animate-spin" />
+            <div className="absolute inset-0 rounded-full border-2 border-arcane/20 animate-ping" />
+            <div className="absolute inset-0 rounded-full border-2 border-arcane/40" />
+            <div className="relative w-full h-full rounded-full bg-arcane/10 flex items-center justify-center">
+              <Loader2 className="w-8 h-8 text-arcane animate-spin" />
             </div>
           </div>
           <div className="text-center">
@@ -136,17 +136,17 @@ function UploadProgress({ step }) {
                   animate={{ opacity: i <= currentIdx ? 1 : 0.25, x: 0 }}
                   transition={{ delay: i * 0.08 }}
                   className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-                    current ? "bg-purple-500/10 border border-purple-500/20" : ""
+                    current ? "bg-arcane/10 border border-arcane/20" : ""
                   }`}
                 >
                   <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
                     done    ? "bg-emerald-500/20" :
-                    current ? "bg-purple-500/20" : "bg-white/5"
+                    current ? "bg-arcane/20" : "bg-white/5"
                   }`}>
                     {done
                       ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                       : current
-                        ? <Loader2 className="w-3 h-3 text-purple-400 animate-spin" />
+                        ? <Loader2 className="w-3 h-3 text-arcane animate-spin" />
                         : <div className="w-1.5 h-1.5 rounded-full bg-gray-600" />
                     }
                   </div>
@@ -275,13 +275,13 @@ export default function SkinPage() {
     </AnimatePresence>
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <div className="relative overflow-hidden border-b border-purple-500/20">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-violet-900/10 to-transparent pointer-events-none" />
+      <div className="relative overflow-hidden border-b border-arcane/20">
+        <div className="absolute inset-0 bg-gradient-to-r from-arcane/10 via-arcane/5 to-transparent pointer-events-none" />
         <div className="relative max-w-5xl mx-auto px-4 py-12 sm:py-16 text-center">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-1.5 text-sm text-purple-300 mb-4"
+            className="inline-flex items-center gap-2 bg-arcane/10 border border-arcane/30 rounded-full px-4 py-1.5 text-sm text-arcane mb-4"
           >
             <Palette className="w-4 h-4" />
             Skin Uploader
@@ -290,7 +290,7 @@ export default function SkinPage() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
-            className="text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-violet-400 to-purple-300 mb-3"
+            className="text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-arcane via-arcane-glow to-arcane mb-3"
           >
             Upload Custom Skin
           </motion.h1>
@@ -317,7 +317,7 @@ export default function SkinPage() {
             className="bg-white/[0.02] border border-white/10 rounded-2xl p-6 flex flex-col gap-6"
           >
             <h2 className="text-lg font-semibold text-gray-200 flex items-center gap-2">
-              <Upload className="w-5 h-5 text-purple-400" /> Upload Skin
+              <Upload className="w-5 h-5 text-arcane" /> Upload Skin
             </h2>
 
             {/* Drop zone */}
@@ -330,10 +330,10 @@ export default function SkinPage() {
                 relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 select-none
                 flex flex-col items-center justify-center gap-3 py-10 px-6 text-center
                 ${dragging
-                  ? "border-purple-400 bg-purple-500/10"
+                  ? "border-arcane bg-arcane/10"
                   : file
-                    ? "border-purple-500/40 bg-purple-500/5"
-                    : "border-white/10 hover:border-purple-500/40 hover:bg-white/[0.03]"
+                    ? "border-arcane/40 bg-arcane/5"
+                    : "border-white/10 hover:border-arcane/40 hover:bg-white/[0.03]"
                 }
               `}
             >
@@ -350,15 +350,15 @@ export default function SkinPage() {
                   <img
                     src={preview}
                     alt="Preview"
-                    className="w-24 h-24 object-contain rounded-lg border border-purple-500/20 bg-black/40"
+                    className="w-24 h-24 object-contain rounded-lg border border-arcane/20 bg-black/40"
                   />
-                  <p className="text-sm text-purple-300 font-medium">{file?.name}</p>
+                  <p className="text-sm text-arcane font-medium">{file?.name}</p>
                   <p className="text-xs text-gray-500">Klik untuk ganti file</p>
                 </>
               ) : (
                 <>
-                  <div className="w-14 h-14 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
-                    <ImageIcon className="w-7 h-7 text-purple-400" />
+                  <div className="w-14 h-14 rounded-full bg-arcane/10 border border-arcane/20 flex items-center justify-center">
+                    <ImageIcon className="w-7 h-7 text-arcane" />
                   </div>
                   <div>
                     <p className="text-gray-300 font-medium">Drag & drop skin PNG</p>
@@ -384,7 +384,7 @@ export default function SkinPage() {
                     className={`
                       relative flex flex-col items-start gap-0.5 p-3 rounded-xl border text-left transition-all
                       ${model === value
-                        ? "border-purple-500 bg-purple-500/10 text-white"
+                        ? "border-arcane bg-arcane/10 text-white"
                         : "border-white/10 text-gray-400 hover:border-white/20 hover:bg-white/[0.03]"
                       }
                     `}
@@ -392,7 +392,7 @@ export default function SkinPage() {
                     <span className="font-medium text-sm">{label}</span>
                     <span className="text-xs opacity-70">{desc}</span>
                     {model === value && (
-                      <CheckCircle2 className="absolute top-2.5 right-2.5 w-4 h-4 text-purple-400" />
+                      <CheckCircle2 className="absolute top-2.5 right-2.5 w-4 h-4 text-arcane" />
                     )}
                   </button>
                 ))}
@@ -404,9 +404,9 @@ export default function SkinPage() {
               onClick={handleUpload}
               disabled={!file || loading}
               className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold transition-all
-                bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500
+                bg-arcane text-bone hover:bg-arcane-glow
                 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none
-                shadow-lg shadow-purple-900/30"
+                shadow-lg shadow-arcane/20"
             >
               <Upload className="w-4 h-4" />
               Upload Skin
@@ -433,7 +433,7 @@ export default function SkinPage() {
             <div className="bg-white/[0.02] border border-white/10 rounded-2xl p-6 flex flex-col items-center gap-4">
               <div className="self-stretch flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-gray-200 flex items-center gap-2">
-                  <User className="w-5 h-5 text-purple-400" /> Preview 3D
+                  <User className="w-5 h-5 text-arcane" /> Preview 3D
                 </h2>
                 {result?.skinUrl && (
                   <span className="text-xs text-emerald-400 flex items-center gap-1">
@@ -465,7 +465,7 @@ export default function SkinPage() {
                       onClick={() => setModel(value)}
                       className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${
                         model === value
-                          ? "bg-purple-500/20 border-purple-500/50 text-purple-300"
+                          ? "bg-arcane/15 border-arcane/40 text-arcane"
                           : "border-white/10 text-gray-500 hover:border-white/20 hover:text-gray-300"
                       }`}
                     >
@@ -495,7 +495,7 @@ export default function SkinPage() {
                     <div>
                       <p className="text-xs text-gray-400 mb-1.5">Command in-game:</p>
                       <div className="flex items-center gap-2 bg-black/40 border border-white/10 rounded-lg px-3 py-2 group">
-                        <code className="flex-1 text-sm text-purple-300 font-mono break-all">
+                        <code className="flex-1 text-sm text-arcane font-mono break-all">
                           {skinCommand}
                         </code>
                         <button

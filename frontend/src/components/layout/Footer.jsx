@@ -81,20 +81,20 @@ const Footer = () => {
   ].filter(social => settings[social.key]);
 
   return (
-    <footer className="relative bg-black border-t border-white/10 overflow-hidden" style={{ fontFamily: "'Inter', 'Poppins', sans-serif" }}>
+    <footer className="relative bg-ink border-t border-ink-border overflow-hidden">
       {/* Enhanced Decorative Background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-950/10 via-black to-black" />
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(139,92,246,0.05)_0%,transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(168,85,247,0.05)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-arcane/5 via-ink to-ink" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-arcane/40 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(116,80,163,0.06)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(116,80,163,0.04)_0%,transparent_50%)]" />
         
         {/* Animated mesh grid */}
         <div className="absolute inset-0 opacity-[0.02]">
           <div className="absolute inset-0" style={{
             backgroundImage: `
-              linear-gradient(to right, rgba(139,92,246,0.3) 1px, transparent 1px),
-              linear-gradient(to bottom, rgba(139,92,246,0.3) 1px, transparent 1px)
+              linear-gradient(to right, rgba(116,80,163,0.15) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(116,80,163,0.15) 1px, transparent 1px)
             `,
             backgroundSize: '60px 60px',
           }} />
@@ -112,38 +112,30 @@ const Footer = () => {
             viewport={{ once: true }}
             className="lg:col-span-5 space-y-6"
           >
-            {/* Logo with glow effect */}
+            {/* Logo - clean, no card wrapper */}
             <Link to="/" className="inline-flex items-center gap-3 group">
-              <div className="relative">
-                <div className="absolute -inset-2 bg-gradient-to-r from-purple-500 to-violet-500 rounded-2xl opacity-0 group-hover:opacity-20 blur-lg transition-opacity" />
-                <div className="relative w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500/20 to-violet-500/20 flex items-center justify-center border border-purple-500/30">
-                  <img 
-                    src="/logo.png" 
-                    alt="Amazing Craft Logo" 
-                    className="h-10 w-auto group-hover:scale-110 transition-transform" 
-                  />
-                </div>
-              </div>
+              <img
+                src="/logo.png"
+                alt="Amazing Craft Logo"
+                className="h-14 w-auto group-hover:scale-105 transition-transform duration-300"
+              />
               <div>
-                <h3 className="text-2xl font-black text-white" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
-                  AMAZING CRAFT
+                <h3 className="text-2xl font-display text-bone tracking-tight">
+                  Amazing Craft
                 </h3>
-                <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Premium Minecraft Server</p>
+                <p className="text-xs text-bone-subtle uppercase tracking-widest">Premium Minecraft Server</p>
               </div>
             </Link>
 
-            <p className="text-gray-400 text-sm leading-relaxed max-w-md">
-              Join thousands of players in our premium Minecraft server with custom features, 
+            <p className="text-bone-muted text-sm leading-relaxed max-w-md">
+              Join thousands of players in our premium Minecraft server with custom features,
               active community, and unforgettable adventures. Experience next-gen survival gameplay today.
             </p>
 
             {/* Server Status Badge */}
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-500/10 border border-purple-500/30 backdrop-blur-sm">
-              <div className="relative flex-shrink-0">
-                <div className="w-2.5 h-2.5 rounded-full bg-purple-400 animate-pulse" />
-                <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-purple-400 animate-ping" />
-              </div>
-              <span className="text-xs font-bold text-purple-400 uppercase tracking-widest">Server Online • 24/7</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-arcane/10 border border-arcane/30">
+              <div className="w-1.5 h-1.5 bg-arcane" />
+              <span className="text-[11px] font-medium text-arcane uppercase tracking-widest">Server Online · 24/7</span>
             </div>
           </motion.div>
 
@@ -155,8 +147,8 @@ const Footer = () => {
             transition={{ delay: 0.1 }}
             className="lg:col-span-2"
           >
-            <h3 className="text-white font-black mb-6 flex items-center gap-2 text-sm uppercase tracking-wider" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
-              <div className="w-1 h-6 bg-gradient-to-b from-purple-400 to-violet-400 rounded-full" />
+            <h3 className="text-bone font-medium mb-6 flex items-center gap-3 text-xs uppercase tracking-widest">
+              <div className="w-6 h-px bg-arcane" />
               Quick Links
             </h3>
             <ul className="space-y-3">
@@ -170,9 +162,9 @@ const Footer = () => {
                 >
                   <Link
                     to={link.path}
-                    className="text-sm text-gray-400 hover:text-purple-400 transition-all duration-200 inline-flex items-center gap-2.5 group"
+                    className="text-sm text-bone-muted hover:text-arcane transition-colors duration-200 inline-flex items-center gap-2.5 group"
                   >
-                    <link.icon className="w-4 h-4 text-purple-400/40 group-hover:text-purple-400 transition-colors" />
+                    <link.icon className="w-4 h-4 text-bone-subtle group-hover:text-arcane transition-colors" />
                     <span className="group-hover:translate-x-1 transition-transform font-medium">{link.name}</span>
                   </Link>
                 </motion.li>
@@ -188,8 +180,8 @@ const Footer = () => {
             transition={{ delay: 0.15 }}
             className="lg:col-span-2"
           >
-            <h3 className="text-white font-black mb-6 flex items-center gap-2 text-sm uppercase tracking-wider" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
-              <div className="w-1 h-6 bg-gradient-to-b from-violet-400 to-fuchsia-400 rounded-full" />
+            <h3 className="text-bone font-medium mb-6 flex items-center gap-3 text-xs uppercase tracking-widest">
+              <div className="w-6 h-px bg-arcane" />
               Services
             </h3>
             <ul className="space-y-3">
@@ -203,9 +195,9 @@ const Footer = () => {
                 >
                   <Link
                     to={link.path}
-                    className="text-sm text-gray-400 hover:text-violet-400 transition-all duration-200 inline-flex items-center gap-2.5 group"
+                    className="text-sm text-bone-muted hover:text-arcane transition-colors duration-200 inline-flex items-center gap-2.5 group"
                   >
-                    <link.icon className="w-4 h-4 text-violet-400/40 group-hover:text-violet-400 transition-colors" />
+                    <link.icon className="w-4 h-4 text-bone-subtle group-hover:text-arcane transition-colors" />
                     <span className="group-hover:translate-x-1 transition-transform font-medium">{link.name}</span>
                   </Link>
                 </motion.li>
@@ -221,8 +213,8 @@ const Footer = () => {
             transition={{ delay: 0.2 }}
             className="lg:col-span-3"
           >
-            <h3 className="text-white font-black mb-6 flex items-center gap-2 text-sm uppercase tracking-wider" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
-              <div className="w-1 h-6 bg-gradient-to-b from-fuchsia-400 to-purple-400 rounded-full" />
+            <h3 className="text-bone font-medium mb-6 flex items-center gap-3 text-xs uppercase tracking-widest">
+              <div className="w-6 h-px bg-arcane" />
               Contact Us
             </h3>
             
@@ -234,12 +226,12 @@ const Footer = () => {
                   whileHover={{ x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/10 to-violet-500/10 flex items-center justify-center border border-purple-500/20 flex-shrink-0 group-hover:border-purple-500/40 transition-colors">
-                    <MapPin className="w-5 h-5 text-purple-400" />
+                  <div className="w-10 h-10 bg-arcane/10 flex items-center justify-center border border-arcane/20 flex-shrink-0 group-hover:border-arcane/40 transition-colors">
+                    <MapPin className="w-5 h-5 text-arcane" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 mb-1 font-semibold uppercase tracking-wider">Location</p>
-                    <p className="text-sm text-gray-300 leading-relaxed">{settings.location}</p>
+                    <p className="text-xs text-bone-subtle mb-1 uppercase tracking-widest">Location</p>
+                    <p className="text-sm text-bone-muted leading-relaxed">{settings.location}</p>
                   </div>
                 </motion.div>
               )}
@@ -250,14 +242,14 @@ const Footer = () => {
                   whileHover={{ x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/10 to-fuchsia-500/10 flex items-center justify-center border border-violet-500/20 flex-shrink-0 group-hover:border-violet-500/40 transition-colors">
-                    <Mail className="w-5 h-5 text-violet-400" />
+                  <div className="w-10 h-10 bg-arcane/10 flex items-center justify-center border border-arcane/20 flex-shrink-0 group-hover:border-arcane/40 transition-colors">
+                    <Mail className="w-5 h-5 text-arcane" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 mb-1 font-semibold uppercase tracking-wider">Email</p>
+                    <p className="text-xs text-bone-subtle mb-1 uppercase tracking-widest">Email</p>
                     <a 
                       href={`mailto:${settings.email}`}
-                      className="text-sm text-gray-300 hover:text-violet-400 transition-colors break-all"
+                      className="text-sm text-bone-muted hover:text-arcane transition-colors break-all"
                     >
                       {settings.email}
                     </a>
@@ -271,16 +263,16 @@ const Footer = () => {
                   whileHover={{ x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500/10 to-emerald-500/10 flex items-center justify-center border border-green-500/20 flex-shrink-0 group-hover:border-green-500/40 transition-colors">
+                  <div className="w-10 h-10 bg-arcane/10 flex items-center justify-center border border-arcane/20 flex-shrink-0 group-hover:border-arcane/40 transition-colors">
                     <Phone className="w-5 h-5 text-green-400" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 mb-1 font-semibold uppercase tracking-wider">WhatsApp</p>
+                    <p className="text-xs text-bone-subtle mb-1 uppercase tracking-widest">WhatsApp</p>
                     <a 
                       href={`https://wa.me/${settings.whatsapp.replace(/[^0-9]/g, '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-gray-300 hover:text-green-400 transition-colors"
+                      className="text-sm text-bone-muted hover:text-arcane transition-colors"
                     >
                       {settings.whatsapp}
                     </a>
@@ -306,7 +298,7 @@ const Footer = () => {
             {/* Social Links */}
             {!loading && socialLinks.length > 0 && (
               <div className="mt-8 pt-6 border-t border-white/10">
-                <p className="text-xs text-gray-500 mb-4 uppercase tracking-widest font-bold">Follow Us</p>
+                <p className="text-xs text-bone-subtle mb-4 uppercase tracking-widest">Follow Us</p>
                 <div className="flex flex-wrap gap-3">
                   {socialLinks.map((social) => (
                     <motion.a
@@ -321,7 +313,7 @@ const Footer = () => {
                     >
                       <div className={`h-11 w-11 rounded-xl bg-gradient-to-br ${social.color} opacity-0 group-hover:opacity-100 absolute inset-0 blur-lg transition-opacity`} />
                       <div className="h-11 w-11 rounded-xl bg-white/5 group-hover:bg-white/10 flex items-center justify-center transition-all relative border border-white/10 group-hover:border-white/20 backdrop-blur-sm">
-                        <social.icon className="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" />
+                        <social.icon className="h-5 w-5 text-bone-muted group-hover:text-arcane transition-colors" />
                       </div>
                     </motion.a>
                   ))}
@@ -340,10 +332,10 @@ const Footer = () => {
               viewport={{ once: true }}
               className="text-center md:text-left"
             >
-              <p className="text-sm text-gray-400">
-                © {currentYear} <span className="text-white font-bold">AMAZING CRAFT</span>. All rights reserved.
+              <p className="text-sm text-bone-muted">
+                © {currentYear} <span className="text-bone font-medium">Amazing Craft</span>. All rights reserved.
               </p>
-              <p className="text-xs text-gray-600 mt-1">
+              <p className="text-xs text-bone-subtle mt-1">
                 Made with <motion.span 
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 1, repeat: Infinity, repeatDelay: 1 }}
@@ -365,15 +357,14 @@ const Footer = () => {
                 className="group"
               >
                 <div className="relative">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-violet-500 rounded-xl opacity-0 group-hover:opacity-20 blur transition-opacity" />
-                  <div className="relative flex items-center gap-2 px-5 py-2.5 rounded-xl bg-black/60 border border-white/10 group-hover:border-purple-500/50 transition-all backdrop-blur-sm">
-                    <span className="text-xs text-gray-400 font-medium">Powered by</span>
+                  <div className="relative flex items-center gap-2 px-5 py-2.5 bg-ink-elevated border border-ink-border group-hover:border-arcane/50 transition-colors">
+                    <span className="text-xs text-bone-muted font-medium">Powered by</span>
                     <div className="flex items-center gap-1.5">
-                      <Zap className="w-4 h-4 text-purple-400" />
-                      <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
+                      <Zap className="w-4 h-4 text-arcane" />
+                      <span className="font-medium text-arcane">
                         NexusCloud
                       </span>
-                      <ExternalLink className="w-3 h-3 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <ExternalLink className="w-3 h-3 text-arcane opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                   </div>
                 </div>

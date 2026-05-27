@@ -108,23 +108,6 @@ const GuidesPage = () => {
           <GridPattern />
         </div>
         
-        {/* Animated orbs */}
-        <motion.div
-          className="absolute top-20 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1.3, 1, 1.3],
-            opacity: [0.5, 0.3, 0.5],
-          }}
-          transition={{ duration: 8, repeat: Infinity, delay: 1 }}
-        />
         
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
@@ -138,7 +121,7 @@ const GuidesPage = () => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 backdrop-blur-xl border border-emerald-500/30 rounded-full mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30 rounded-full mb-6"
             >
               <BookOpen className="w-4 h-4 text-emerald-400" />
               <span className="text-sm text-emerald-400 font-medium">Panduan & Tutorial</span>
@@ -333,19 +316,17 @@ const GuidesPage = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -5 }}
                 >
                   <SpotlightCard 
                     className="rounded-2xl"
                     spotlightColor="rgba(16, 185, 129, 0.15)"
                   >
-                    <div className="relative p-8 text-center bg-[#0a0b0f] rounded-2xl border border-emerald-500/20 backdrop-blur-xl">
-                      <motion.div 
-                        className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-xl shadow-emerald-500/20"
-                        whileHover={{ rotate: 5, scale: 1.05 }}
+                    <div className="relative p-8 text-center bg-[#0a0b0f] rounded-2xl border border-emerald-500/20 hover:-translate-y-1 transition-transform">
+                      <div
+                        className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-xl shadow-emerald-500/20 group-hover:scale-105 transition-transform"
                       >
                         <Icon className="w-8 h-8 text-white" />
-                      </motion.div>
+                      </div>
                       <p className="text-3xl font-bold text-white mb-2">
                         {stat.value}
                       </p>
@@ -379,14 +360,13 @@ const GuidesPage = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              whileHover={{ y: -5 }}
             >
               <Link to={`/guides/${featuredGuide.slug}`}>
                 <SpotlightCard 
                   className="rounded-2xl"
                   spotlightColor="rgba(16, 185, 129, 0.2)"
                 >
-                  <div className="relative overflow-hidden bg-gradient-to-br from-[#0f1015] via-[#0a0b0f] to-black rounded-2xl border border-emerald-500/20 backdrop-blur-xl shadow-2xl shadow-emerald-500/10 group">
+                  <div className="relative overflow-hidden bg-gradient-to-br from-[#0f1015] via-[#0a0b0f] to-black rounded-2xl border border-emerald-500/20 shadow-2xl shadow-emerald-500/10 group">
                     {/* Glow effect on hover */}
                     <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     
@@ -427,12 +407,10 @@ const GuidesPage = () => {
                           <span>5 min read</span>
                         </div>
                         
-                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                          <Button className="w-fit bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 shadow-lg shadow-emerald-500/30">
+                        <Button className="w-fit bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 shadow-lg shadow-emerald-500/30">
                             Baca Panduan
                             <ArrowRight className="ml-2 w-4 h-4" />
                           </Button>
-                        </motion.div>
                       </div>
                     </div>
                   </div>
@@ -499,14 +477,13 @@ const GuidesPage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -5 }}
                 >
                   <Link to={`/guides/${guide.slug}`}>
                     <SpotlightCard 
                       className="rounded-2xl h-full"
                       spotlightColor="rgba(16, 185, 129, 0.15)"
                     >
-                      <div className="h-full overflow-hidden bg-gradient-to-br from-[#0f1015] via-[#0a0b0f] to-black rounded-2xl border border-emerald-500/20 backdrop-blur-xl shadow-xl shadow-emerald-500/5 group">
+                      <div className="h-full overflow-hidden bg-gradient-to-br from-[#0f1015] via-[#0a0b0f] to-black rounded-2xl border border-emerald-500/20 shadow-xl shadow-emerald-500/5 group">
                         {/* Glow effect on hover */}
                         <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
                         
@@ -535,9 +512,7 @@ const GuidesPage = () => {
                               <Clock className="w-3.5 h-3.5" />
                               <span>5 min read</span>
                             </div>
-                            <motion.div whileHover={{ x: 5 }}>
-                              <ArrowRight className="w-5 h-5 text-emerald-400" />
-                            </motion.div>
+                            <ArrowRight className="w-5 h-5 text-emerald-400 group-hover:translate-x-1 transition-transform" />
                           </div>
                         </div>
                       </div>
@@ -563,12 +538,11 @@ const GuidesPage = () => {
             viewport={{ once: true }}
             className="text-center max-w-2xl mx-auto"
           >
-            <motion.div 
+            <div
               className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-500 flex items-center justify-center shadow-2xl shadow-indigo-500/30"
-              whileHover={{ rotate: 12, scale: 1.1 }}
             >
               <MessageCircle className="w-10 h-10 text-white" />
-            </motion.div>
+            </div>
             
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
               Masih Bingung?
@@ -604,11 +578,7 @@ const GuidesPage = () => {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <motion.div
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
-                    className="w-2 h-2 rounded-full bg-emerald-500"
-                  />
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="flex items-center gap-1">
                     <span>{item.icon}</span>
                     {item.label}

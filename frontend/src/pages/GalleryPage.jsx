@@ -82,8 +82,8 @@ const GalleryPage = () => {
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
           >
-            <div className="absolute inset-0 border-4 border-purple-500/20 rounded-full" />
-            <div className="absolute inset-0 border-4 border-purple-500 border-t-transparent rounded-full" />
+            <div className="absolute inset-0 border-4 border-arcane/20 rounded-full" />
+            <div className="absolute inset-0 border-4 border-arcane border-t-transparent rounded-full" />
           </motion.div>
           <p className="text-gray-400">Loading gallery...</p>
         </div>
@@ -97,28 +97,11 @@ const GalleryPage = () => {
       <section className="relative overflow-hidden py-20 bg-black">
         {/* Background effects */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-950/20 via-black to-black" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(168,85,247,0.1),transparent_50%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-arcane/10 via-black to-black" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,165,116,0.08),transparent_50%)]" />
           <GridPattern />
         </div>
 
-        {/* Animated orbs */}
-        <motion.div
-          className="absolute top-20 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.5, 0.3, 0.5],
-          }}
-          transition={{ duration: 8, repeat: Infinity, delay: 1 }}
-        />
 
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
@@ -127,15 +110,15 @@ const GalleryPage = () => {
             className="text-center max-w-3xl mx-auto"
           >
             {/* Badge */}
-            <motion.div 
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-full mb-6 backdrop-blur-xl"
+            <motion.div
+              className="inline-flex items-center gap-2 px-4 py-2 bg-arcane/10 border border-arcane/30 rounded-full mb-6 backdrop-blur-xl"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", delay: 0.2 }}
             >
-              <Grid3x3 className="w-4 h-4 text-purple-400" />
-              <span className="text-sm text-purple-400 font-medium">Gallery</span>
-              <Sparkles className="w-4 h-4 text-pink-400" />
+              <Grid3x3 className="w-4 h-4 text-arcane" />
+              <span className="text-sm text-arcane font-medium">Gallery</span>
+              <Sparkles className="w-4 h-4 text-arcane" />
             </motion.div>
 
             {/* Title */}
@@ -153,9 +136,9 @@ const GalleryPage = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4, type: "spring" }}
               >
-                <AnimatedGradientText 
-                  gradient="from-purple-400 via-pink-400 to-purple-400"
-                  className="drop-shadow-[0_0_30px_rgba(168,85,247,0.5)]"
+                <AnimatedGradientText
+                  gradient="from-arcane via-arcane-glow to-arcane"
+                  className="drop-shadow-[0_0_30px_rgba(212,165,116,0.4)]"
                 >
                   Showcase
                 </AnimatedGradientText>
@@ -178,20 +161,20 @@ const GalleryPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
             >
-              <motion.div 
-                className="px-6 py-3 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-full backdrop-blur-xl"
+              <motion.div
+                className="px-6 py-3 bg-arcane/10 border border-arcane/30 rounded-full backdrop-blur-xl"
                 whileHover={{ scale: 1.05 }}
               >
-                <span className="text-purple-400 font-bold text-lg flex items-center gap-2">
+                <span className="text-arcane font-bold text-lg flex items-center gap-2">
                   <ImageIcon className="w-5 h-5" />
                   {galleries.length} Photos
                 </span>
               </motion.div>
-              <motion.div 
-                className="px-6 py-3 bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/30 rounded-full backdrop-blur-xl"
+              <motion.div
+                className="px-6 py-3 bg-arcane/10 border border-arcane/30 rounded-full backdrop-blur-xl"
                 whileHover={{ scale: 1.05 }}
               >
-                <span className="text-pink-400 font-bold text-lg flex items-center gap-2">
+                <span className="text-arcane font-bold text-lg flex items-center gap-2">
                   <Eye className="w-5 h-5" />
                   {totalPages} Pages
                 </span>
@@ -210,7 +193,7 @@ const GalleryPage = () => {
                 onClick={() => setActiveServer(null)}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all border ${
                   !activeServer
-                    ? 'bg-purple-500/20 border-purple-500/50 text-purple-300'
+                    ? 'bg-arcane/15 border-arcane/40 text-arcane'
                     : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/20'
                 }`}
               >
@@ -223,7 +206,7 @@ const GalleryPage = () => {
                   onClick={() => setActiveServer(s.id)}
                   className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all border ${
                     activeServer === s.id
-                      ? 'bg-purple-500/20 border-purple-500/50 text-purple-300'
+                      ? 'bg-arcane/15 border-arcane/40 text-arcane'
                       : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/20'
                   }`}
                 >
@@ -245,7 +228,7 @@ const GalleryPage = () => {
               animate={{ opacity: 1 }}
               className="text-center py-20"
             >
-              <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 flex items-center justify-center">
+              <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-arcane/10 border border-arcane/20 flex items-center justify-center">
                 <ImageIcon className="w-10 h-10 text-gray-600" />
               </div>
               <h3 className="text-lg font-medium text-gray-400 mb-2">
@@ -286,20 +269,20 @@ const GalleryPage = () => {
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
                       
                       {/* Hover overlay with glassmorphism */}
-                      <motion.div 
-                        className="absolute inset-0 bg-gradient-to-t from-purple-900/90 via-purple-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"
                         initial={{ opacity: 0 }}
                         whileHover={{ opacity: 1 }}
                       >
                         {/* Zoom icon */}
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <motion.div 
-                            className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/50"
+                          <motion.div
+                            className="w-14 h-14 rounded-full bg-arcane flex items-center justify-center shadow-lg shadow-arcane/40"
                             initial={{ scale: 0 }}
                             whileHover={{ scale: 1 }}
                             transition={{ type: "spring", stiffness: 300 }}
                           >
-                            <ZoomIn className="w-7 h-7 text-white" />
+                            <ZoomIn className="w-7 h-7 text-ink" />
                           </motion.div>
                         </div>
                         
@@ -317,7 +300,7 @@ const GalleryPage = () => {
                       </motion.div>
 
                       {/* Border glow on hover */}
-                      <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-purple-500/50 transition-all duration-300" />
+                      <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-arcane/40 transition-all duration-300" />
                     </motion.div>
                   ))}
                 </AnimatePresence>
@@ -335,7 +318,7 @@ const GalleryPage = () => {
                     disabled={currentPage === 1}
                     variant="outline"
                     size="icon"
-                    className="border-purple-700/50 hover:bg-purple-800/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </Button>
@@ -367,11 +350,6 @@ const GalleryPage = () => {
                             onClick={() => goToPage(page)}
                             variant={currentPage === page ? "default" : "outline"}
                             size="sm"
-                            className={
-                              currentPage === page
-                                ? "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 shadow-lg shadow-purple-500/50"
-                                : "border-purple-700/50 hover:bg-purple-800/50"
-                            }
                           >
                             {page}
                           </Button>
@@ -385,7 +363,7 @@ const GalleryPage = () => {
                     disabled={currentPage === totalPages}
                     variant="outline"
                     size="icon"
-                    className="border-purple-700/50 hover:bg-purple-800/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </Button>
@@ -420,7 +398,7 @@ const GalleryPage = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
               onClick={() => setSelectedImage(null)}
-              className="absolute top-6 right-6 p-3 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white hover:scale-110 transition-transform shadow-lg shadow-purple-500/50 z-10"
+              className="absolute top-6 right-6 p-3 rounded-full bg-arcane text-bone hover:scale-110 transition-transform shadow-lg shadow-arcane/40 z-10"
             >
               <X className="w-6 h-6" />
             </motion.button>
@@ -433,26 +411,26 @@ const GalleryPage = () => {
               className="relative max-w-5xl w-full"
             >
               {/* Image container with glow */}
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-purple-500/20">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-arcane/20">
                 <img
                   src={getImageUrl(selectedImage.imageUrl)}
                   alt={selectedImage.title}
                   className="w-full h-auto max-h-[85vh] object-contain"
                 />
-                
+
                 {/* Glowing border */}
-                <div className="absolute inset-0 rounded-2xl border-2 border-purple-500/50 pointer-events-none" />
+                <div className="absolute inset-0 rounded-2xl border-2 border-arcane/40 pointer-events-none" />
               </div>
 
               {/* Info card with glassmorphism */}
-              <motion.div 
-                className="mt-6 p-6 bg-gradient-to-br from-purple-900/50 to-pink-900/50 backdrop-blur-xl rounded-2xl border border-purple-500/30 shadow-lg"
+              <motion.div
+                className="mt-6 p-6 bg-ink-elevated/90 backdrop-blur-xl rounded-2xl border border-arcane/30 shadow-lg"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
                 <h3 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
-                  <Sparkles className="w-6 h-6 text-purple-400" />
+                  <Sparkles className="w-6 h-6 text-arcane" />
                   {selectedImage.title}
                 </h3>
                 {selectedImage.description && (

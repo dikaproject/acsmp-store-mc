@@ -33,13 +33,13 @@ const gradientPresets = {
 };
 
 const getGradientClass = (bg) => {
-  if (!bg) return "bg-gradient-to-r from-purple-500/10 to-violet-500/10 border border-purple-500/20";
+  if (!bg) return "bg-gradient-to-r from-arcane/10 to-arcane-glow/10 border border-arcane/20";
   if (gradientPresets[bg]) return gradientPresets[bg];
   return `bg-gradient-to-r ${bg}`;
 };
 
 const getGlowColor = (bg) => {
-  if (!bg) return "shadow-purple-500/20";
+  if (!bg) return "shadow-arcane/20";
   if (bg.includes("purple") || bg.includes("violet") || bg.includes("fuchsia")) return "shadow-purple-500/25";
   if (bg.includes("blue") || bg.includes("indigo") || bg.includes("cyan")) return "shadow-blue-500/25";
   if (bg.includes("emerald") || bg.includes("teal")) return "shadow-emerald-500/25";
@@ -290,7 +290,7 @@ const LinktreePage = () => {
                   className={`relative rounded-2xl px-5 py-4 flex items-center gap-4 overflow-hidden ${
                     hasBg
                       ? `${gradientClass} text-white`
-                      : "bg-[#0f1015] border border-white/[0.06] text-white hover:border-purple-500/20"
+                      : "bg-[#0f1015] border border-white/[0.06] text-white hover:border-arcane/30"
                   }`}
                 >
                   {/* Subtle shine effect on hover */}
@@ -303,10 +303,10 @@ const LinktreePage = () => {
                     className={`relative flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 ${
                       hasBg
                         ? "bg-white/20"
-                        : "bg-purple-500/10 border border-purple-500/20"
+                        : "bg-arcane/10 border border-arcane/20"
                     }`}
                   >
-                    <IconComponent className={`w-5 h-5 ${hasBg ? "text-white" : "text-purple-400"}`} />
+                    <IconComponent className={`w-5 h-5 ${hasBg ? "text-white" : "text-arcane"}`} />
                   </div>
 
                   {/* Text */}
@@ -329,7 +329,7 @@ const LinktreePage = () => {
                   >
                     <ArrowUpRight
                       className={`w-4 h-4 transition-transform duration-300 group-hover:scale-110 ${
-                        hasBg ? "text-white/80" : "text-gray-500 group-hover:text-purple-400"
+                        hasBg ? "text-white/80" : "text-gray-500 group-hover:text-arcane"
                       }`}
                     />
                   </div>
@@ -345,8 +345,8 @@ const LinktreePage = () => {
               animate={{ opacity: 1 }}
               className="text-center py-16"
             >
-              <div className="w-16 h-16 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="w-7 h-7 text-purple-400" />
+              <div className="w-16 h-16 rounded-2xl bg-arcane/10 border border-arcane/20 flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="w-7 h-7 text-arcane" />
               </div>
               <p className="text-gray-500 text-sm">No links available yet</p>
             </motion.div>

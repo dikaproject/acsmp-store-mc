@@ -129,9 +129,9 @@ const ServerTypeModal = ({ isOpen, onClose, mode, serverType, onSuccess }) => {
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto"
         >
-          <Card className="border-gray-800/50 bg-[#13151a] shadow-2xl">
+          <Card className="border-white/\[0.06\] bg-[#13151a] shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-800/50">
+            <div className="flex items-center justify-between p-6 border-b border-white/\[0.06\]">
               <div>
                 <h2 className="text-2xl font-bold text-white">
                   {mode === 'create' ? 'Tambah Server Type' : mode === 'edit' ? 'Edit Server Type' : 'Detail Server Type'}
@@ -142,7 +142,7 @@ const ServerTypeModal = ({ isOpen, onClose, mode, serverType, onSuccess }) => {
               </div>
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                className="p-2 hover:bg-white/\[0.07\] rounded-lg transition-colors"
               >
                 <X className="w-5 h-5 text-gray-400" />
               </button>
@@ -157,7 +157,7 @@ const ServerTypeModal = ({ isOpen, onClose, mode, serverType, onSuccess }) => {
                 </label>
                 <div className="flex flex-col items-center gap-4">
                   {/* Image Preview */}
-                  <div className="relative w-full h-48 rounded-xl overflow-hidden bg-gray-800/50 border-2 border-dashed border-gray-700 hover:border-emerald-500/50 transition-colors">
+                  <div className="relative w-full h-48 rounded-xl overflow-hidden bg-white/\[0.05\] border-2 border-dashed border-gray-700 hover:border-arcane/30 transition-colors">
                     {imagePreview ? (
                       <>
                         <img
@@ -208,7 +208,7 @@ const ServerTypeModal = ({ isOpen, onClose, mode, serverType, onSuccess }) => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g., Skyblock, Prison, RPG"
-                  className="bg-gray-800/50 border-gray-700 focus:border-emerald-500"
+                  className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-arcane"
                   required
                   disabled={isViewMode}
                 />
@@ -224,7 +224,7 @@ const ServerTypeModal = ({ isOpen, onClose, mode, serverType, onSuccess }) => {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Deskripsi server type..."
                   rows={4}
-                  className="w-full px-3 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition-colors resize-none"
+                  className="w-full px-3 py-2 bg-[#1a1d24] border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-arcane transition-colors resize-none"
                   disabled={isViewMode}
                 />
               </div>
@@ -242,7 +242,7 @@ const ServerTypeModal = ({ isOpen, onClose, mode, serverType, onSuccess }) => {
                     className={`flex-1 p-3 rounded-lg border-2 transition-all ${
                       formData.isActive
                         ? 'border-emerald-500 bg-emerald-500/10'
-                        : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                        : 'border-gray-700 bg-white/\[0.03\] hover:border-gray-600'
                     }`}
                   >
                     <div className="flex items-center justify-center gap-2">
@@ -257,7 +257,7 @@ const ServerTypeModal = ({ isOpen, onClose, mode, serverType, onSuccess }) => {
                     className={`flex-1 p-3 rounded-lg border-2 transition-all ${
                       !formData.isActive
                         ? 'border-red-500 bg-red-500/10'
-                        : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                        : 'border-gray-700 bg-white/\[0.03\] hover:border-gray-600'
                     }`}
                   >
                     <div className="flex items-center justify-center gap-2">
@@ -294,7 +294,7 @@ const ServerTypeModal = ({ isOpen, onClose, mode, serverType, onSuccess }) => {
                   type="button"
                   onClick={onClose}
                   variant="outline"
-                  className="flex-1 border-gray-700 hover:bg-gray-800"
+                  className="flex-1 border-gray-700 hover:bg-white/\[0.07\]"
                 >
                   {isViewMode ? 'Tutup' : 'Batal'}
                 </Button>
@@ -302,7 +302,7 @@ const ServerTypeModal = ({ isOpen, onClose, mode, serverType, onSuccess }) => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600"
+                    className="flex-1 bg-gradient-to-r bg-arcane hover:bg-arcane-glow"
                   >
                     {loading ? (
                       <>
@@ -327,3 +327,8 @@ const ServerTypeModal = ({ isOpen, onClose, mode, serverType, onSuccess }) => {
 };
 
 export default ServerTypeModal;
+
+
+
+
+

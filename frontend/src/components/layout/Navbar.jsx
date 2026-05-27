@@ -59,43 +59,47 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50">
-        <div 
+      <nav
+        className={cn(
+          "fixed left-0 right-0 z-50 transition-[top] duration-500 ease-out",
+          isScrolled ? "top-4 md:top-5" : "top-0"
+        )}
+      >
+        <div
           className={cn(
-            "transition-all duration-700 ease-in-out",
-            isScrolled 
-              ? "py-3 px-4 md:py-4 md:px-6" 
-              : "py-0 px-0"
+            "mx-auto transition-[max-width,padding] duration-500 ease-out",
+            isScrolled ? "max-w-6xl px-4" : "max-w-7xl px-0"
           )}
         >
           <div
             className={cn(
-              "relative w-full transition-all duration-700 ease-in-out",
+              "transition-[background-color,border-color,border-radius,box-shadow] duration-500 ease-out relative border",
               isScrolled
-                ? "mx-auto max-w-6xl"
-                : "mx-0 max-w-none"
+                ? "bg-ink/90 backdrop-blur-md border-ink-border rounded-full shadow-[0_8px_40px_-12px_rgba(0,0,0,0.6),0_0_0_1px_rgba(116,80,163,0.12)_inset]"
+                : "bg-ink/75 backdrop-blur-sm border-transparent border-b-transparent rounded-none"
             )}
           >
+            {/* Subtle arcane accent line on scrolled state */}
+            {isScrolled && (
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-arcane/40 to-transparent"
+              />
+            )}
             <div
               className={cn(
-                "relative w-full transition-all duration-700 ease-in-out",
+                "transition-all duration-500 ease-out",
                 isScrolled
-                  ? "rounded-full bg-black/80 backdrop-blur-2xl shadow-2xl shadow-emerald-500/10 border border-white/10"
-                  : "rounded-none bg-black/95 backdrop-blur-xl border-b border-white/10 shadow-none"
+                  ? "px-5 md:px-6"
+                  : "mx-auto max-w-7xl px-6 md:px-10"
               )}
-              style={{
-                transform: isScrolled ? 'scale(1)' : 'scale(1)',
-              }}
             >
-              <div 
-                className={cn(
-                  "transition-all duration-700 ease-in-out",
-                  isScrolled 
-                    ? "px-4 py-2 md:px-6 md:py-3" 
-                    : "px-6 py-4 md:px-12 md:py-5"
-                )}
-              >
-                <div className="flex items-center justify-between gap-4 md:gap-8">
+            <div
+              className={cn(
+                "flex items-center justify-between gap-4 md:gap-8 transition-all duration-500 relative",
+                isScrolled ? "py-2.5 md:py-3" : "py-4 md:py-5"
+              )}
+            >
                   {/* Logo - Smooth scale animation */}
                   <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
                     <div className="relative">
@@ -108,30 +112,42 @@ const Navbar = () => {
                         )}
                       />
                     </div>
-                    <span 
+                    <span
                       className={cn(
-                        "font-black tracking-tight text-white transition-all duration-700 ease-in-out",
-                        isScrolled ? "text-base md:text-lg" : "text-lg md:text-xl"
+                        "font-black tracking-tight text-white transition-all duration-500 ease-in-out whitespace-nowrap",
+                        isScrolled
+                          ? "text-base md:text-lg opacity-0 w-0 overflow-hidden md:opacity-100 md:w-auto"
+                          : "text-lg md:text-xl opacity-100"
                       )}
                     >
                       Amazing Craft
                     </span>
                   </Link>
 
-                  {/* Desktop Navigation - Simplified animation */}
-                  <div className="hidden lg:flex items-center gap-1 flex-1 justify-center">
+                  {/* Desktop Navigation - absolutely centered to pill */}
+                  <div className="hidden lg:flex items-center gap-1 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                     {navLinks.map((link) => (
                       <Link key={link.path} to={link.path} className="relative group">
                         <div
                           className={cn(
-                            "px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 relative overflow-hidden whitespace-nowrap flex items-center gap-2",
+                            "px-4 py-2 text-sm font-semibold transition-colors duration-200 whitespace-nowrap flex items-center gap-2 relative",
                             isActive(link.path)
-                              ? "text-black bg-white"
-                              : "text-gray-400 hover:text-white hover:bg-white/5"
+                              ? "text-white"
+                              : "text-gray-400 hover:text-white"
                           )}
                         >
                           <link.icon className="w-4 h-4" />
-                          <span className="relative z-10">{link.name}</span>
+                          <span className="relative">{link.name}</span>
+                          {/* Underline indicator */}
+                          <span
+                            aria-hidden
+                            className={cn(
+                              "pointer-events-none absolute left-4 right-4 -bottom-0.5 h-px bg-arcane origin-center transition-transform duration-300 ease-out",
+                              isActive(link.path)
+                                ? "scale-x-100"
+                                : "scale-x-0 group-hover:scale-x-100"
+                            )}
+                          />
                         </div>
                       </Link>
                     ))}
@@ -160,14 +176,14 @@ const Navbar = () => {
                               : "bg-white/10 border-white/10 hover:bg-white/15"
                           )}
                         >
-                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center flex-shrink-0">
-                            <User className="w-3 h-3 text-black" />
+                          <div className="w-6 h-6 rounded-full bg-arcane flex items-center justify-center flex-shrink-0">
+                            <User className="w-3 h-3 text-ink" />
                           </div>
-                          <span className="text-sm font-semibold text-white whitespace-nowrap max-w-[120px] truncate">
+                          <span className="text-sm font-medium text-bone whitespace-nowrap max-w-[120px] truncate">
                             {minecraftName}
                           </span>
                           <ChevronDown className={cn(
-                            "w-3.5 h-3.5 text-gray-400 transition-transform duration-200",
+                            "w-3.5 h-3.5 text-bone-muted transition-transform duration-200",
                             isUserDropdownOpen && "rotate-180"
                           )} />
                         </button>
@@ -179,17 +195,17 @@ const Navbar = () => {
                               animate={{ opacity: 1, y: 0, scale: 1 }}
                               exit={{ opacity: 0, y: 6, scale: 0.96 }}
                               transition={{ duration: 0.15 }}
-                              className="absolute right-0 mt-3 w-64 bg-black/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl shadow-black/50 overflow-hidden"
+                              className="absolute right-0 mt-3 w-64 bg-black/95 backdrop-blur border border-white/10 rounded-2xl shadow-2xl shadow-black/50 overflow-hidden"
                             >
                               {/* Header */}
                               <div className="px-4 py-4 border-b border-white/10">
                                 <div className="flex items-center gap-3">
-                                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center flex-shrink-0">
-                                    <User className="w-5 h-5 text-black" />
+                                  <div className="w-10 h-10 rounded-full bg-arcane flex items-center justify-center flex-shrink-0">
+                                    <User className="w-5 h-5 text-ink" />
                                   </div>
                                   <div className="min-w-0">
-                                    <p className="text-sm font-bold text-white truncate">{minecraftName}</p>
-                                    <p className="text-xs text-gray-400 truncate">{serverName || 'Player'}</p>
+                                    <p className="text-sm font-medium text-bone truncate">{minecraftName}</p>
+                                    <p className="text-xs text-bone-muted truncate">{serverName || 'Player'}</p>
                                   </div>
                                 </div>
                               </div>
@@ -198,8 +214,8 @@ const Navbar = () => {
                               <div className="px-4 py-3 space-y-2">
                                 {/* Nametag */}
                                 <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5">
-                                  <div className="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                                    <User className="w-3.5 h-3.5 text-emerald-400" />
+                                  <div className="w-7 h-7 rounded-full bg-arcane/15 border border-arcane/30 flex items-center justify-center flex-shrink-0">
+                                    <User className="w-3.5 h-3.5 text-arcane" />
                                   </div>
                                   <div className="min-w-0">
                                     <p className="text-xs text-gray-500 leading-none mb-0.5">Nametag</p>
@@ -247,8 +263,8 @@ const Navbar = () => {
                                   onClick={() => setIsUserDropdownOpen(false)}
                                   className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
                                 >
-                                  <div className="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                                    <History className="w-3.5 h-3.5 text-purple-400" />
+                                  <div className="w-7 h-7 rounded-full bg-arcane/15 border border-arcane/30 flex items-center justify-center flex-shrink-0">
+                                    <History className="w-3.5 h-3.5 text-arcane" />
                                   </div>
                                   <div className="min-w-0">
                                     <p className="text-xs text-gray-500 leading-none mb-0.5">Riwayat</p>
@@ -282,7 +298,7 @@ const Navbar = () => {
                       <button className="relative p-2 rounded-full hover:bg-white/10 transition-colors">
                         <ShoppingCart className="w-5 h-5 text-white" />
                         {totalItems > 0 && (
-                          <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 text-black text-xs flex items-center justify-center font-bold">
+                          <span className="absolute -top-1 -right-1 w-5 h-5 bg-arcane text-bone text-xs flex items-center justify-center font-bold rounded-full">
                             {totalItems}
                           </span>
                         )}
@@ -304,7 +320,6 @@ const Navbar = () => {
                 </div>
               </div>
             </div>
-          </div>
         </div>
       </nav>
 
@@ -317,11 +332,11 @@ const Navbar = () => {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.15 }}
             className={cn(
-              "fixed left-4 right-4 z-40 lg:hidden transition-all duration-700",
-              isScrolled ? "top-20 md:top-24" : "top-24 md:top-28"
+              "fixed left-4 right-4 z-40 lg:hidden transition-all duration-500",
+              isScrolled ? "top-24 md:top-28" : "top-24 md:top-28"
             )}
           >
-            <div className="bg-black/95 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl overflow-hidden">
+<div className="bg-black/95 backdrop-blur rounded-3xl border border-white/10 shadow-2xl overflow-hidden">
               <div className="p-4 md:p-6 space-y-2 max-h-[calc(100vh-120px)] overflow-y-auto">
                 {navLinks.map((link) => (
                   <Link
@@ -345,8 +360,8 @@ const Navbar = () => {
                   <div className="pt-4 border-t border-white/10 space-y-3">
                     {/* Nametag */}
                     <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center flex-shrink-0">
-                        <User className="w-5 h-5 text-black" />
+                      <div className="w-10 h-10 rounded-full bg-arcane flex items-center justify-center flex-shrink-0">
+                        <User className="w-5 h-5 text-ink" />
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs text-gray-500 leading-none mb-0.5">Nametag</p>
@@ -357,8 +372,8 @@ const Navbar = () => {
                     {/* Server */}
                     {serverName && (
                       <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5">
-                        <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                          <Server className="w-5 h-5 text-purple-400" />
+                        <div className="w-10 h-10 rounded-full bg-arcane/15 border border-arcane/30 flex items-center justify-center flex-shrink-0">
+                          <Server className="w-5 h-5 text-arcane" />
                         </div>
                         <div className="min-w-0">
                           <p className="text-xs text-gray-500 leading-none mb-0.5">Server</p>
@@ -398,8 +413,8 @@ const Navbar = () => {
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors"
                     >
-                      <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                        <History className="w-5 h-5 text-purple-400" />
+                      <div className="w-10 h-10 rounded-full bg-arcane/15 border border-arcane/30 flex items-center justify-center flex-shrink-0">
+                        <History className="w-5 h-5 text-arcane" />
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs text-gray-500 leading-none mb-0.5">Riwayat</p>

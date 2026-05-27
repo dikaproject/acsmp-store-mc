@@ -173,9 +173,9 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           className="relative w-full max-w-lg"
         >
-          <div className="bg-[#13151a] border border-gray-800/50 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-[#13151a] border border-white/\[0.06\] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-800/50 flex-shrink-0">
+            <div className="flex items-center justify-between p-6 border-b border-white/\[0.06\] flex-shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-teal-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
                   <Terminal className="w-5 h-5 text-white" />
@@ -191,7 +191,7 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-gray-800 rounded-lg transition-colors text-gray-400 hover:text-white"
+                className="p-2 hover:bg-white/\[0.07\] rounded-lg transition-colors text-gray-400 hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -221,7 +221,7 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
                   placeholder="contoh: Survival Server RCON"
                   disabled={isViewMode}
                   required
-                  className="bg-gray-800/50 border-gray-700 focus:border-cyan-500 text-white placeholder-gray-500"
+                  className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-cyan-500 placeholder-gray-500"
                 />
               </div>
 
@@ -231,7 +231,7 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
                   Server Type <span className="text-red-400">*</span>
                 </label>
                 {mode === "edit" || mode === "view" ? (
-                  <div className="w-full px-3 py-2 bg-gray-800/30 border border-gray-700/50 rounded-lg text-gray-400 text-sm">
+                  <div className="w-full px-3 py-2 bg-white/\[0.03\] border border-gray-700/50 rounded-lg text-gray-400 text-sm">
                     {serverTypes?.find(s => s.id === formData.serverTypeId)?.name || formData.serverTypeId}
                     <span className="ml-2 text-xs text-gray-600">(tidak bisa diubah)</span>
                   </div>
@@ -272,7 +272,7 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
                       placeholder="192.168.1.1 atau localhost"
                       disabled={isViewMode}
                       required
-                      className="bg-gray-800/50 border-gray-700 focus:border-cyan-500 text-white placeholder-gray-500 pl-9"
+                      className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-cyan-500 placeholder-gray-500 pl-9"
                     />
                   </div>
                 </div>
@@ -290,7 +290,7 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
                     required
                     min="1"
                     max="65535"
-                    className="bg-gray-800/50 border-gray-700 focus:border-cyan-500 text-white placeholder-gray-500"
+                    className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-cyan-500 placeholder-gray-500"
                   />
                 </div>
               </div>
@@ -301,7 +301,7 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
                   Password RCON
                   {mode === "create" && <span className="text-red-400"> *</span>}
                   {mode === "edit" && config?.hasPassword && (
-                    <Badge className="ml-2 text-xs bg-emerald-500/20 text-emerald-400 border-emerald-500/30 py-0 px-1.5">
+                    <Badge className="ml-2 text-xs bg-arcane/10 text-arcane border-emerald-500/30 py-0 px-1.5">
                       Password tersimpan
                     </Badge>
                   )}
@@ -315,7 +315,7 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
                       value={formData.password}
                       onChange={handleChange}
                       placeholder={mode === "edit" ? "Kosongkan untuk tidak mengubah password" : "Masukkan password RCON"}
-                      className="w-full pl-9 pr-10 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                      className="w-full pl-9 pr-10 py-2 bg-[#1a1d24] border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
                       autoComplete="new-password"
                     />
                     <button
@@ -327,7 +327,7 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
                     </button>
                   </div>
                 ) : (
-                  <div className="w-full px-3 py-2 bg-gray-800/30 border border-gray-700/50 rounded-lg text-gray-400 text-sm tracking-widest">
+                  <div className="w-full px-3 py-2 bg-white/\[0.03\] border border-gray-700/50 rounded-lg text-gray-400 text-sm tracking-widest">
                     {config?.hasPassword ? "••••••••••••" : "—"}
                   </div>
                 )}
@@ -349,14 +349,14 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
                     disabled={isViewMode}
                     min="1000"
                     max="60000"
-                    className="bg-gray-800/50 border-gray-700 focus:border-cyan-500 text-white placeholder-gray-500 pl-9"
+                    className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-cyan-500 placeholder-gray-500 pl-9"
                   />
                 </div>
                 <p className="text-xs text-gray-600 mt-1">Default: 10000ms (10 detik)</p>
               </div>
 
               {/* isActive Toggle */}
-              <div className="flex items-center justify-between p-3 bg-gray-800/30 border border-gray-700/50 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-white/\[0.03\] border border-gray-700/50 rounded-lg">
                 <div>
                   <p className="text-sm font-medium text-gray-300">Status Aktif</p>
                   <p className="text-xs text-gray-500 mt-0.5">Config tidak aktif tidak akan digunakan</p>
@@ -374,7 +374,7 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
                   </button>
                 ) : (
                   <Badge className={formData.isActive
-                    ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+                    ? "bg-arcane/10 text-arcane border-emerald-500/30"
                     : "bg-red-500/20 text-red-400 border-red-500/30"
                   }>
                     {formData.isActive ? "Aktif" : "Nonaktif"}
@@ -386,7 +386,7 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
               {testResult && (
                 <div className={`flex items-start gap-2 p-3 rounded-lg border text-sm ${
                   testResult.success
-                    ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-300"
+                    ? "bg-arcane/10 border-arcane/20 text-emerald-300"
                     : "bg-red-500/10 border-red-500/20 text-red-300"
                 }`}>
                   {testResult.success
@@ -404,7 +404,7 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
               </div>{/* end scrollable area */}
 
               {/* Actions - fixed at bottom */}
-              <div className="flex justify-between gap-3 px-6 py-4 border-t border-gray-800/50 flex-shrink-0">
+              <div className="flex justify-between gap-3 px-6 py-4 border-t border-white/\[0.06\] flex-shrink-0">
                 {/* Test button (only in edit/view mode when config exists) */}
                 {(mode === "edit" || mode === "view") && config?.id && (
                   <Button
@@ -412,7 +412,7 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
                     variant="outline"
                     onClick={handleTestConnection}
                     disabled={testLoading}
-                    className="border-gray-700 hover:bg-gray-800 hover:border-cyan-500/50 hover:text-cyan-400"
+                    className="border-gray-700 hover:bg-white/\[0.07\] hover:border-cyan-500/50 hover:text-cyan-400"
                   >
                     {testLoading ? (
                       <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Testing...</>
@@ -424,7 +424,7 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
 
                 <div className="flex gap-3 ml-auto">
                   <Button type="button" variant="outline" onClick={onClose}
-                    className="border-gray-700 hover:bg-gray-800">
+                    className="border-gray-700 hover:bg-white/\[0.07\]">
                     {isViewMode ? "Tutup" : "Batal"}
                   </Button>
                   {!isViewMode && (
@@ -449,3 +449,9 @@ const RconModal = ({ isOpen, onClose, mode, config, serverTypes, onSuccess }) =>
 };
 
 export default RconModal;
+
+
+
+
+
+

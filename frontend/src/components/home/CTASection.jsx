@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Sparkles, ArrowRight, Zap, Shield, Trophy, Star, Play } from "lucide-react";
-import LiquidEther from "../ui/LiquidEther";
 
 const MCSTATUS_API = 'https://api.mcsrvstat.us/bedrock/3/';
 const SERVER_IP = 'amazingcraft.org';
@@ -40,37 +39,22 @@ const CTASection = () => {
   }, []);
 
   const features = [
-    { icon: Zap, label: "Instant Delivery", color: "text-purple-400" },
-    { icon: Shield, label: "Secure Payment", color: "text-pink-400" },
-    { icon: Trophy, label: "Best Prices", color: "text-cyan-400" },
-    { icon: Star, label: "24/7 Support", color: "text-emerald-400" }
+    { icon: Zap, label: "Instant Delivery" },
+    { icon: Shield, label: "Secure Payment" },
+    { icon: Trophy, label: "Best Prices" },
+    { icon: Star, label: "24/7 Support" }
   ];
 
   return (
-    <section className="relative py-32 md:py-40 overflow-hidden" style={{ minHeight: '600px' }}>
-      {/* Liquid Ether Background */}
+    <section className="relative py-32 md:py-40 overflow-hidden bg-ink" style={{ minHeight: '600px' }}>
+      {/* Editorial atmospheric background */}
       <div className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
-        <LiquidEther
-          colors={['#5227FF', '#FF9FFC', '#B19EEF']}
-          mouseForce={20}
-          cursorSize={100}
-          isViscous={false}
-          viscous={30}
-          iterationsViscous={32}
-          iterationsPoisson={32}
-          resolution={0.5}
-          isBounce={false}
-          autoDemo={true}
-          autoSpeed={0.5}
-          autoIntensity={2.2}
-          takeoverDuration={0.25}
-          autoResumeDelay={3000}
-          autoRampDuration={0.6}
-        />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_50%,rgba(116,80,163,0.10)_0%,transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,rgba(116,80,163,0.06)_0%,transparent_50%)]" />
       </div>
 
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/40" />
+      {/* Subtle dark overlay */}
+      <div className="absolute inset-0 bg-ink/30" />
 
       {/* Content */}
       <div className="container mx-auto px-4 relative z-10">
@@ -87,10 +71,10 @@ const CTASection = () => {
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
             transition={{ type: "spring", delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 mb-8"
+            className="inline-flex items-center gap-3 px-4 py-2 bg-arcane/10 border border-arcane/30 mb-10"
           >
-            <Sparkles className="w-4 h-4 text-purple-400" />
-            <span className="text-sm font-medium text-white uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-arcane" strokeWidth={1.75} />
+            <span className="text-[11px] font-medium text-arcane uppercase tracking-widest">
               Join Amazing Craft Today
             </span>
           </motion.div>
@@ -101,11 +85,10 @@ const CTASection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
-            style={{ fontFamily: "'Orbitron', 'Rajdhani', 'Inter', sans-serif" }}
+            className="font-display text-5xl md:text-7xl text-bone mb-6 leading-[1.05]"
           >
-            Ready to Start Your
-            <span className="block mt-2 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+            Ready to start your
+            <span className="block mt-2 italic text-arcane">
               Epic Adventure?
             </span>
           </motion.h2>
@@ -116,11 +99,11 @@ const CTASection = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
-            className="text-xl md:text-2xl text-gray-300 mb-12 leading-relaxed"
+            className="text-lg md:text-xl text-bone-muted mb-12 leading-relaxed max-w-2xl mx-auto"
           >
             Join thousands of players in the ultimate Minecraft survival experience.
-            <span className="block mt-2 text-white font-semibold">
-              No registration required. Start playing now!
+            <span className="block mt-2 text-bone">
+              No registration required. Start playing now.
             </span>
           </motion.p>
 
@@ -133,28 +116,13 @@ const CTASection = () => {
             className="flex flex-wrap gap-4 justify-center mb-12"
           >
             <a href={`minecraft://?addExternalServer=${encodeURIComponent('Amazing Craft')}|${SERVER_IP}:${SERVER_PORT}`}>
-              <motion.button
-                className="group relative inline-flex items-center gap-2 px-10 py-5 rounded-xl bg-gradient-to-r from-purple-600 via-violet-600 to-purple-600 text-white font-black text-lg uppercase tracking-wider overflow-hidden shadow-lg shadow-purple-500/30 border border-purple-400/30"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                style={{ fontFamily: "'Rajdhani', 'Inter', sans-serif" }}
+              <button
+                className="group inline-flex items-center gap-3 px-12 py-5 bg-arcane text-bone font-medium text-sm uppercase tracking-widest hover:bg-arcane-glow transition-colors"
               >
-                {/* Animated background */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-violet-600"
-                  initial={{ x: '-100%' }}
-                  whileHover={{ x: '100%' }}
-                  transition={{ duration: 0.6 }}
-                />
-                
-                {/* Button content */}
-                <Play className="w-5 h-5 relative z-10 group-hover:rotate-12 transition-transform" />
-                <span className="relative z-10">Start Playing Now</span>
-                <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-                
-                {/* Glow effect */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/10 blur-xl" />
-              </motion.button>
+                <Play className="w-4 h-4" />
+                <span>Start Playing Now</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
             </a>
           </motion.div>
 
@@ -177,9 +145,9 @@ const CTASection = () => {
                   transition={{ delay: 0.7 + index * 0.1 }}
                   className="group"
                 >
-                  <div className="p-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/20 transition-all">
-                    <Icon className={`w-6 h-6 ${feature.color} mx-auto mb-2`} />
-                    <p className="text-sm text-white font-medium">
+                  <div className="p-5 bg-ink-elevated border border-ink-border hover:border-arcane/40 transition-colors duration-200">
+                    <Icon className="w-5 h-5 text-arcane mx-auto mb-3" strokeWidth={1.75} />
+                    <p className="text-xs text-bone uppercase tracking-widest text-center">
                       {feature.label}
                     </p>
                   </div>
@@ -194,21 +162,14 @@ const CTASection = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.9 }}
-            className="mt-12 inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 backdrop-blur-xl border border-white/10"
+            className="mt-12 inline-flex items-center gap-3 px-5 py-2.5 bg-ink-elevated border border-ink-border"
           >
-            <div className="relative">
-              <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-400' : 'bg-red-400'} animate-pulse`} />
-            </div>
-            <span className="text-white font-medium">
-              {isOnline ? 'Server Online' : 'Server Offline'} • 
-              <motion.span
-                key={playersOnline}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="ml-1"
-              >
+            <div className={`w-1.5 h-1.5 ${isOnline ? 'bg-arcane' : 'bg-[hsl(var(--danger))]'}`} />
+            <span className="text-bone text-sm">
+              {isOnline ? 'Server Online' : 'Server Offline'} ·
+              <span className="ml-1 font-mono">
                 {playersOnline} Players
-              </motion.span> • {SERVER_IP}
+              </span> · <span className="font-mono">{SERVER_IP}</span>
             </span>
           </motion.div>
         </motion.div>

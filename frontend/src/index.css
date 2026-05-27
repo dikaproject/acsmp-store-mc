@@ -2,42 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 160 84% 39%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 91.2% 59.8%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 45 93% 47%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 160 84% 39%;
-    --radius: 0.5rem;
+    /* Core dark palette — deep purple undertone */
+    --ink: 268 22% 5%;             /* #0C0910 */
+    --ink-elevated: 268 18% 8%;    /* #121019 */
+    --ink-border: 268 15% 17%;     /* #211D2E */
+
+    --bone: 265 15% 88%;           /* #E2DDE9 */
+    --bone-muted: 265 8% 63%;      /* #A09AAB */
+    --bone-subtle: 265 6% 40%;     /* #655F6D */
+
+    --ember: 30 50% 64%;           /* #D4A574 — kept for non-home pages */
+    --ember-glow: 30 65% 72%;      /* #E8B988 */
+
+    /* Arcane — deep warm purple brand accent */
+    --arcane: 272 40% 50%;         /* #7450A3 */
+    --arcane-glow: 272 38% 62%;    /* #9270C2 */
+
+    --success: 95 30% 55%;         /* #7FB069 */
+    --danger: 2 50% 55%;           /* #C75450 */
+
+    /* shadcn-compatible aliases */
+    --background: 268 22% 5%;
+    --foreground: 265 15% 88%;
+    --card: 268 18% 8%;
+    --card-foreground: 265 15% 88%;
+    --popover: 268 18% 8%;
+    --popover-foreground: 265 15% 88%;
+    --primary: 272 40% 50%;
+    --primary-foreground: 265 15% 88%;
+    --secondary: 268 15% 17%;
+    --secondary-foreground: 265 15% 88%;
+    --muted: 268 15% 17%;
+    --muted-foreground: 265 8% 63%;
+    --accent: 272 40% 50%;
+    --accent-foreground: 265 15% 88%;
+    --destructive: 2 50% 55%;
+    --destructive-foreground: 265 15% 88%;
+    --border: 268 15% 17%;
+    --input: 268 15% 17%;
+    --ring: 272 40% 50%;
+    --radius: 0.25rem;
   }
 
   * {
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: 'Outfit', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  html {
-    scroll-behavior: smooth;
+  /* Subtle grain texture for depth without WebGL */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
@@ -46,78 +88,70 @@
     text-wrap: balance;
   }
 
-  .gradient-emerald {
-    @apply bg-gradient-to-br from-emerald-500 via-teal-600 to-cyan-600;
+  .font-display {
+    font-family: 'Outfit', system-ui, sans-serif;
   }
 
-  .gradient-indigo {
-    @apply bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-600;
+  .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
   }
 
-  .gradient-gold {
-    @apply bg-gradient-to-br from-yellow-500 via-amber-600 to-orange-600;
+  .hairline {
+    @apply border-t border-[hsl(var(--ink-border))];
   }
 
-  .glass-effect {
-    @apply bg-white/5 backdrop-blur-lg border border-white/10;
+  /* Editorial divider — small mark */
+  .rule-mark::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: hsl(var(--arcane));
+    margin-right: 12px;
+    vertical-align: middle;
   }
 
-  .card-hover {
-    @apply transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/20;
-  }
-
-  /* Custom Scrollbar for Sidebar */
+  /* Custom Scrollbar */
   .scrollbar-thin::-webkit-scrollbar {
     width: 4px;
   }
-
   .scrollbar-thin::-webkit-scrollbar-track {
     background: transparent;
   }
-
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: #374151;
+    background: hsl(var(--ink-border));
     border-radius: 4px;
   }
-
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: #4b5563;
+    background: hsl(var(--bone-subtle));
   }
-
-  /* Firefox */
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: #374151 transparent;
+    scrollbar-color: hsl(var(--ink-border)) transparent;
   }
 }
 
-/* TinyMCE Dark Theme Overrides */
+/* TinyMCE — keep dark, retune to arcane */
 .tox-tinymce {
-  border-color: rgba(75, 85, 99, 0.5) !important;
+  border-color: hsl(var(--ink-border)) !important;
 }
-
 .tox .tox-toolbar,
 .tox .tox-toolbar__overflow,
 .tox .tox-toolbar__primary {
-  background: #1a1c24 !important;
+  background: hsl(var(--ink-elevated)) !important;
 }
-
 .tox .tox-tbtn {
-  color: #9ca3af !important;
+  color: hsl(var(--bone-muted)) !important;
 }
-
 .tox .tox-tbtn:hover {
-  background: #374151 !important;
-  color: #fff !important;
+  background: hsl(var(--ink-border)) !important;
+  color: hsl(var(--bone)) !important;
 }
-
 .tox .tox-tbtn--enabled {
-  background: #4f46e5 !important;
-  color: #fff !important;
+  background: hsl(var(--arcane)) !important;
+  color: hsl(var(--bone)) !important;
 }
-
 .tox .tox-statusbar {
-  background: #1a1c24 !important;
-  border-top: 1px solid rgba(75, 85, 99, 0.5) !important;
+  background: hsl(var(--ink-elevated)) !important;
+  border-top: 1px solid hsl(var(--ink-border)) !important;
 }
-

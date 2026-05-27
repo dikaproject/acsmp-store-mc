@@ -92,13 +92,8 @@ const AdminLoginPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/30 via-background to-indigo-950/30" />
-      
-      <motion.div
-        className="absolute top-20 left-10 w-72 h-72 bg-emerald-500/5 rounded-full blur-3xl"
-        animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
-        transition={{ duration: 10, repeat: Infinity }}
-      />
+      <div className="absolute inset-0 bg-[#0a0b0f]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(116,80,163,0.08),transparent_60%)]" />
       
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
@@ -108,16 +103,13 @@ const AdminLoginPage = () => {
         >
           {/* Logo/Brand */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-400 flex items-center justify-center shadow-lg">
-              <Shield className="w-8 h-8 text-white" />
+            <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-arcane/15 border border-arcane/30 flex items-center justify-center">
+              <Shield className="w-7 h-7 text-arcane" />
             </div>
-            <h1 className="text-3xl font-bold mb-2">
-              Admin{" "}
-              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                Dashboard
-              </span>
+            <h1 className="text-2xl font-bold text-white mb-1">
+              Admin Dashboard
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-gray-500 text-sm">
               Masuk untuk mengelola server
             </p>
           </div>
@@ -125,7 +117,7 @@ const AdminLoginPage = () => {
           {/* Login Card */}
           <Card className="border-border/50 shadow-2xl">
             <CardHeader>
-              <Badge className="w-fit mb-2 bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+              <Badge className="w-fit mb-2 bg-arcane/10 text-arcane border-arcane/20">
                 <Lock className="w-3 h-3 mr-1" />
                 Admin Access
               </Badge>
@@ -189,7 +181,7 @@ const AdminLoginPage = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600"
+                  className="w-full bg-arcane hover:bg-arcane-glow text-bone transition-colors"
                   size="lg"
                 >
                   {loading ? (
@@ -212,7 +204,7 @@ const AdminLoginPage = () => {
           <div className="text-center mt-6">
             <button
               onClick={() => navigate('/')}
-              className="text-sm text-muted-foreground hover:text-emerald-400 transition-colors"
+              className="text-sm text-muted-foreground hover:text-arcane transition-colors"
             >
               ← Kembali ke Homepage
             </button>
@@ -224,3 +216,8 @@ const AdminLoginPage = () => {
 };
 
 export default AdminLoginPage;
+
+
+
+
+

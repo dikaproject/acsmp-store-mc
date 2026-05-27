@@ -250,7 +250,7 @@ const SettingsPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Social Media & Contact */}
         <div className="space-y-6">
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+          <Card className="border-white/\[0.06\] bg-[#111318]">
             <CardContent className="p-6">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
@@ -288,7 +288,7 @@ const SettingsPage = () => {
                           value={value}
                           onChange={(e) => setSettings({ ...settings, [field.key]: e.target.value })}
                           placeholder={field.placeholder}
-                          className={`bg-gray-800/50 border-gray-700 focus:border-blue-500 ${
+                          className={`bg-[#1a1d24] border-gray-700 rounded-xl focus:border-blue-500 ${
                             value && !isValid ? 'border-red-500/50' : ''
                           }`}
                         />
@@ -321,7 +321,7 @@ const SettingsPage = () => {
 
         {/* Vote Links */}
         <div className="space-y-6">
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+          <Card className="border-white/\[0.06\] bg-[#111318]">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
@@ -354,7 +354,7 @@ const SettingsPage = () => {
                       onClick={addVoteLink}
                       size="sm"
                       variant="outline"
-                      className="border-gray-700 hover:bg-gray-800"
+                      className="border-gray-700 hover:bg-white/\[0.07\]"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Tambah Vote Link
@@ -370,7 +370,7 @@ const SettingsPage = () => {
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
-                        className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50 hover:border-gray-600 transition-all"
+                        className="p-4 bg-white/\[0.03\] rounded-lg border border-gray-700/50 hover:border-gray-600 transition-all"
                       >
                         <div className="flex items-start gap-3">
                           <div className="flex-1 space-y-3">
@@ -383,7 +383,7 @@ const SettingsPage = () => {
                                 value={link.name}
                                 onChange={(e) => updateVoteLink(index, 'name', e.target.value)}
                                 placeholder="e.g., Minecraft-Server-List"
-                                className="bg-gray-800/50 border-gray-700 focus:border-purple-500 text-sm"
+                                className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500 text-sm"
                               />
                             </div>
                             <div>
@@ -396,7 +396,7 @@ const SettingsPage = () => {
                                   value={link.url}
                                   onChange={(e) => updateVoteLink(index, 'url', e.target.value)}
                                   placeholder="https://vote-site.com/yourserver"
-                                  className={`bg-gray-800/50 border-gray-700 focus:border-purple-500 text-sm ${
+                                  className={`bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500 text-sm ${
                                     link.url && !isValidLink ? 'border-red-500/50' : ''
                                   }`}
                                 />
@@ -445,11 +445,11 @@ const SettingsPage = () => {
           </Card>
 
           {/* Quick Stats */}
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+          <Card className="border-white/\[0.06\] bg-[#111318]">
             <CardContent className="p-6">
               <h3 className="text-sm font-semibold text-white mb-4">Configuration Stats</h3>
               <div className="grid grid-cols-2 gap-3">
-                <div className="p-3 bg-gray-800/30 rounded-lg">
+                <div className="p-3 bg-white/\[0.03\] rounded-lg">
                   <div className="flex items-center gap-2 mb-1">
                     <Globe className="w-4 h-4 text-blue-400" />
                     <p className="text-xs text-gray-400">Social Links</p>
@@ -458,7 +458,7 @@ const SettingsPage = () => {
                     {socialFields.filter(f => settings[f.key]).length}/{socialFields.length}
                   </p>
                 </div>
-                <div className="p-3 bg-gray-800/30 rounded-lg">
+                <div className="p-3 bg-white/\[0.03\] rounded-lg">
                   <div className="flex items-center gap-2 mb-1">
                     <LinkIcon className="w-4 h-4 text-purple-400" />
                     <p className="text-xs text-gray-400">Vote Sites</p>
@@ -474,7 +474,7 @@ const SettingsPage = () => {
       </div>
 
       {/* Save Button Bottom */}
-      <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+      <Card className="border-white/\[0.06\] bg-[#111318]">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -510,3 +510,8 @@ const SettingsPage = () => {
 };
 
 export default SettingsPage;
+
+
+
+
+

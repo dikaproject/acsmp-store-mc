@@ -72,11 +72,11 @@ const DashboardPage = () => {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <div className="relative w-16 h-16 mx-auto mb-4">
-            <div className="absolute inset-0 border-4 border-emerald-500/20 rounded-full" />
-            <div className="absolute inset-0 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <div className="relative w-10 h-10 mx-auto mb-4">
+            <div className="absolute inset-0 border-2 border-white/10 rounded-full" />
+            <div className="absolute inset-0 border-2 border-arcane border-t-transparent rounded-full animate-spin" />
           </div>
-          <p className="text-gray-400">Memuat dashboard...</p>
+          <p className="text-gray-500 text-sm">Memuat dashboard...</p>
         </div>
       </div>
     );
@@ -89,7 +89,7 @@ const DashboardPage = () => {
       icon: DollarSign,
       gradient: "from-emerald-400 to-teal-400",
       bgGradient: "from-emerald-500/10 to-teal-500/10",
-      shadowColor: "shadow-emerald-500/20",
+      shadowColor: "",
       trend: "+12.5%",
       trendUp: true
     },
@@ -145,10 +145,10 @@ const DashboardPage = () => {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/30">
-              <Sparkles className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-lg bg-arcane/15 border border-arcane/30 flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-arcane" />
             </div>
-            <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+            <h1 className="text-2xl font-bold text-white">Dashboard</h1>
           </div>
           <p className="text-gray-400 ml-13">
             Welcome back! Here's what's happening with your server.
@@ -165,13 +165,13 @@ const DashboardPage = () => {
             <button
               key={days}
               onClick={() => setPeriod(days)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 period === days
-                  ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-400 border border-emerald-500/30 shadow-lg shadow-emerald-500/10'
-                  : 'bg-gray-800/50 text-gray-400 border border-gray-700/50 hover:bg-gray-800 hover:text-gray-300 hover:border-gray-600'
+                  ? 'bg-arcane/10 text-arcane border border-arcane/20'
+                  : 'bg-white/[0.04] text-gray-400 border border-white/[0.06] hover:bg-white/[0.07] hover:text-gray-200'
               }`}
             >
-              {days} Days
+              {days}d
             </button>
           ))}
         </motion.div>
@@ -186,15 +186,11 @@ const DashboardPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
           >
-            <Card className="relative overflow-hidden border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all group">
-              {/* Gradient Background Effect */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${stat.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
-              
-              <CardContent className="relative p-6">
+            <Card className="border-white/[0.06] bg-[#111318] hover:border-white/10 transition-colors">
+              <CardContent className="p-5">
                 <div className="flex items-start justify-between mb-4">
-                  <div className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center shadow-lg ${stat.shadowColor} group-hover:scale-110 transition-transform duration-300`}>
-                    <stat.icon className="w-6 h-6 text-white" />
-                    <div className="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${stat.gradient} flex items-center justify-center opacity-90`}>
+                    <stat.icon className="w-5 h-5 text-white" />
                   </div>
                   
                   {stat.trendUp !== null && (
@@ -216,8 +212,8 @@ const DashboardPage = () => {
                   )}
                 </div>
                 
-                <h3 className="text-sm text-gray-400 mb-2">{stat.title}</h3>
-                <p className="text-2xl font-bold text-white">{stat.value}</p>
+                <h3 className="text-xs text-gray-500 uppercase tracking-wide mb-1.5">{stat.title}</h3>
+                <p className="text-xl font-bold text-white">{stat.value}</p>
                 
                 {stat.trendUp === null && (
                   <p className="text-xs text-gray-500 mt-2">{stat.trend}</p>
@@ -234,19 +230,19 @@ const DashboardPage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
       >
-        <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] overflow-hidden">
+        <Card className="border-white/[0.06] bg-[#111318]">
           <CardHeader>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-emerald-400" />
+                <CardTitle className="text-white flex items-center gap-2 text-base">
+                  <TrendingUp className="w-4 h-4 text-emerald-400" />
                   Revenue & Orders Trend
                 </CardTitle>
                 <CardDescription className="text-gray-400 mt-1">
                   Showing revenue and order trends for the last {period} days
                 </CardDescription>
               </div>
-              <Badge className="bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-400 border-emerald-500/30 w-fit">
+              <Badge className="bg-arcane/10 text-arcane border-arcane/20 w-fit">
                 <TrendingUp className="w-3 h-3 mr-1" />
                 Trending up by 12.5%
               </Badge>
@@ -340,10 +336,10 @@ const DashboardPage = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+          <Card className="border-white/[0.06] bg-[#111318]">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Package className="w-5 h-5 text-purple-400" />
+              <CardTitle className="text-white flex items-center gap-2 text-base">
+                <Package className="w-4 h-4 text-arcane" />
                 Top Products
               </CardTitle>
               <CardDescription className="text-gray-400">
@@ -355,16 +351,16 @@ const DashboardPage = () => {
                 {stats?.topProducts?.slice(0, 5).map((product, index) => (
                   <div 
                     key={product.id} 
-                    className="flex items-center gap-4 p-3 rounded-xl bg-gray-800/30 hover:bg-gray-800/50 transition-all group"
+                    className="flex items-center gap-4 p-3 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] transition-colors"
                   >
-                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400 to-teal-400 text-white font-bold text-sm shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
-                      #{index + 1}
+                    <div className="flex items-center justify-center w-7 h-7 rounded-md bg-arcane/15 text-arcane text-xs font-semibold">
+                      {index + 1}
                     </div>
                     {product.imageUrl && (
                       <img
                         src={getImageUrl(product.imageUrl)}
                         alt={product.name}
-                        className="w-12 h-12 rounded-lg object-cover ring-2 ring-gray-700 group-hover:ring-emerald-500/50 transition-all"
+                        className="w-10 h-10 rounded-lg object-cover border border-white/10"
                       />
                     )}
                     <div className="flex-1 min-w-0">
@@ -390,10 +386,10 @@ const DashboardPage = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.6 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+          <Card className="border-white/[0.06] bg-[#111318]">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Activity className="w-5 h-5 text-cyan-400" />
+              <CardTitle className="text-white flex items-center gap-2 text-base">
+                <Activity className="w-4 h-4 text-blue-400" />
                 Server Type Performance
               </CardTitle>
               <CardDescription className="text-gray-400">
@@ -413,7 +409,7 @@ const DashboardPage = () => {
                   ];
                   
                   return (
-                    <div key={index} className="space-y-3 p-4 rounded-xl bg-gray-800/30 hover:bg-gray-800/50 transition-all">
+                    <div key={index} className="space-y-2.5 p-3 rounded-lg bg-white/[0.03] hover:bg-white/[0.05] transition-colors">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${gradients[index % gradients.length]} shadow-lg`} />
@@ -453,3 +449,8 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
+
+
+
+
+

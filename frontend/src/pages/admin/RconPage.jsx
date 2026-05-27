@@ -189,7 +189,7 @@ const RconPage = () => {
           { label: "Server Terkonfigurasi", value: stats.covered, icon: Server, color: "from-blue-400 to-indigo-400", glow: "blue-500" },
           { label: "Total Server Types", value: stats.totalServers, icon: Zap, color: "from-purple-400 to-pink-400", glow: "purple-500" }
         ].map((stat, i) => (
-          <Card key={i} className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+          <Card key={i} className="border-white/\[0.06\] bg-[#111318]">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg shadow-${stat.glow}/20`}>
@@ -218,14 +218,14 @@ const RconPage = () => {
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder="Cari nama, host, atau server type..."
-            className="bg-gray-800/50 border-gray-700 focus:border-cyan-500 text-white placeholder-gray-500 pl-10"
+            className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-cyan-500 placeholder-gray-500 pl-10"
           />
         </div>
         <div className="flex gap-2">
           <Button
             variant="outline"
             onClick={fetchAll}
-            className="border-gray-700 hover:bg-gray-800 hover:border-cyan-500/50 hover:text-cyan-400"
+            className="border-gray-700 hover:bg-white/\[0.07\] hover:border-cyan-500/50 hover:text-cyan-400"
           >
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
@@ -272,7 +272,7 @@ const RconPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
               >
-                <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-cyan-500/20 transition-all">
+                <Card className="border-white/\[0.06\] bg-[#111318] hover:border-cyan-500/20 transition-all">
                   <CardContent className="p-5">
                     <div className="flex flex-col md:flex-row md:items-center gap-4">
                       {/* Icon + Info */}
@@ -288,7 +288,7 @@ const RconPage = () => {
                           <div className="flex flex-wrap items-center gap-2 mb-1">
                             <h3 className="font-semibold text-white truncate">{config.name}</h3>
                             <Badge className={config.isActive
-                              ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-xs"
+                              ? "bg-arcane/10 text-arcane border-emerald-500/30 text-xs"
                               : "bg-red-500/20 text-red-400 border-red-500/30 text-xs"
                             }>
                               {config.isActive ? "Aktif" : "Nonaktif"}
@@ -339,7 +339,7 @@ const RconPage = () => {
                           onClick={() => handleTestConnection(config)}
                           disabled={isTesting || !config.isActive}
                           title={!config.isActive ? "Config nonaktif" : "Test koneksi RCON"}
-                          className="border-gray-700 hover:bg-gray-800 hover:border-cyan-500/50 hover:text-cyan-400 disabled:opacity-40"
+                          className="border-gray-700 hover:bg-white/\[0.07\] hover:border-cyan-500/50 hover:text-cyan-400 disabled:opacity-40"
                         >
                           {isTesting
                             ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -351,7 +351,7 @@ const RconPage = () => {
                           size="sm"
                           variant="outline"
                           onClick={() => handleEdit(config)}
-                          className="border-gray-700 hover:bg-gray-800 hover:border-blue-500/50 hover:text-blue-400"
+                          className="border-gray-700 hover:bg-white/\[0.07\] hover:border-blue-500/50 hover:text-blue-400"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
                           <span className="ml-1.5 hidden sm:inline">Edit</span>
@@ -420,3 +420,9 @@ const RconPage = () => {
 };
 
 export default RconPage;
+
+
+
+
+
+

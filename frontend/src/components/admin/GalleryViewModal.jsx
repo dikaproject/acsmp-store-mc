@@ -55,15 +55,15 @@ const GalleryViewModal = ({ isOpen, onClose, gallery }) => {
           exit={{ opacity: 0, scale: 0.95 }}
           className="relative w-full max-w-6xl max-h-[95vh] overflow-y-auto"
         >
-          <Card className="border-gray-800/50 bg-[#13151a] shadow-2xl">
+          <Card className="border-white/\[0.06\] bg-[#13151a] shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-800/50">
+            <div className="flex items-center justify-between p-6 border-b border-white/\[0.06\]">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <h2 className="text-2xl font-bold text-white">{gallery.title}</h2>
                   <Badge className={`${
                     gallery.isActive
-                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                      ? 'bg-arcane/10 text-arcane border-emerald-500/30'
                       : 'bg-gray-500/20 text-gray-400 border-gray-500/30'
                   }`}>
                     {gallery.isActive ? (
@@ -87,14 +87,14 @@ const GalleryViewModal = ({ isOpen, onClose, gallery }) => {
                 <Button
                   onClick={handleDownload}
                   variant="outline"
-                  className="border-gray-700 hover:bg-gray-800"
+                  className="border-gray-700 hover:bg-white/\[0.07\]"
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Download
                 </Button>
                 <button
                   onClick={onClose}
-                  className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                  className="p-2 hover:bg-white/\[0.07\] rounded-lg transition-colors"
                 >
                   <X className="w-5 h-5 text-gray-400" />
                 </button>
@@ -103,7 +103,7 @@ const GalleryViewModal = ({ isOpen, onClose, gallery }) => {
 
             {/* Image */}
             <div className="p-6">
-              <div className="relative rounded-xl overflow-hidden bg-gray-800/50 mb-6">
+              <div className="relative rounded-xl overflow-hidden bg-white/\[0.05\] mb-6">
                 <img
                   src={getImageUrl(gallery.imageUrl)}
                   alt={gallery.title}
@@ -113,7 +113,7 @@ const GalleryViewModal = ({ isOpen, onClose, gallery }) => {
 
               {/* Meta Info */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                <div className="p-4 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                   <div className="flex items-center gap-2 mb-1">
                     <Hash className="w-4 h-4 text-gray-400" />
                     <p className="text-xs text-gray-400">Display Order</p>
@@ -121,7 +121,7 @@ const GalleryViewModal = ({ isOpen, onClose, gallery }) => {
                   <p className="text-lg font-bold text-white">#{gallery.order}</p>
                 </div>
 
-                <div className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                <div className="p-4 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                   <div className="flex items-center gap-2 mb-1">
                     <Calendar className="w-4 h-4 text-gray-400" />
                     <p className="text-xs text-gray-400">Created</p>
@@ -135,7 +135,7 @@ const GalleryViewModal = ({ isOpen, onClose, gallery }) => {
                   </p>
                 </div>
 
-                <div className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                <div className="p-4 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                   <div className="flex items-center gap-2 mb-1">
                     <Calendar className="w-4 h-4 text-gray-400" />
                     <p className="text-xs text-gray-400">Last Updated</p>
@@ -152,11 +152,11 @@ const GalleryViewModal = ({ isOpen, onClose, gallery }) => {
             </div>
 
             {/* Footer */}
-            <div className="p-6 border-t border-gray-800/50">
+            <div className="p-6 border-t border-white/\[0.06\]">
               <Button
                 onClick={onClose}
                 variant="outline"
-                className="w-full border-gray-700 hover:bg-gray-800"
+                className="w-full border-gray-700 hover:bg-white/\[0.07\]"
               >
                 Close
               </Button>
@@ -169,3 +169,8 @@ const GalleryViewModal = ({ isOpen, onClose, gallery }) => {
 };
 
 export default GalleryViewModal;
+
+
+
+
+

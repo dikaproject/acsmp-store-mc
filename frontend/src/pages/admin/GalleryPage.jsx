@@ -197,7 +197,7 @@ const GalleryPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Total Images</p>
@@ -214,7 +214,7 @@ const GalleryPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Active</p>
@@ -231,7 +231,7 @@ const GalleryPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Hidden</p>
@@ -245,7 +245,7 @@ const GalleryPage = () => {
       </div>
 
       {/* Filters & Search */}
-      <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+      <Card className="border-white/\[0.06\] bg-[#111318]">
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* Search */}
@@ -256,7 +256,7 @@ const GalleryPage = () => {
                 placeholder="Cari berdasarkan judul atau deskripsi..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-gray-800/30 border-gray-700/50 focus:border-pink-500/50"
+                className="pl-10 bg-[#1a1d24] border-gray-700/50 rounded-xl focus:border-pink-500/50"
               />
             </div>
 
@@ -265,7 +265,7 @@ const GalleryPage = () => {
               <select
                 value={filters.isActive}
                 onChange={(e) => setFilters({ ...filters, isActive: e.target.value })}
-                className="w-full px-3 py-2 bg-gray-800/30 border border-gray-700/50 rounded-lg text-white focus:outline-none focus:border-pink-500/50 transition-colors appearance-none cursor-pointer"
+                className="w-full px-3 py-2 bg-[#1a1d24] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-pink-500/50 transition-colors appearance-none cursor-pointer [&_option]:bg-[#1a1d24] [&_option]:text-white [color-scheme:dark]"
               >
                 <option value="all">All Status</option>
                 <option value="true">Active</option>
@@ -274,13 +274,13 @@ const GalleryPage = () => {
             </div>
 
             {/* View Toggle */}
-            <div className="md:col-span-1 flex gap-2 bg-gray-800/30 p-1 rounded-lg">
+            <div className="md:col-span-1 flex gap-2 bg-white/\[0.03\] p-1 rounded-lg">
               <button
                 onClick={() => setViewMode('masonry')}
                 className={`flex-1 p-2 rounded-lg transition-all ${
                   viewMode === 'masonry'
                     ? 'bg-pink-500/20 text-pink-400'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                    : 'text-gray-400 hover:text-white hover:bg-white/[0.05]'
                 }`}
                 title="Masonry View"
               >
@@ -291,7 +291,7 @@ const GalleryPage = () => {
                 className={`flex-1 p-2 rounded-lg transition-all ${
                   viewMode === 'grid'
                     ? 'bg-pink-500/20 text-pink-400'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                    : 'text-gray-400 hover:text-white hover:bg-white/[0.05]'
                 }`}
                 title="Grid View"
               >
@@ -333,9 +333,9 @@ const GalleryPage = () => {
                 transition={{ delay: index * 0.03 }}
                 className="break-inside-avoid"
               >
-                <Card className="group border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-pink-500/30 transition-all overflow-hidden">
+                <Card className="group border-white/\[0.06\] bg-[#111318] hover:border-pink-500/30 transition-all overflow-hidden">
                   {/* Image */}
-                  <div className="relative overflow-hidden bg-gray-800/50">
+                  <div className="relative overflow-hidden bg-white/\[0.05\]">
                     <img
                       src={getImageUrl(gallery.imageUrl)}
                       alt={gallery.title}
@@ -381,7 +381,7 @@ const GalleryPage = () => {
                     <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
                       <Badge className={`${
                         gallery.isActive
-                          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 backdrop-blur-sm'
+                          ? 'bg-arcane/10 text-arcane border-emerald-500/30 backdrop-blur-sm'
                           : 'bg-gray-500/20 text-gray-400 border-gray-500/30 backdrop-blur-sm'
                       }`}>
                         {gallery.isActive ? 'Active' : 'Hidden'}
@@ -436,9 +436,9 @@ const GalleryPage = () => {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ delay: index * 0.03 }}
               >
-                <Card className="group border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-pink-500/30 transition-all overflow-hidden">
+                <Card className="group border-white/\[0.06\] bg-[#111318] hover:border-pink-500/30 transition-all overflow-hidden">
                   {/* Image */}
-                  <div className="relative aspect-square overflow-hidden bg-gray-800/50">
+                  <div className="relative aspect-square overflow-hidden bg-white/\[0.05\]">
                     <img
                       src={getImageUrl(gallery.imageUrl)}
                       alt={gallery.title}
@@ -493,7 +493,7 @@ const GalleryPage = () => {
                     <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <Badge className={`text-xs ${
                         gallery.isActive
-                          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 backdrop-blur-sm'
+                          ? 'bg-arcane/10 text-arcane border-emerald-500/30 backdrop-blur-sm'
                           : 'bg-gray-500/20 text-gray-400 border-gray-500/30 backdrop-blur-sm'
                       }`}>
                         {gallery.isActive ? '✓' : '✕'}
@@ -574,3 +574,8 @@ const GalleryPage = () => {
 };
 
 export default GalleryPage;
+
+
+
+
+

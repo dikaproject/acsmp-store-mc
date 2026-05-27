@@ -131,9 +131,9 @@ const UserModal = ({ isOpen, onClose, mode, user, onSuccess }) => {
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           className="relative w-full max-w-md"
         >
-          <Card className="border-gray-800/50 bg-[#13151a] shadow-2xl">
+          <Card className="border-white/\[0.06\] bg-[#13151a] shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-800/50">
+            <div className="flex items-center justify-between p-6 border-b border-white/\[0.06\]">
               <div>
                 <h2 className="text-2xl font-bold text-white">
                   {mode === 'create' ? 'Tambah Admin' : 'Edit User'}
@@ -144,7 +144,7 @@ const UserModal = ({ isOpen, onClose, mode, user, onSuccess }) => {
               </div>
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                className="p-2 hover:bg-white/\[0.07\] rounded-lg transition-colors"
               >
                 <X className="w-5 h-5 text-gray-400" />
               </button>
@@ -163,7 +163,7 @@ const UserModal = ({ isOpen, onClose, mode, user, onSuccess }) => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g., John Doe"
-                  className="bg-gray-800/50 border-gray-700 focus:border-purple-500"
+                  className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500"
                   required
                 />
               </div>
@@ -179,7 +179,7 @@ const UserModal = ({ isOpen, onClose, mode, user, onSuccess }) => {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="admin@example.com"
-                  className="bg-gray-800/50 border-gray-700 focus:border-purple-500"
+                  className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500"
                   required
                 />
               </div>
@@ -197,7 +197,7 @@ const UserModal = ({ isOpen, onClose, mode, user, onSuccess }) => {
                     className={`p-4 rounded-lg border-2 transition-all ${
                       formData.role === 'ADMIN'
                         ? 'border-purple-500 bg-purple-500/10'
-                        : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                        : 'border-gray-700 bg-white/\[0.03\] hover:border-gray-600'
                     }`}
                   >
                     <div className="flex flex-col items-center gap-2">
@@ -215,7 +215,7 @@ const UserModal = ({ isOpen, onClose, mode, user, onSuccess }) => {
                     className={`p-4 rounded-lg border-2 transition-all ${
                       formData.role === 'VISITOR'
                         ? 'border-blue-500 bg-blue-500/10'
-                        : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+                        : 'border-gray-700 bg-white/\[0.03\] hover:border-gray-600'
                     }`}
                   >
                     <div className="flex flex-col items-center gap-2">
@@ -241,7 +241,7 @@ const UserModal = ({ isOpen, onClose, mode, user, onSuccess }) => {
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     placeholder={mode === 'edit' ? "Leave blank to keep current" : "Min. 6 characters"}
-                    className="bg-gray-800/50 border-gray-700 focus:border-purple-500 pr-10"
+                    className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500 pr-10"
                     required={mode === 'create'}
                   />
                   <button
@@ -275,7 +275,7 @@ const UserModal = ({ isOpen, onClose, mode, user, onSuccess }) => {
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                     placeholder="Confirm your password"
-                    className="bg-gray-800/50 border-gray-700 focus:border-purple-500"
+                    className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500"
                     required
                   />
                 </div>
@@ -302,7 +302,7 @@ const UserModal = ({ isOpen, onClose, mode, user, onSuccess }) => {
                   type="button"
                   onClick={onClose}
                   variant="outline"
-                  className="flex-1 border-gray-700 hover:bg-gray-800"
+                  className="flex-1 border-gray-700 hover:bg-white/\[0.07\]"
                 >
                   Batal
                 </Button>
@@ -333,3 +333,8 @@ const UserModal = ({ isOpen, onClose, mode, user, onSuccess }) => {
 };
 
 export default UserModal;
+
+
+
+
+

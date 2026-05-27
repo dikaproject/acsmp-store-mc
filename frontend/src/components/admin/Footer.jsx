@@ -4,7 +4,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-gray-800/50 bg-[#13151a]/50 backdrop-blur-xl mt-auto">
+    <footer className="border-t border-white/\[0.06\] bg-[#13151a]/50 backdrop-blur-xl mt-auto">
       <div className="px-6 py-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           {/* Left Section - Copyright & Credits */}
@@ -52,3 +52,8 @@ const Footer = () => {
 };
 
 export default Footer;
+
+
+
+
+

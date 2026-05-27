@@ -32,11 +32,11 @@ const CartPage = () => {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-black pt-20 pb-16 flex items-center justify-center">
+      <div className="min-h-screen bg-ink pt-20 pb-16 flex items-center justify-center">
         {/* Background */}
         <div className="fixed inset-0 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/10 to-black" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.03)_0%,transparent_60%)]" />
+          <div className="absolute inset-0 bg-ink" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,165,116,0.03)_0%,transparent_60%)]" />
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
@@ -45,16 +45,16 @@ const CartPage = () => {
             animate={{ opacity: 1, y: 0 }}
             className="max-w-md mx-auto"
           >
-            <div className="text-center p-12 bg-black/60 backdrop-blur-xl rounded-2xl border border-purple-500/10">
-              <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-purple-500/5 border border-purple-500/10 flex items-center justify-center">
-                <ShoppingCart className="w-12 h-12 text-purple-400/50" />
+            <div className="text-center p-12 bg-ink-elevated border border-ink-border">
+              <div className="w-20 h-20 mx-auto mb-6 bg-arcane/5 border border-arcane/30 flex items-center justify-center">
+                <ShoppingCart className="w-10 h-10 text-arcane/50" strokeWidth={1.5} />
               </div>
               <h2 className="text-3xl font-bold text-white mb-4">Keranjang Kosong</h2>
               <p className="text-gray-400 mb-8">
                 Belum ada produk di keranjang belanja Anda
               </p>
               <Link to="/shop">
-                <Button className="bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 shadow-lg shadow-purple-500/20">
+                <Button className="bg-arcane text-bone hover:bg-arcane-glow">
                   <Package className="w-4 h-4 mr-2" />
                   Mulai Belanja
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -68,29 +68,13 @@ const CartPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black pt-20 pb-16">
+    <div className="min-h-screen bg-ink pt-20 pb-16">
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/10 to-black" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.03)_0%,transparent_60%)]" />
-        <div className="absolute inset-0 opacity-[0.02]">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `linear-gradient(to right, rgba(139,92,246,0.3) 1px, transparent 1px),
-                             linear-gradient(to bottom, rgba(139,92,246,0.3) 1px, transparent 1px)`,
-            backgroundSize: '100px 100px'
-          }} />
-        </div>
+        <div className="absolute inset-0 bg-ink" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,165,116,0.03)_0%,transparent_60%)]" />
       </div>
 
-      {/* Subtle animated orb */}
-      <motion.div
-        className="fixed top-20 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl pointer-events-none"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.05, 0.1, 0.05],
-        }}
-        transition={{ duration: 10, repeat: Infinity }}
-      />
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
@@ -100,7 +84,7 @@ const CartPage = () => {
           className="mb-10"
         >
           <Link to="/shop">
-            <Button variant="ghost" className="mb-6 hover:bg-purple-500/5 border border-purple-500/10 text-gray-400 hover:text-white">
+            <Button variant="ghost" className="mb-6 hover:bg-arcane/5 border border-ink-border text-bone-muted hover:text-bone">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Kembali ke Shop
             </Button>
@@ -110,7 +94,7 @@ const CartPage = () => {
             <div>
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
                 Keranjang{" "}
-                <span className="bg-gradient-to-r from-purple-400 to-violet-400 bg-clip-text text-transparent">
+                <span className="text-arcane">
                   Belanja
                 </span>
               </h1>
@@ -119,7 +103,7 @@ const CartPage = () => {
                 {items.length} produk di keranjang
               </p>
             </div>
-            <Badge className="bg-purple-500/10 text-purple-400 border-purple-500/20 px-4 py-2 w-fit">
+            <Badge className="bg-arcane/10 text-arcane border-arcane/20 px-4 py-2 w-fit">
               <Sparkles className="w-4 h-4 mr-2" />
               Total: {formatCurrency(getTotalPrice())}
             </Badge>
@@ -138,14 +122,14 @@ const CartPage = () => {
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <div className="relative overflow-hidden bg-black/60 backdrop-blur-xl rounded-2xl border border-purple-500/10 hover:border-purple-500/20 transition-all">
+                  <div className="relative overflow-hidden bg-ink-elevated border border-ink-border rounded-2xl hover:border-arcane/20 transition-all">
                     {/* Subtle glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 hover:opacity-100 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-arcane/5 to-transparent opacity-0 hover:opacity-100 transition-opacity" />
                     
                     <div className="relative p-6">
                       <div className="flex gap-6">
                         {/* Product Image */}
-                        <div className="relative w-28 h-28 rounded-xl overflow-hidden flex-shrink-0 border border-purple-500/10">
+                        <div className="relative w-28 h-28 rounded-xl overflow-hidden flex-shrink-0 border border-ink-border">
                           <img
                             src={getImageUrl(item.imageUrl)}
                             alt={item.name}
@@ -163,7 +147,7 @@ const CartPage = () => {
                               <p className="text-sm text-gray-400 line-clamp-2 mb-3">
                                 {item.description}
                               </p>
-                              <Badge className="bg-purple-500/10 text-purple-400 border-purple-500/20">
+                              <Badge className="bg-arcane/10 text-arcane border-arcane/20">
                                 {item.ServerType?.name || item.serverType?.name}
                               </Badge>
                             </div>
@@ -178,14 +162,14 @@ const CartPage = () => {
                           </div>
 
                           {/* Quantity & Price */}
-                          <div className="flex items-center justify-between pt-4 border-t border-purple-500/10">
+                          <div className="flex items-center justify-between pt-4 border-t border-ink-border">
                             <div className="flex items-center gap-3">
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => updateQuantity(item.id, item.quantity - 1)}
                                 disabled={item.quantity <= 1 || item._isUpgrade}
-                                className="border-purple-500/20 hover:bg-purple-500/10 disabled:opacity-50 text-white"
+                                className="border-ink-border hover:bg-arcane/5 disabled:opacity-50 text-bone"
                               >
                                 <Minus className="w-4 h-4" />
                               </Button>
@@ -197,7 +181,7 @@ const CartPage = () => {
                                 size="sm"
                                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
                                 disabled={item._isUpgrade}
-                                className="border-purple-500/20 hover:bg-purple-500/10 text-white disabled:opacity-40"
+                                className="border-ink-border hover:bg-arcane/5 text-bone disabled:opacity-40"
                               >
                                 <Plus className="w-4 h-4" />
                               </Button>
@@ -242,7 +226,7 @@ const CartPage = () => {
                                   <p className="text-xs text-gray-500 mb-1">
                                     {formatCurrency(item.price)} x {item.quantity}
                                   </p>
-                                  <p className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-violet-400 bg-clip-text text-transparent">
+                                  <p className="text-2xl font-bold text-arcane">
                                     {formatCurrency(item.price * item.quantity)}
                                   </p>
                                 </>
@@ -281,12 +265,12 @@ const CartPage = () => {
               animate={{ opacity: 1, x: 0 }}
               className="sticky top-24"
             >
-              <div className="relative overflow-hidden bg-black/60 backdrop-blur-xl rounded-2xl border border-purple-500/20">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.03),transparent_70%)]" />
+              <div className="relative overflow-hidden bg-ink-elevated border border-ink-border rounded-2xl">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,165,116,0.03),transparent_70%)]" />
                 
                 <div className="relative p-6">
                   <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                    <ShoppingCart className="w-5 h-5 text-purple-400" />
+                    <ShoppingCart className="w-5 h-5 text-arcane" />
                     Ringkasan Pesanan
                   </h3>
 
@@ -301,10 +285,10 @@ const CartPage = () => {
                       const subtotal = finalPrice * item.quantity;
                       
                       return (
-                        <div key={item.id} className="p-3 rounded-lg bg-black/40 border border-purple-500/10">
+                        <div key={item.id} className="p-3 rounded-lg bg-ink/40 border border-ink-border">
                           <div className="flex justify-between items-start mb-1">
                             <span className="text-sm text-gray-400 flex-1">
-                              {item.name} <span className="text-purple-400">x{item.quantity}</span>
+                              {item.name} <span className="text-arcane">x{item.quantity}</span>
                             </span>
                             <span className="font-medium text-white ml-2">
                               {formatCurrency(subtotal)}
@@ -334,18 +318,18 @@ const CartPage = () => {
                     })}
                   </div>
 
-                  <div className="border-t border-purple-500/10 pt-4 space-y-3">
+                  <div className="border-t border-ink-border pt-4 space-y-3">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-400">Subtotal ({items.length} item)</span>
+                      <span className="text-bone-muted">Subtotal ({items.length} item)</span>
                       <span className="font-medium text-white">{formatCurrency(getTotalPrice())}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-400">Biaya Admin</span>
-                      <span className="font-medium text-purple-400">Gratis</span>
+                      <span className="font-medium text-arcane">Gratis</span>
                     </div>
-                    <div className="flex justify-between text-xl font-bold pt-4 border-t border-purple-500/10">
-                      <span className="text-white">Total</span>
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-400">
+                    <div className="flex justify-between text-xl font-bold pt-4 border-t border-ink-border">
+                      <span className="text-bone">Total</span>
+                      <span className="text-arcane">
                         {formatCurrency(getTotalPrice())}
                       </span>
                     </div>
@@ -359,9 +343,9 @@ const CartPage = () => {
                         Pembayaran aman melalui <strong>Tripay</strong>
                       </p>
                     </div>
-                    <div className="flex items-start gap-2 p-3 rounded-xl bg-purple-500/5 border border-purple-500/10">
-                      <CreditCard className="w-4 h-4 text-purple-400/70 mt-0.5 flex-shrink-0" />
-                      <p className="text-xs text-purple-400/70">
+                    <div className="flex items-start gap-2 p-3 rounded-xl bg-arcane/5 border border-arcane/10">
+                      <CreditCard className="w-4 h-4 text-arcane/70 mt-0.5 flex-shrink-0" />
+                      <p className="text-xs text-arcane/70">
                         Berbagai metode pembayaran tersedia
                       </p>
                     </div>
@@ -369,7 +353,7 @@ const CartPage = () => {
 
                   <Button
                     onClick={handleCheckout}
-                    className="w-full bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 shadow-lg shadow-purple-500/20 group mb-3"
+                    className="w-full shadow-lg shadow-arcane/20 group mb-3"
                     size="lg"
                   >
                     Lanjut ke Checkout
@@ -377,7 +361,7 @@ const CartPage = () => {
                   </Button>
 
                   <Link to="/shop">
-                    <Button variant="outline" className="w-full border-purple-500/20 hover:bg-purple-500/5 text-gray-400 hover:text-white">
+                    <Button variant="outline" className="w-full">
                       Lanjut Belanja
                     </Button>
                   </Link>
@@ -394,15 +378,15 @@ const CartPage = () => {
           width: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(139, 92, 246, 0.05);
+          background: rgba(212, 165, 116, 0.05);
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(139, 92, 246, 0.2);
+          background: rgba(212, 165, 116, 0.2);
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(139, 92, 246, 0.3);
+          background: rgba(212, 165, 116, 0.3);
         }
       `}</style>
     </div>

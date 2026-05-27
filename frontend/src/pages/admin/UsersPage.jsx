@@ -202,7 +202,7 @@ const UsersPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Total Users</p>
@@ -219,7 +219,7 @@ const UsersPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Administrators</p>
@@ -236,7 +236,7 @@ const UsersPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-gray-700 transition-all">
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-gray-400">Visitors</p>
@@ -269,7 +269,7 @@ const UsersPage = () => {
       </Card>
 
       {/* Filters & Search */}
-      <Card className="border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f]">
+      <Card className="border-white/\[0.06\] bg-[#111318]">
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* Search */}
@@ -280,7 +280,7 @@ const UsersPage = () => {
                 placeholder="Cari berdasarkan nama atau email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-gray-800/30 border-gray-700/50 focus:border-purple-500/50"
+                className="pl-10 bg-[#1a1d24] border-gray-700/50 rounded-xl focus:border-purple-500/50"
               />
             </div>
 
@@ -289,7 +289,7 @@ const UsersPage = () => {
               <select
                 value={filters.role}
                 onChange={(e) => setFilters({ ...filters, role: e.target.value })}
-                className="w-full px-3 py-2 bg-gray-800/30 border border-gray-700/50 rounded-lg text-white focus:outline-none focus:border-purple-500/50 transition-colors appearance-none cursor-pointer"
+                className="w-full px-3 py-2 bg-[#1a1d24] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-purple-500/50 transition-colors appearance-none cursor-pointer [&_option]:bg-[#1a1d24] [&_option]:text-white [color-scheme:dark]"
               >
                 <option value="all">All Roles</option>
                 <option value="ADMIN">Admin</option>
@@ -334,7 +334,7 @@ const UsersPage = () => {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Card className="group border-gray-800/50 bg-gradient-to-br from-[#13151a] to-[#0a0b0f] hover:border-purple-500/30 transition-all">
+                <Card className="group border-white/\[0.06\] bg-[#111318] hover:border-purple-500/30 transition-all">
                   <CardContent className="p-6">
                     {/* Header */}
                     <div className="flex items-start justify-between mb-4">
@@ -353,7 +353,7 @@ const UsersPage = () => {
                             {user.name}
                           </h3>
                           {isCurrentUser && (
-                            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 mt-1">
+                            <Badge className="bg-arcane/10 text-arcane border-emerald-500/30 mt-1">
                               <CheckCircle2 className="w-3 h-3 mr-1" />
                               You
                             </Badge>
@@ -368,7 +368,7 @@ const UsersPage = () => {
                     </div>
 
                     {/* Email */}
-                    <div className="mb-4 p-3 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                    <div className="mb-4 p-3 bg-white/\[0.03\] rounded-lg border border-gray-700/50">
                       <div className="flex items-center gap-2 mb-1">
                         <Mail className="w-3 h-3 text-gray-400" />
                         <p className="text-xs text-gray-400">Email</p>
@@ -415,7 +415,7 @@ const UsersPage = () => {
                         onClick={() => handleEdit(user)}
                         variant="outline"
                         size="sm"
-                        className="flex-1 border-gray-700 hover:bg-gray-800 hover:border-purple-500/50 hover:text-purple-400"
+                        className="flex-1 border-gray-700 hover:bg-white/\[0.07\] hover:border-purple-500/50 hover:text-purple-400"
                       >
                         <Edit2 className="w-4 h-4 mr-1" />
                         Edit
@@ -495,3 +495,8 @@ const UsersPage = () => {
 };
 
 export default UsersPage;
+
+
+
+
+
