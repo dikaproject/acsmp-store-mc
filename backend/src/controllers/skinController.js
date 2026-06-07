@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
-const MINESKIN_API_KEY = process.env.MINESKIN_API_KEY || 'msk_s1Lw5kJ5_AkzwkAIAY4TLAJtb4e1kz8GFiU1hlu_lrKQSCQ1D30ZsNonONAZiJPAUVTJPXqZ7';
+const MINESKIN_API_KEY = process.env.MINESKIN_API_KEY;
 
 // Generate or reuse a short 8-char hex code for a texture hash
 async function createShortCode(hash) {

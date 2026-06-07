@@ -230,8 +230,23 @@ exports.create = async (req, res, next) => {
         voucher.usedCount < voucher.maxUse &&
         (!voucher.expiredAt || new Date() <= new Date(voucher.expiredAt))
       ) {
-        discountAmount = Math.floor(totalBeforeVoucher * voucher.discount / 100);
-        voucherId = voucher.id;
+        // Atomically claim one usage slot to avoid race conditions where
+        // concurrent orders push usedCount beyond maxUse.
+        const claimed = await prisma.voucher.updateMany({
+          where: {
+            id: voucher.id,
+            isActive: true,
+            usedCount: { lt: voucher.maxUse }
+          },
+          data: { usedCount: { increment: 1 } }
+        });
+
+        if (claimed.count === 1) {
+          discountAmount = Math.floor(totalBeforeVoucher * voucher.discount / 100);
+          voucherId = voucher.id;
+        }
+        // If claimed.count === 0 the voucher was exhausted by a concurrent
+        // request; we simply proceed without the discount.
       }
     }
 
@@ -262,11 +277,6 @@ exports.create = async (req, res, next) => {
         serverType: true
       }
     });
-
-    // Increment voucher usedCount
-    if (voucherId) {
-      await prisma.voucher.update({ where: { id: voucherId }, data: { usedCount: { increment: 1 } } });
-    }
 
     let paymentData = null;
     try {

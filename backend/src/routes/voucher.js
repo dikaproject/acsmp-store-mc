@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const voucherController = require('../controllers/voucherController');
 const { authenticate, isAdmin } = require('../middleware/auth');
+const { publicWriteLimiter } = require('../middleware/rateLimiters');
 
 // Public: validate a code
-router.post('/validate', voucherController.validate);
+router.post('/validate', publicWriteLimiter, voucherController.validate);
 
 // Admin only
 router.get('/', authenticate, isAdmin, voucherController.getAll);

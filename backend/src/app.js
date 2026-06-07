@@ -1,10 +1,16 @@
 // src/app.js
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const path = require('path');
 require('dotenv').config();
 
+const validateEnv = require('./config/validateEnv');
+// Validate security-critical env vars before anything else starts.
+validateEnv();
+
 const errorHandler = require('./middleware/errorHandler');
+const { globalLimiter } = require('./middleware/rateLimiters');
 
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
@@ -22,16 +28,43 @@ const voucherRoutes = require('./routes/voucher');
 const app = express();
 const port = process.env.PORT || 5001;
 
+// Trust the first proxy hop so express-rate-limit & req.ip read the real client IP
+// (required when running behind Nginx / a load balancer).
+app.set('trust proxy', 1);
+
+// Security headers. crossOriginResourcePolicy relaxed so static uploads/images
+// can be loaded by the frontend on a different origin.
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+}));
+
+// CORS allowlist. Configure allowed origins via CORS_ORIGINS (comma-separated).
+// Falls back to FRONTEND_URL, then localhost dev origins.
+const allowedOrigins = (process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',')
+  : [process.env.FRONTEND_URL, 'http://localhost:5173', 'http://localhost:3000'])
+  .map(o => (o || '').trim())
+  .filter(Boolean);
 
 const corsOptions = {
-  origin: true,                 
-  credentials: true,             
+  origin: (origin, callback) => {
+    // Allow same-origin/non-browser requests (no Origin header) e.g. curl, server-to-server, webhooks.
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); 
-app.use(express.json());
+app.options('*', cors(corsOptions));
+
+// Limit request body size to mitigate large-payload DoS.
+app.use(express.json({ limit: '1mb' }));
+
+// Baseline global rate limit across the whole API.
+app.use(globalLimiter);
 
 // Static files - serve both /uploads and /api/uploads
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));

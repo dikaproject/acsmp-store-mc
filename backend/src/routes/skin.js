@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { uploadSkin, getTexture, getShortUrl } = require('../controllers/skinController');
+const { publicWriteLimiter } = require('../middleware/rateLimiters');
 
 // GET /api/skin/s/:code — resolve short code and redirect
 router.get('/s/:code', getShortUrl);
@@ -9,6 +10,6 @@ router.get('/s/:code', getShortUrl);
 router.get('/texture/:hash', getTexture);
 
 // POST /api/skin/upload
-router.post('/upload', uploadSkin);
+router.post('/upload', publicWriteLimiter, uploadSkin);
 
 module.exports = router;

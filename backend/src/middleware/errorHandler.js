@@ -29,12 +29,24 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // Log error for debugging
-  console.error('Error:', err.message);
-  
-  res.status(err.status || 500).json({
+  // Log full error server-side for debugging
+  console.error('Error:', err.stack || err.message);
+
+  const status = err.status || 500;
+  const isProd = process.env.NODE_ENV === 'production';
+
+  // Don't leak internal error details (stack traces, DB errors) to clients in production.
+  // 4xx errors carry intentional, safe messages; 5xx are masked in production.
+  let message;
+  if (status < 500) {
+    message = err.message || 'Request error';
+  } else {
+    message = isProd ? 'Internal Server Error' : (err.message || 'Internal Server Error');
+  }
+
+  res.status(status).json({
     success: false,
-    message: err.message || 'Internal Server Error'
+    message
   });
 };
 

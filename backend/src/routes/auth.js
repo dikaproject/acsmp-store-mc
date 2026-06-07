@@ -4,9 +4,11 @@ const authController = require('../controllers/authController');
 const { authenticate, isAdmin } = require('../middleware/auth');
 const { body } = require('express-validator');
 const { validate } = require('../middleware/validations');
+const { loginLimiter } = require('../middleware/rateLimiters');
 
 // Player login
 router.post('/login/player', [
+  loginLimiter,
   body('minecraftName')
     .trim()
     .notEmpty().withMessage('Minecraft name is required')
@@ -16,6 +18,7 @@ router.post('/login/player', [
 
 // Admin login - ✅ Accept 'email' instead of 'username'
 router.post('/login', [
+  loginLimiter,
   body('email').trim().notEmpty().withMessage('Email is required')
     .isEmail().withMessage('Invalid email format'),
   body('password').notEmpty().withMessage('Password is required'),
