@@ -169,3 +169,16 @@ exports.delete = async (req, res, next) => {
     next(error);
   }
 };
+
+// Upload inline image from TinyMCE editor
+exports.uploadImage = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No image uploaded' });
+    }
+    const url = `/uploads/guides/${req.file.filename}`;
+    res.json({ success: true, url });
+  } catch (error) {
+    next(error);
+  }
+};

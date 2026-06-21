@@ -73,6 +73,12 @@ const Sidebar = ({ isOpen, onClose }) => {
       description: "Kelola foto gallery"
     },
     { 
+      icon: BookOpen, 
+      label: "Panduan", 
+      path: "/admin/guides",
+      description: "Kelola panduan & tutorial"
+    },
+    { 
       icon: Ticket, 
       label: "Vouchers", 
       path: "/admin/vouchers",

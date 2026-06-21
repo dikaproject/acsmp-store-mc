@@ -155,3 +155,242 @@
   background: hsl(var(--ink-elevated)) !important;
   border-top: 1px solid hsl(var(--ink-border)) !important;
 }
+
+/* ============================================================
+   RULES SERVER — prose styles for the pinned rules guide
+   Scoped under .rules-doc to avoid bleeding into other content
+   ============================================================ */
+.rules-doc {
+  color: #e2e8f0;
+  line-height: 1.75;
+  font-size: 0.97rem;
+}
+
+.rules-intro {
+  padding: 18px 22px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  margin-bottom: 32px;
+  color: #94a3b8;
+  font-size: 0.93rem;
+}
+
+/* Section titles */
+.rules-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 36px 0 18px;
+  color: #64748b;
+}
+.rules-section-title::before,
+.rules-section-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+}
+
+/* Cards */
+.rules-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-left-width: 3px;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 14px;
+  transition: background 0.2s;
+}
+.rules-card:hover { background: rgba(255,255,255,0.05); }
+
+.rules-card.danger  { border-left-color: #f87171; }
+.rules-card.warn    { border-left-color: #fbbf24; }
+.rules-card.safe    { border-left-color: #4ade80; }
+
+.rules-card-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+/* Pasal number pill */
+.rules-num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  background: #4ade80;
+  color: #0f172a;
+}
+.rules-num.warn  { background: #fbbf24; color: #0f172a; }
+.rules-num.green { background: #4ade80; color: #0f172a; }
+
+.rules-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  flex: 1;
+  min-width: 160px;
+}
+
+/* Tags */
+.rules-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.rules-tag.ban  { background: rgba(248,113,113,0.15); color: #f87171; }
+.rules-tag.info { background: rgba(74,222,128,0.15);  color: #4ade80; }
+.rules-tag.warn { background: rgba(251,191,36,0.15);  color: #fbbf24; }
+
+/* Text utilities */
+.ban-text { color: #f87171; font-weight: 700; }
+
+/* Lists inside cards */
+.rules-card ol,
+.rules-card ul {
+  padding-left: 20px;
+  margin-top: 6px;
+}
+.rules-card li { margin-bottom: 5px; }
+.rules-card p  { margin-bottom: 8px; }
+
+/* Inner notes */
+.rules-note {
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-top: 12px;
+  font-size: 0.88rem;
+}
+.rules-note.warn   { background: rgba(251,191,36,0.1);  border: 1px solid rgba(251,191,36,0.25);  color: #fde68a; }
+.rules-note.danger { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.25); color: #fca5a5; }
+
+/* Footer */
+.rules-footer {
+  margin-top: 40px;
+  padding: 24px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  text-align: center;
+}
+.rules-footer h3 { color: #fff; margin-bottom: 14px; font-size: 1rem; font-weight: 700; }
+.rules-footer ul { list-style: none; padding: 0; }
+.rules-footer li { color: #94a3b8; margin-bottom: 8px; font-size: 0.9rem; }
+.rules-sign {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  color: #4ade80;
+  font-weight: 600;
+}
+
+/* ============================================================
+   GUIDE CONTENT — prose for blog-style guide detail view
+   Used in GuideDetailPage and GuideModal view mode
+   ============================================================ */
+.guide-prose {
+  color: #cbd5e1;
+  line-height: 1.8;
+  font-size: 1rem;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.guide-prose h1,
+.guide-prose h2,
+.guide-prose h3,
+.guide-prose h4,
+.guide-prose h5,
+.guide-prose h6 {
+  color: #fff;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+}
+.guide-prose h1 { font-size: 2rem; }
+.guide-prose h2 { font-size: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.4em; }
+.guide-prose h3 { font-size: 1.25rem; }
+.guide-prose h4 { font-size: 1.05rem; }
+.guide-prose p  { margin-bottom: 1.1em; }
+.guide-prose a  { color: #34d399; text-decoration: none; }
+.guide-prose a:hover { text-decoration: underline; }
+.guide-prose strong { color: #fff; }
+.guide-prose em     { color: #a5b4fc; }
+.guide-prose ul,
+.guide-prose ol  { padding-left: 1.5em; margin-bottom: 1em; }
+.guide-prose li  { margin-bottom: 0.35em; }
+.guide-prose blockquote {
+  border-left: 3px solid #4ade80;
+  margin: 1.2em 0;
+  padding: 0.6em 1em;
+  background: rgba(74,222,128,0.05);
+  border-radius: 0 8px 8px 0;
+  color: #94a3b8;
+  font-style: italic;
+}
+.guide-prose code {
+  background: rgba(255,255,255,0.07);
+  color: #86efac;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88em;
+  font-family: ui-monospace, monospace;
+}
+.guide-prose pre {
+  background: #0d1117;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 16px;
+  overflow-x: auto;
+  margin-bottom: 1.2em;
+}
+.guide-prose pre code {
+  background: transparent;
+  color: #86efac;
+  padding: 0;
+  font-size: 0.9em;
+}
+.guide-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.2em;
+  font-size: 0.93rem;
+}
+.guide-prose th {
+  background: rgba(255,255,255,0.06);
+  color: #4ade80;
+  font-weight: 600;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid rgba(255,255,255,0.1);
+}
+.guide-prose td {
+  padding: 9px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  color: #cbd5e1;
+}
+.guide-prose tr:hover td { background: rgba(255,255,255,0.03); }
+.guide-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  margin: 1em auto;
+  display: block;
+}
+.guide-prose hr {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin: 2em 0;
+}

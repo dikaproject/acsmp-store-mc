@@ -1,86 +1,80 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Book, 
-  ArrowRight, 
-  Search, 
-  Filter,
-  BookOpen,
-  TrendingUp,
-  Sparkles,
-  MessageCircle,
-  ExternalLink,
-  Zap,
-  Clock,
-  ChevronRight
+import {
+  ArrowRight, Search, BookOpen, X,
+  Sparkles, MessageCircle, ExternalLink, Clock, ChevronRight, ShieldAlert
 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { GlowingButton } from "../components/ui/GlowingButton";
 import { AnimatedGradientText } from "../components/ui/AnimatedGradientText";
 import { GridPattern } from "../components/ui/GridPattern";
-import { SpotlightCard } from "../components/ui/SpotlightCard";
-import { Input } from "../components/ui/Input";
 import { Badge } from "../components/ui/Badge";
 import { guideAPI } from "../lib/api";
 import { getImageUrl } from "../lib/utils";
+import { RULES_GUIDE } from "../components/RulesServerContent";
 
 const GuidesPage = () => {
   const [guides, setGuides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredGuides, setFilteredGuides] = useState([]);
-  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const searchRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchGuides = async () => {
-      try {
-        const response = await guideAPI.getAll();
-        const activeGuides = response.data.data.filter(guide => guide.isActive);
-        setGuides(activeGuides);
-        setFilteredGuides(activeGuides);
-      } catch (error) {
-        console.error("Error fetching guides:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGuides();
+    guideAPI.getAll()
+      .then(r => {
+        const active = r.data.data.filter(g => g.isActive);
+        setGuides(active);
+        setFilteredGuides(active);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
+  // Filter setiap kali query berubah
   useEffect(() => {
-    if (searchQuery.trim() === "") {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) {
       setFilteredGuides(guides);
-      setSearchResults([]);
-      setShowSearchDropdown(false);
+      setDropdownOpen(false);
       return;
     }
-
-    const searchLower = searchQuery.toLowerCase().trim();
-    const filtered = guides.filter(guide => {
-      const titleMatch = guide.title.toLowerCase().includes(searchLower);
-      const contentText = guide.content.replace(/<[^>]*>/g, '').toLowerCase();
-      const contentMatch = contentText.includes(searchLower);
-      return titleMatch || contentMatch;
-    });
-    
+    const filtered = guides.filter(g =>
+      g.title.toLowerCase().includes(q) ||
+      g.content.replace(/<[^>]*>/g, "").toLowerCase().includes(q)
+    );
     setFilteredGuides(filtered);
-    setSearchResults(filtered.slice(0, 4));
-    setShowSearchDropdown(isSearchFocused && filtered.length > 0);
-  }, [searchQuery, guides, isSearchFocused]);
+    setDropdownOpen(true);
+  }, [searchQuery, guides]);
 
+  // Tutup dropdown saat klik di luar
+  useEffect(() => {
+    const handler = e => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const dropdownResults = filteredGuides.slice(0, 5);
   const featuredGuide = filteredGuides[0];
   const regularGuides = filteredGuides.slice(1);
 
-  const stats = [
-    { label: "Total Panduan", value: guides.length, icon: Book, color: "emerald" },
-    { label: "Kategori", value: "6+", icon: Filter, color: "cyan" },
-    { label: "User Helped", value: "10K+", icon: TrendingUp, color: "purple" },
-  ];
+  const clearSearch = () => { setSearchQuery(""); setDropdownOpen(false); };
+
+  const handleSearchKeyDown = e => {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      setDropdownOpen(false);
+      // scroll ke section results
+      document.getElementById("all-guides")?.scrollIntoView({ behavior: "smooth" });
+    }
+    if (e.key === "Escape") clearSearch();
+  };
 
   if (loading) {
     return (
@@ -89,9 +83,9 @@ const GuidesPage = () => {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full"
+            className="w-12 h-12 border-4 border-arcane border-t-transparent rounded-full"
           />
-          <p className="text-muted-foreground">Memuat panduan...</p>
+          <p className="text-bone-muted">Memuat panduan...</p>
         </div>
       </div>
     );
@@ -99,345 +93,275 @@ const GuidesPage = () => {
 
   return (
     <div className="min-h-screen bg-black pb-16">
-      {/* Enhanced Hero Section */}
+
+      {/* ── HERO ── */}
       <section className="relative overflow-hidden py-20">
-        {/* Background */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/20 via-black to-black" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.1),transparent_50%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-arcane/10 via-black to-black" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(116,80,163,0.12),transparent_55%)]" />
           <GridPattern />
         </div>
-        
-        
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="text-center max-w-3xl mx-auto"
           >
-            {/* Badge */}
+            {/* badge */}
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
+              initial={{ scale: 0 }} animate={{ scale: 1 }}
               transition={{ type: "spring", delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30 rounded-full mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-arcane/10 border border-arcane/30 rounded-full mb-6"
             >
-              <BookOpen className="w-4 h-4 text-emerald-400" />
-              <span className="text-sm text-emerald-400 font-medium">Panduan & Tutorial</span>
-              <Sparkles className="w-4 h-4 text-cyan-400" />
+              <BookOpen className="w-4 h-4 text-arcane-glow" />
+              <span className="text-sm text-arcane-glow font-medium">Panduan & Tutorial</span>
+              <Sparkles className="w-4 h-4 text-arcane-glow" />
             </motion.div>
-            
+
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="block text-white"
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }} className="block text-white"
               >
                 Panduan Lengkap
               </motion.span>
               <motion.span
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4, type: "spring" }}
               >
-                <AnimatedGradientText 
-                  gradient="from-emerald-400 via-cyan-400 to-emerald-400"
-                  className="drop-shadow-[0_0_30px_rgba(16,185,129,0.5)]"
+                <AnimatedGradientText
+                  gradient="from-arcane via-arcane-glow to-arcane"
+                  className="drop-shadow-[0_0_30px_rgba(116,80,163,0.6)]"
                 >
-                  Nexus SMP
+                  AmazingCraft
                 </AnimatedGradientText>
               </motion.span>
             </h1>
-            
-            <motion.p 
-              className="text-xl text-gray-400 mb-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
+
+            <motion.p
+              className="text-xl text-bone-muted mb-8"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
             >
-              Pelajari semua yang perlu kamu ketahui untuk memulai petualangan di Nexus SMP
+              Semua yang perlu kamu tahu untuk memulai petualangan di AmazingCraft
             </motion.p>
 
-            {/* Search Bar with Dropdown */}
-            <motion.div 
+            {/* ── SEARCH ── */}
+            <motion.div
               className="relative max-w-xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
+              ref={searchRef}
             >
-              <div className="relative z-50">
-                <SpotlightCard 
-                  className="rounded-2xl overflow-hidden"
-                  spotlightColor="rgba(16, 185, 129, 0.15)"
-                >
-                  <div className="relative bg-[#0a0b0f] border border-emerald-500/20 rounded-2xl p-1 transition-all duration-300 hover:border-emerald-500/40">
-                    <div className="relative">
-                      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-400 z-10" />
-                      <Input
-                        type="text"
-                        placeholder="Cari panduan..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onFocus={() => setIsSearchFocused(true)}
-                        onBlur={() => {
-                          // Delay to allow click on dropdown items
-                          setTimeout(() => setIsSearchFocused(false), 200);
-                        }}
-                        className="pl-12 pr-12 py-6 text-lg bg-transparent border-0 focus:ring-0 text-white placeholder:text-gray-500"
-                      />
-                      {searchQuery && (
-                        <button
-                          onClick={() => {
-                            setSearchQuery("");
-                            setShowSearchDropdown(false);
-                          }}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                        >
-                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
+              {/* Input wrapper */}
+              <div className={`flex items-center gap-3 bg-ink-elevated border rounded-2xl px-4 py-3 transition-all duration-200 ${
+                dropdownOpen ? "border-arcane/50 shadow-lg shadow-arcane/10" : "border-arcane/20 hover:border-arcane/35"
+              }`}>
+                <Search className="w-5 h-5 text-arcane-glow flex-shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Cari panduan..."
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchKeyDown}
+                  className="flex-1 bg-transparent text-white placeholder:text-bone-subtle text-base outline-none"
+                />
+                {searchQuery && (
+                  <button onClick={clearSearch}
+                    className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center flex-shrink-0 transition-colors">
+                    <X className="w-3.5 h-3.5 text-bone-muted" />
+                  </button>
+                )}
+              </div>
+
+              {/* Dropdown */}
+              <AnimatePresence>
+                {dropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-full left-0 right-0 mt-2 z-50"
+                  >
+                    <div className="bg-ink-elevated border border-arcane/20 rounded-2xl overflow-hidden shadow-2xl shadow-black/60">
+                      {dropdownResults.length === 0 ? (
+                        <div className="p-6 text-center">
+                          <p className="text-bone-subtle text-sm">Tidak ada panduan untuk <span className="text-white">"{searchQuery}"</span></p>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="px-4 pt-3 pb-1">
+                            <p className="text-xs text-bone-subtle font-medium uppercase tracking-wider">
+                              {dropdownResults.length} hasil ditemukan
+                            </p>
+                          </div>
+                          {dropdownResults.map((guide, i) => (
+                            <Link key={guide.id} to={`/guides/${guide.slug}`}
+                              onClick={() => { setDropdownOpen(false); clearSearch(); }}
+                            >
+                              <motion.div
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: i * 0.04 }}
+                                className="flex items-center gap-3 px-4 py-3 hover:bg-arcane/8 transition-colors border-t border-ink-border first:border-0 group/item"
+                              >
+                                {guide.imageUrl ? (
+                                  <img src={getImageUrl(guide.imageUrl)} alt={guide.title}
+                                    className="w-12 h-12 object-cover rounded-xl flex-shrink-0" />
+                                ) : (
+                                  <div className="w-12 h-12 rounded-xl bg-arcane/10 border border-arcane/20 flex items-center justify-center flex-shrink-0">
+                                    <BookOpen className="w-5 h-5 text-arcane-glow" />
+                                  </div>
+                                )}
+                                <div className="flex-1 min-w-0 text-left">
+                                  <p className="text-sm font-semibold text-white truncate group-hover/item:text-arcane-glow transition-colors">
+                                    {guide.title}
+                                  </p>
+                                  <p className="text-xs text-bone-subtle truncate mt-0.5">
+                                    {guide.content.replace(/<[^>]*>/g, "").substring(0, 70)}...
+                                  </p>
+                                </div>
+                                <ChevronRight className="w-4 h-4 text-arcane-glow flex-shrink-0 opacity-0 group-hover/item:opacity-100 transition-opacity" />
+                              </motion.div>
+                            </Link>
+                          ))}
+                          {filteredGuides.length > 5 && (
+                            <div
+                              className="px-4 py-3 text-center text-xs text-bone-subtle border-t border-ink-border cursor-pointer hover:bg-arcane/5 transition-colors"
+                              onClick={() => { setDropdownOpen(false); document.getElementById("all-guides")?.scrollIntoView({ behavior: "smooth" }); }}
+                            >
+                              Lihat {filteredGuides.length - 5} panduan lainnya ↓
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
-                  </div>
-                </SpotlightCard>
-
-                {/* Search Dropdown */}
-                <AnimatePresence>
-                  {showSearchDropdown && (
-                    <>
-                      {/* Backdrop */}
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-                        onClick={() => {
-                          setShowSearchDropdown(false);
-                          setIsSearchFocused(false);
-                        }}
-                      />
-                      
-                      {/* Dropdown */}
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute top-full left-0 right-0 z-[60]"
-                      >
-                        <SpotlightCard 
-                          className="rounded-2xl"
-                          spotlightColor="rgba(16, 185, 129, 0.15)"
-                        >
-                          <div className="bg-[#0a0b0f] border border-emerald-500/20 rounded-2xl overflow-hidden max-h-[400px] overflow-y-auto custom-scrollbar shadow-2xl shadow-emerald-500/20">
-                            {searchResults.length === 0 ? (
-                              <div className="p-8 text-center">
-                                <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 flex items-center justify-center">
-                                  <Search className="w-8 h-8 text-gray-600" />
-                                </div>
-                                <p className="text-gray-400 text-sm">
-                                  Tidak ada panduan yang cocok dengan pencarian "{searchQuery}"
-                                </p>
-                              </div>
-                            ) : (
-                              <>
-                                {searchResults.map((guide, index) => (
-                              <Link
-                                key={guide.id}
-                                to={`/guides/${guide.slug}`}
-                                onClick={() => {
-                                  setShowSearchDropdown(false);
-                                  setIsSearchFocused(false);
-                                  setSearchQuery("");
-                                }}
-                              >
-                                <motion.div
-                                  initial={{ opacity: 0, x: -20 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  transition={{ delay: index * 0.05 }}
-                                  className="flex items-center gap-10 p-4 hover:bg-emerald-500/10 transition-colors border-b border-gray-800/50 last:border-0"
-                                >
-                                  {guide.imageUrl && (
-                                    <img
-                                      src={getImageUrl(guide.imageUrl)}
-                                      alt={guide.title}
-                                      className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
-                                    />
-                                  )}
-                                  <div className="flex-1 min-w-0">
-                                    <h3 className="font-semibold text-white mb-1 truncate">
-                                      {guide.title}
-                                    </h3>
-                                    <p className="text-sm text-gray-400 line-clamp-1">
-                                      {guide.content.replace(/<[^>]*>/g, '').substring(0, 80)}...
-                                    </p>
-                                  </div>
-                                  <ChevronRight className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                                </motion.div>
-                              </Link>
-                            ))}
-                            
-                            {searchResults.length < filteredGuides.length && (
-                              <div 
-                                className="p-4 text-center text-sm text-gray-500 border-t border-gray-800/50 cursor-pointer hover:bg-emerald-500/5 transition-colors"
-                                onClick={() => {
-                                  setShowSearchDropdown(false);
-                                  setIsSearchFocused(false);
-                                }}
-                              >
-                                Lihat {filteredGuides.length - searchResults.length} panduan lainnya di bawah
-                              </div>
-                            )}
-                              </>
-                            )}
-                          </div>
-                        </SpotlightCard>
-                      </motion.div>
-                    </>
-                  )}
-                </AnimatePresence>
-              </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 relative">
+      {/* ── RULES PINNED ── */}
+      <section className="py-6 relative">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {stats.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <SpotlightCard 
-                    className="rounded-2xl"
-                    spotlightColor="rgba(16, 185, 129, 0.15)"
-                  >
-                    <div className="relative p-8 text-center bg-[#0a0b0f] rounded-2xl border border-emerald-500/20 hover:-translate-y-1 transition-transform">
-                      <div
-                        className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-xl shadow-emerald-500/20 group-hover:scale-105 transition-transform"
-                      >
-                        <Icon className="w-8 h-8 text-white" />
-                      </div>
-                      <p className="text-3xl font-bold text-white mb-2">
-                        {stat.value}
-                      </p>
-                      <p className="text-sm text-gray-400 font-medium">{stat.label}</p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} className="mb-5"
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <ShieldAlert className="w-5 h-5 text-red-400" />
+              <h2 className="text-xl font-bold text-white">Peraturan Server</h2>
+              <Badge className="bg-red-500/10 text-red-400 border-red-500/30 ml-1 text-xs">WAJIB BACA</Badge>
+            </div>
+            <p className="text-bone-subtle text-sm">Berlaku untuk semua pemain AmazingCraft</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <Link to="/guides/peraturan-server">
+              <div className="relative overflow-hidden bg-ink-elevated rounded-2xl border border-red-500/20 hover:border-red-500/40 shadow-lg shadow-red-500/5 group transition-all duration-300">
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-red-500/4 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="p-7 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-6">
+                  <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/25 flex items-center justify-center">
+                    <ShieldAlert className="w-8 h-8 text-red-400" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <Badge className="bg-red-500/10 text-red-400 border-red-500/25 text-xs">📜 PERATURAN RESMI</Badge>
+                      <Badge className="bg-orange-500/10 text-orange-400 border-orange-500/25 text-xs">13 Pasal</Badge>
                     </div>
-                  </SpotlightCard>
-                </motion.div>
-              );
-            })}
-          </div>
+                    <h3 className="text-xl md:text-2xl font-bold text-white mb-1.5 group-hover:text-red-300 transition-colors">
+                      Peraturan Resmi AmazingCraft
+                    </h3>
+                    <p className="text-bone-muted text-sm max-w-xl">
+                      Dengan bergabung ke server, kamu menyetujui seluruh peraturan — cheating, RMT, refund, claim land, dan ketentuan lainnya.
+                    </p>
+                  </div>
+                  <div className="flex-shrink-0 px-4 py-2 rounded-xl bg-red-500/8 border border-red-500/25 text-red-400 font-medium text-sm flex items-center gap-2 group-hover:bg-red-500/15 transition-colors">
+                    Baca Sekarang
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
-      {/* Featured Guide */}
+      {/* ── FEATURED GUIDE ── */}
       {featuredGuide && (
-        <section className="py-20 relative">
+        <section className="py-10 relative">
           <div className="container mx-auto px-4">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="mb-12"
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} className="mb-7"
             >
-              <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="w-5 h-5 text-emerald-400" />
-                <h2 className="text-3xl font-bold text-white">Panduan Unggulan</h2>
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-arcane-glow" />
+                <h2 className="text-2xl font-bold text-white">Panduan Unggulan</h2>
               </div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
               <Link to={`/guides/${featuredGuide.slug}`}>
-                <SpotlightCard 
-                  className="rounded-2xl"
-                  spotlightColor="rgba(16, 185, 129, 0.2)"
-                >
-                  <div className="relative overflow-hidden bg-gradient-to-br from-[#0f1015] via-[#0a0b0f] to-black rounded-2xl border border-emerald-500/20 shadow-2xl shadow-emerald-500/10 group">
-                    {/* Glow effect on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <div className="grid md:grid-cols-2 gap-0">
-                      {/* Image */}
-                      {featuredGuide.imageUrl && (
-                        <div className="relative h-80 md:h-auto overflow-hidden">
-                          <img
-                            src={getImageUrl(featuredGuide.imageUrl)}
-                            alt={featuredGuide.title}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                          
-                          <Badge className="absolute top-4 left-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white border-0 shadow-lg">
-                            <Sparkles className="w-3 h-3 mr-1" />
-                            Featured
-                          </Badge>
-                        </div>
-                      )}
-
-                      {/* Content */}
-                      <div className="p-8 md:p-10 flex flex-col justify-center relative">
-                        <Badge className="w-fit mb-4 bg-emerald-500/10 text-emerald-400 border-emerald-500/30">
-                          Panduan Utama
+                <div className="relative overflow-hidden bg-ink-elevated rounded-2xl border border-ink-border hover:border-arcane/30 shadow-xl shadow-arcane/5 group transition-all duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-br from-arcane/4 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="grid md:grid-cols-2 gap-0">
+                    {featuredGuide.imageUrl && (
+                      <div className="relative h-72 md:h-auto overflow-hidden rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none">
+                        <img src={getImageUrl(featuredGuide.imageUrl)} alt={featuredGuide.title}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                        <Badge className="absolute top-4 left-4 bg-arcane/80 text-white border-0 shadow-lg">
+                          <Sparkles className="w-3 h-3 mr-1" />Featured
                         </Badge>
-                        
-                        <h3 className="text-3xl font-bold mb-4 text-white group-hover:text-emerald-400 transition-colors">
-                          {featuredGuide.title}
-                        </h3>
-                        
-                        <p className="text-gray-400 mb-6 line-clamp-3">
-                          {featuredGuide.content.replace(/<[^>]*>/g, '').substring(0, 200)}...
-                        </p>
-                        
-                        <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-                          <Clock className="w-4 h-4" />
-                          <span>5 min read</span>
-                        </div>
-                        
-                        <Button className="w-fit bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 shadow-lg shadow-emerald-500/30">
-                            Baca Panduan
-                            <ArrowRight className="ml-2 w-4 h-4" />
-                          </Button>
                       </div>
+                    )}
+                    <div className="p-8 md:p-10 flex flex-col justify-center relative">
+                      <Badge className="w-fit mb-4 bg-arcane/10 text-arcane-glow border-arcane/25">Panduan Utama</Badge>
+                      <h3 className="text-2xl md:text-3xl font-bold mb-4 text-white group-hover:text-arcane-glow transition-colors">
+                        {featuredGuide.title}
+                      </h3>
+                      <p className="text-bone-muted mb-5 line-clamp-3">
+                        {featuredGuide.content.replace(/<[^>]*>/g, '').substring(0, 200)}...
+                      </p>
+                      <div className="flex items-center gap-2 text-sm text-bone-subtle mb-6">
+                        <Clock className="w-4 h-4" /><span>5 min baca</span>
+                      </div>
+                      <Button className="w-fit bg-arcane hover:bg-arcane-glow text-bone shadow-lg shadow-arcane/30 transition-colors">
+                        Baca Panduan <ArrowRight className="ml-2 w-4 h-4" />
+                      </Button>
                     </div>
                   </div>
-                </SpotlightCard>
+                </div>
               </Link>
             </motion.div>
           </div>
         </section>
       )}
 
-      {/* All Guides Grid */}
-      <section className="py-20 relative">
+      {/* ── ALL GUIDES ── */}
+      <section id="all-guides" className="py-10 relative">
         <div className="container mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-12"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} className="mb-8"
           >
-            <h2 className="text-3xl font-bold text-white mb-2">
+            <h2 className="text-2xl font-bold text-white mb-1">
               {searchQuery ? "Hasil Pencarian" : "Semua Panduan"}
             </h2>
-            <p className="text-gray-400">
+            <p className="text-bone-muted text-sm">
               {searchQuery ? (
-                <>
-                  Ditemukan <span className="text-emerald-400 font-semibold">{filteredGuides.length}</span> panduan untuk "{searchQuery}"
-                </>
+                <>Ditemukan <span className="text-arcane-glow font-semibold">{filteredGuides.length}</span> panduan untuk "{searchQuery}"</>
               ) : (
                 `${filteredGuides.length} panduan tersedia`
               )}
@@ -445,78 +369,52 @@ const GuidesPage = () => {
           </motion.div>
 
           {filteredGuides.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-20"
-            >
-              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 flex items-center justify-center">
-                <Search className="w-10 h-10 text-gray-600" />
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-20">
+              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-arcane/10 border border-arcane/20 flex items-center justify-center">
+                <Search className="w-10 h-10 text-bone-subtle" />
               </div>
-              <p className="text-xl text-white font-semibold mb-2">
-                Tidak ada panduan yang ditemukan
-              </p>
-              <p className="text-gray-400 mb-6">
-                Coba kata kunci lain atau hapus pencarian untuk melihat semua panduan
-              </p>
+              <p className="text-xl text-white font-semibold mb-2">Tidak ada panduan ditemukan</p>
+              <p className="text-bone-muted mb-6">Coba kata kunci lain atau hapus pencarian</p>
               {searchQuery && (
-                <Button
-                  onClick={() => setSearchQuery("")}
-                  className="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600"
-                >
+                <Button onClick={() => setSearchQuery("")}
+                  className="bg-arcane hover:bg-arcane-glow text-bone transition-colors">
                   Hapus Pencarian
                 </Button>
               )}
             </motion.div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
               {regularGuides.map((guide, index) => (
-                <motion.div
-                  key={guide.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
+                <motion.div key={guide.id}
+                  initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }} transition={{ delay: index * 0.08 }}
                 >
                   <Link to={`/guides/${guide.slug}`}>
-                    <SpotlightCard 
-                      className="rounded-2xl h-full"
-                      spotlightColor="rgba(16, 185, 129, 0.15)"
-                    >
-                      <div className="h-full overflow-hidden bg-gradient-to-br from-[#0f1015] via-[#0a0b0f] to-black rounded-2xl border border-emerald-500/20 shadow-xl shadow-emerald-500/5 group">
-                        {/* Glow effect on hover */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
-                        
-                        {/* Image */}
-                        {guide.imageUrl && (
-                          <div className="relative h-48 overflow-hidden">
-                            <img
-                              src={getImageUrl(guide.imageUrl)}
-                              alt={guide.title}
-                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                    <div className="h-full overflow-hidden bg-ink-elevated rounded-2xl border border-ink-border hover:border-arcane/30 shadow-md group transition-all duration-300">
+                      <div className="absolute inset-0 bg-arcane/4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
+                      {guide.imageUrl && (
+                        <div className="relative h-44 overflow-hidden rounded-t-2xl">
+                          <img src={getImageUrl(guide.imageUrl)} alt={guide.title}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-ink-elevated/80 to-transparent" />
+                        </div>
+                      )}
+                      <div className="p-5 relative">
+                        <h3 className="font-bold text-base text-white group-hover:text-arcane-glow transition-colors line-clamp-2 mb-2">
+                          {guide.title}
+                        </h3>
+                        <p className="text-sm text-bone-muted line-clamp-3 mb-4">
+                          {guide.content.replace(/<[^>]*>/g, '').substring(0, 110)}...
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5 text-xs text-bone-subtle">
+                            <Clock className="w-3.5 h-3.5" /><span>5 min baca</span>
                           </div>
-                        )}
-
-                        <div className="p-6 relative">
-                          <h3 className="font-bold text-lg text-white group-hover:text-emerald-400 transition-colors line-clamp-2 mb-3">
-                            {guide.title}
-                          </h3>
-                          <p className="text-sm text-gray-400 line-clamp-3 mb-4">
-                            {guide.content.replace(/<[^>]*>/g, '').substring(0, 120)}...
-                          </p>
-
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2 text-xs text-gray-500">
-                              <Clock className="w-3.5 h-3.5" />
-                              <span>5 min read</span>
-                            </div>
-                            <ArrowRight className="w-5 h-5 text-emerald-400 group-hover:translate-x-1 transition-transform" />
-                          </div>
+                          <ArrowRight className="w-4 h-4 text-arcane-glow group-hover:translate-x-1 transition-transform" />
                         </div>
                       </div>
-                    </SpotlightCard>
+                    </div>
                   </Link>
                 </motion.div>
               ))}
@@ -525,70 +423,48 @@ const GuidesPage = () => {
         </div>
       </section>
 
-      {/* Enhanced CTA Section */}
+      {/* ── CTA ── */}
       <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.05),transparent_50%)]" />
-        </div>
-        
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(116,80,163,0.07),transparent_55%)]" />
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} className="text-center max-w-xl mx-auto"
           >
-            <div
-              className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-500 flex items-center justify-center shadow-2xl shadow-indigo-500/30"
-            >
-              <MessageCircle className="w-10 h-10 text-white" />
+            <div className="w-18 h-18 w-16 h-16 mx-auto mb-6 rounded-2xl bg-arcane/15 border border-arcane/25 flex items-center justify-center shadow-xl shadow-arcane/20">
+              <MessageCircle className="w-8 h-8 text-arcane-glow" />
             </div>
-            
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-              Masih Bingung?
-            </h2>
-            <p className="text-xl text-gray-400 mb-8">
-              Join Discord server kami! Tim support dan komunitas siap membantu 24/7
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Masih Bingung?</h2>
+            <p className="text-bone-muted mb-8">
+              Join Discord AmazingCraft! Tim support dan komunitas siap membantu kamu 24/7
             </p>
-            
-            <a 
-              href="https://discord.com/invite/nexus-cloud" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-block"
-            >
+            <a href="https://discord.gg/amazingcraft" target="_blank" rel="noopener noreferrer"
+              className="inline-block">
               <GlowingButton variant="secondary">
                 <MessageCircle className="w-5 h-5" />
-                Join Discord Server
+                Join Discord AmazingCraft
                 <ExternalLink className="w-4 h-4" />
               </GlowingButton>
             </a>
-
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-bone-muted">
               {[
                 { icon: "🎯", label: "Support 24/7" },
-                { icon: "🎮", label: "Komunitas aktif" },
-                { icon: "🎁", label: "Event & Giveaway" }
-              ].map((item, index) => (
-                <motion.div 
-                  key={index}
-                  className="flex items-center gap-2"
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
+                { icon: "⚔️", label: "Komunitas aktif" },
+                { icon: "🎁", label: "Event & Giveaway" },
+              ].map((item, i) => (
+                <motion.div key={i} className="flex items-center gap-2"
+                  initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                 >
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="flex items-center gap-1">
-                    <span>{item.icon}</span>
-                    {item.label}
-                  </span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-arcane animate-pulse" />
+                  <span>{item.icon} {item.label}</span>
                 </motion.div>
               ))}
             </div>
           </motion.div>
         </div>
       </section>
+
     </div>
   );
 };

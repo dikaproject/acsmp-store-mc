@@ -8,9 +8,10 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "seed": "node prisma/seed.js",
+    "seed:guides": "node prisma/seedGuides.js",
     "seed:orders": "node prisma/seedOrders.js",
     "seed:orders:clear": "node prisma/seedOrders.js --clear",
-    "seed:all": "npm run seed && npm run seed:orders"
+    "seed:all": "npm run seed && npm run seed:guides && npm run seed:orders"
   },
   "keywords": [],
   "author": "",

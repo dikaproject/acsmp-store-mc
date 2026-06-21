@@ -370,7 +370,7 @@ const GuideModal = ({ isOpen, onClose, mode, guide, onSuccess }) => {
                     
                     {isViewMode ? (
                       <div 
-                        className="prose prose-invert max-w-none p-6 bg-white/\[0.03\] rounded-lg border border-gray-700/50"
+                        className="guide-prose p-6 bg-white/[0.03] rounded-lg border border-gray-700/50 max-h-[600px] overflow-y-auto"
                         dangerouslySetInnerHTML={{ __html: formData.content }}
                       />
                     ) : (
