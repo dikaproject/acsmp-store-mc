@@ -15,6 +15,7 @@ import {
   Trash2,
   Sparkles,
   Terminal,
+  Banknote,
   Shield,
   AlertTriangle,
   BookOpen,
@@ -27,6 +28,9 @@ import { Badge } from "../ui/Badge";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { getImageUrl } from "../../lib/utils";
+
+const hasPlayerPlaceholder = (command) =>
+  command.includes('{player}') || command.includes('%player%');
 
 const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }) => {
   const [loading, setLoading] = useState(false);
@@ -50,6 +54,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
   const [newBenefit, setNewBenefit] = useState('');
   const [newCommand, setNewCommand] = useState('');
   const [newInfoCommand, setNewInfoCommand] = useState('');
+  const isCurrencyType = formData.type === 'COIN' || formData.type === 'MONEY';
 
   // Calculate discounted price
   const getDiscountedPrice = () => {
@@ -193,10 +198,10 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
       formDataToSend.append('isActive', formData.isActive.toString());
       formDataToSend.append('isOutOfStock', formData.isOutOfStock.toString());
       
-      // Warn if any command is missing {player}
-      const commandsMissingPlayer = (formData.commands || []).filter(c => c.trim() && !c.includes('{player}'));
+      // Warn if any command is missing a supported player placeholder
+      const commandsMissingPlayer = (formData.commands || []).filter(c => c.trim() && !hasPlayerPlaceholder(c));
       if (commandsMissingPlayer.length > 0) {
-        toast('Peringatan: ' + commandsMissingPlayer.length + ' command tidak memiliki {player}. Command mungkin tidak berfungsi dengan benar!', {
+        toast('Peringatan: ' + commandsMissingPlayer.length + ' command tidak memiliki {player} atau %player%. Command mungkin tidak berfungsi dengan benar!', {
           icon: '⚠️',
           style: { background: '#1a1a1a', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }
         });
@@ -376,7 +381,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                     <label className="text-sm font-medium text-gray-300 mb-2 block">
                       Product Type <span className="text-red-400">*</span>
                     </label>
-                    <div className="flex gap-3">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                       <button
                         type="button"
                         onClick={() => !isViewMode && setFormData({ ...formData, type: 'COIN' })}
@@ -390,6 +395,21 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         <div className="flex flex-col items-center gap-2">
                           <Coins className="w-6 h-6 text-yellow-400" />
                           <span className="font-medium text-white">Coin</span>
+                        </div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => !isViewMode && setFormData({ ...formData, type: 'MONEY' })}
+                        disabled={isViewMode}
+                        className={`p-4 rounded-lg border-2 transition-all ${
+                          formData.type === 'MONEY'
+                            ? 'border-emerald-500 bg-emerald-500/10'
+                            : 'border-gray-700 bg-white/[0.03] hover:border-gray-600'
+                        } ${isViewMode ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                      >
+                        <div className="flex flex-col items-center gap-2">
+                          <Banknote className="w-6 h-6 text-emerald-400" />
+                          <span className="font-medium text-white">Money</span>
                         </div>
                       </button>
                       <button
@@ -515,7 +535,11 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder={formData.type === 'COIN' ? 'e.g., 1000 Coins' : 'e.g., VIP Rank (30 Hari)'}
+                      placeholder={formData.type === 'COIN'
+                        ? 'e.g., 1000 Coins'
+                        : formData.type === 'MONEY'
+                        ? 'e.g., 100K Money'
+                        : 'e.g., VIP Rank (30 Hari)'}
                       className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500"
                       required
                       disabled={isViewMode}
@@ -642,10 +666,12 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                   {/* Amount Field */}
                   <div>
                     <label className="text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                      {formData.type === 'COIN' ? (
+                      {isCurrencyType ? (
                         <>
-                          <Coins className="w-4 h-4 text-yellow-400" />
-                          Coin Amount <span className="text-red-400">*</span>
+                          {formData.type === 'MONEY'
+                            ? <Banknote className="w-4 h-4 text-emerald-400" />
+                            : <Coins className="w-4 h-4 text-yellow-400" />}
+                          {formData.type === 'MONEY' ? 'Money Amount' : 'Coin Amount'} <span className="text-red-400">*</span>
                         </>
                       ) : (
                         <>
@@ -658,7 +684,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                       type="number"
                       value={formData.amount}
                       onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                      placeholder={formData.type === 'COIN' ? '1000' : '30'}
+                      placeholder={formData.type === 'COIN' ? '1000' : formData.type === 'MONEY' ? '100000' : '30'}
                       min="0"
                       className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-purple-500"
                       required
@@ -667,6 +693,8 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                     <p className="text-xs text-gray-500 mt-1">
                       {formData.type === 'COIN' 
                         ? '💰 Jumlah coins yang akan diberikan'
+                        : formData.type === 'MONEY'
+                        ? '💵 Nominal money in-game yang akan diberikan'
                         : '📅 Berapa hari rank akan aktif (contoh: 7, 30, 90)'
                       }
                     </p>
@@ -720,6 +748,24 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                     </div>
                     <code className="block p-3 bg-black/50 rounded-lg text-sm font-mono text-yellow-300 overflow-x-auto">
                       /points give <span className="text-cyan-400">{'{player}'}</span> <span className="text-green-400">{formData.amount}</span>
+                    </code>
+                    <p className="text-xs text-gray-500 mt-2">
+                      ⚡ Command ini akan dieksekusi saat pembayaran berhasil
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Command Preview for MONEY (outside grid) */}
+              {formData.type === 'MONEY' && formData.amount && (
+                <div className="pt-6 border-t border-gray-800">
+                  <div className="p-4 rounded-xl bg-gray-900/50 border border-emerald-500/20">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Terminal className="w-4 h-4 text-emerald-400" />
+                      <span className="text-sm font-medium text-gray-300">Command Preview</span>
+                    </div>
+                    <code className="block p-3 bg-black/50 rounded-lg text-sm font-mono text-emerald-300 overflow-x-auto">
+                      /eco give <span className="text-cyan-400">{'{player}'}</span> <span className="text-green-400">{formData.amount}</span>
                     </code>
                     <p className="text-xs text-gray-500 mt-2">
                       ⚡ Command ini akan dieksekusi saat pembayaran berhasil
@@ -882,6 +928,9 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                       {formData.type === 'COIN' && (
                         <>points give <span className="text-cyan-600">{'{player}'}</span> <span className="text-yellow-600">{formData.amount || '{amount}'}</span></>
                       )}
+                      {formData.type === 'MONEY' && (
+                        <>eco give <span className="text-cyan-600">{'{player}'}</span> <span className="text-emerald-600">{formData.amount || '{amount}'}</span></>
+                      )}
                       {formData.type === 'RANK' && (
                         <>lp user <span className="text-cyan-600">{'{player}'}</span> parent addtemp <span className="text-orange-600">{formData.groupName || '{groupName}'}</span> <span className="text-green-600">{formData.amount || '{duration}'}d</span></>
                       )}
@@ -900,7 +949,9 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                       value={newCommand}
                       onChange={(e) => setNewCommand(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCommand())}
-                      placeholder="e.g., points give {player} {amount}"
+                      placeholder={formData.type === 'MONEY'
+                        ? 'e.g., eco give {player} {amount}'
+                        : 'e.g., points give {player} {amount}'}
                       className="bg-[#1a1d24] border-gray-700 rounded-xl focus:border-cyan-500 flex-1 font-mono text-sm"
                     />
                     <Button type="button" onClick={addCommand}
@@ -913,7 +964,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                 {/* Commands List */}
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {formData.commands.length > 0 ? formData.commands.map((command, index) => {
-                    const missingPlayer = !command.includes('{player}');
+                    const missingPlayer = !hasPlayerPlaceholder(command);
                     return (
                       <motion.div key={index} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
                         className={`flex items-center gap-2 p-2 rounded-lg border ${
@@ -924,7 +975,7 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                         <Terminal className={`w-3 h-3 flex-shrink-0 ${missingPlayer ? 'text-amber-400' : 'text-cyan-400'}`} />
                         <code className="text-sm text-gray-300 flex-1 font-mono break-all">{command}</code>
                         {missingPlayer && (
-                          <div title="Command ini tidak memiliki {player}. Nama player tidak akan disubstitusi!">
+                          <div title="Command ini tidak memiliki {player} atau %player%. Nama player tidak akan disubstitusi!">
                             <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
                           </div>
                         )}
@@ -944,12 +995,12 @@ const ProductModal = ({ isOpen, onClose, mode, product, serverTypes, onSuccess }
                   )}
                 </div>
 
-                {/* Warning if any command missing {player} */}
-                {formData.commands.some(c => c.trim() && !c.includes('{player}')) && (
+                {/* Warning if any command is missing a player placeholder */}
+                {formData.commands.some(c => c.trim() && !hasPlayerPlaceholder(c)) && (
                   <div className="mt-2 flex items-start gap-2 p-2 bg-amber-500/10 border border-amber-500/20 rounded-lg">
                     <AlertTriangle className="w-3.5 h-3.5 text-amber-400 mt-0.5 flex-shrink-0" />
                     <p className="text-xs text-amber-400">
-                      Beberapa command tidak memiliki <code className="font-mono">{'{player}'}</code>. Nama player tidak akan disubstitusi pada command tersebut — pastikan ini disengaja.
+                      Beberapa command tidak memiliki <code className="font-mono">{'{player}'}</code> atau <code className="font-mono">%player%</code>. Nama player tidak akan disubstitusi pada command tersebut — pastikan ini disengaja.
                     </p>
                   </div>
                 )}

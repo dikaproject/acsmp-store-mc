@@ -34,6 +34,8 @@ Thumbs.db
 # Prisma
 prisma/*.db
 /prisma/migrations/*/
+!/prisma/migrations/20260723120000_add_money_product_type/
+!/prisma/migrations/20260723120000_add_money_product_type/migration.sql
 
 # Build/Deploy
 /dist

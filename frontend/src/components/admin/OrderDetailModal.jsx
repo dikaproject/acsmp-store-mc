@@ -26,6 +26,15 @@ import toast from "react-hot-toast";
 const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh }) => {
   if (!isOpen || !order) return null;
 
+  const getProductSummary = (product) => {
+    if (!product) return '-';
+    if (product.type === 'COIN') return `${product.amount.toLocaleString('id-ID')} Coins`;
+    if (product.type === 'MONEY') return `${product.amount.toLocaleString('id-ID')} Money`;
+    if (product.type === 'FEATURE') return `Feature: ${product.permission || '-'}`;
+    if (product.type === 'RANK') return `Rank: ${product.groupName || '-'}`;
+    return `${product.amount.toLocaleString('id-ID')} hari`;
+  };
+
   const getStatusConfig = (status) => {
     const configs = {
       PENDING: {
@@ -194,10 +203,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, onUpdateStatus, onRefresh })
                         <div>
                           <p className="font-medium text-white">{item.product?.name}</p>
                           <p className="text-sm text-gray-400">
-                            {item.product?.type === 'COIN' 
-                              ? `${item.product.amount.toLocaleString()} Coins`
-                              : `Rank: ${item.product.groupName}`
-                            }
+                            {getProductSummary(item.product)}
                           </p>
                         </div>
                       </div>

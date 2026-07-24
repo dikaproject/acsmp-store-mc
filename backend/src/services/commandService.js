@@ -72,15 +72,16 @@ class CommandService {
   /**
    * Substitute known variables in a command template string.
    * Supported: {player}, {amount}, {quantity}, {duration}, {groupName}, {permission}
+   * Percent-wrapped aliases such as %player% and %amount% are also accepted.
    */
   interpolateCommand(template, vars) {
     return template
-      .replace(/\{player\}/g, vars.player || '')
-      .replace(/\{amount\}/g, vars.amount ?? '')
-      .replace(/\{quantity\}/g, vars.quantity ?? '')
-      .replace(/\{duration\}/g, vars.duration ?? '')
-      .replace(/\{groupName\}/g, vars.groupName || '')
-      .replace(/\{permission\}/g, vars.permission || '');
+      .replace(/\{player\}|%player%/g, vars.player || '')
+      .replace(/\{amount\}|%amount%/g, vars.amount ?? '')
+      .replace(/\{quantity\}|%quantity%/g, vars.quantity ?? '')
+      .replace(/\{duration\}|%duration%/g, vars.duration ?? '')
+      .replace(/\{groupName\}|%groupName%/g, vars.groupName || '')
+      .replace(/\{permission\}|%permission%/g, vars.permission || '');
   }
 
   /**
@@ -110,6 +111,9 @@ class CommandService {
     // Hardcoded fallback per product type
     if (product.type === 'COIN') {
       return [`points give ${minecraftName} ${vars.amount}`];
+    }
+    if (product.type === 'MONEY') {
+      return [`eco give ${minecraftName} ${vars.amount}`];
     }
     if (product.type === 'RANK') {
       return [`lp user ${minecraftName} parent addtemp ${product.groupName} ${vars.duration}d`];

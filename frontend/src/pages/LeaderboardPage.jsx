@@ -22,6 +22,7 @@ const RANK_STYLES = [
 const TYPE_BADGE = {
   RANK:        { label: "Rank",        cls: "bg-arcane/15 text-arcane border border-arcane/30" },
   COIN:        { label: "Coin",        cls: "bg-yellow-500/20 text-yellow-300 border border-yellow-500/30" },
+  MONEY:       { label: "Money",       cls: "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" },
   FEATURE:     { label: "Feature",     cls: "bg-cyan-500/20    text-cyan-300    border border-cyan-500/30" },
   BATTLEPASS:  { label: "Battlepass",  cls: "bg-rose-500/20   text-rose-300   border border-rose-500/30" },
   UNKNOWN:     { label: "Unknown",     cls: "bg-gray-500/20   text-gray-400   border border-gray-500/30" },

@@ -14,8 +14,13 @@ exports.getAll = async (req, res, next) => {
       where.type = type.toUpperCase();
     } else if (category && category !== 'all') {
       const categoryMap = {
+        'coin': 'COIN',
         'coins': 'COIN',
+        'money': 'MONEY',
+        'rank': 'RANK',
         'ranks': 'RANK',
+        'feature': 'FEATURE',
+        'features': 'FEATURE',
         'battlepass': 'BATTLEPASS'
       };
       where.type = categoryMap[category] || category.toUpperCase();
@@ -203,15 +208,20 @@ exports.update = async (req, res, next) => {
     }
 
     const updateData = {};
+    const nextType = type || existing.type;
     
     if (name !== undefined) updateData.name = name;
     if (description !== undefined) updateData.description = description || null;
-    if (type !== undefined) updateData.type = type;
+    if (type !== undefined) {
+      updateData.type = type;
+      if (nextType !== 'RANK') updateData.groupName = null;
+      if (nextType !== 'FEATURE') updateData.permission = null;
+    }
     if (price !== undefined) updateData.price = parseInt(price) || 0;
     if (discount !== undefined) updateData.discount = parseInt(discount) || 0;
     if (amount !== undefined) updateData.amount = parseInt(amount) || 0;
-    if (groupName !== undefined) updateData.groupName = groupName || null;
-    if (permission !== undefined) updateData.permission = permission || null;
+    if (groupName !== undefined && nextType === 'RANK') updateData.groupName = groupName || null;
+    if (permission !== undefined && nextType === 'FEATURE') updateData.permission = permission || null;
     if (serverTypeId !== undefined) updateData.serverTypeId = serverTypeId;
     
     if (isActive !== undefined) {

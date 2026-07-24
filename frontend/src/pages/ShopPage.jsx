@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   Search, ShoppingCart, Filter, Sparkles, Tag, TrendingUp, Zap, 
   Star, Package, Clock, ChevronLeft, ChevronRight, Info, X,
-  CheckCircle, Command, Gift, Shield, Lock
+  CheckCircle, Command, Gift, Shield, Lock, Banknote
 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import SpotlightCard from "../components/ui/SpotlightCard";
@@ -199,7 +199,7 @@ const RankDetailModal = ({ product, isOpen, onClose }) => {
                   )}
 
                   {/* Duration */}
-                  {product.amount && product.type !== 'COIN' && (
+                  {product.amount && !['COIN', 'MONEY'].includes(product.type) && (
                     <div>
                       <div className="flex items-center gap-2 mb-3">
                         <div className="w-8 h-8 bg-arcane/15 flex items-center justify-center border border-arcane/30">
@@ -445,6 +445,7 @@ const ShopPage = () => {
   const categories = [
     { value: "all", label: "Semua Produk", icon: Tag },
     { value: "coin", label: "Coins", icon: Sparkles },
+    { value: "money", label: "Money", icon: Banknote },
     { value: "feature", label: "Features", icon: Shield },
     { value: "rank", label: "Ranks", icon: TrendingUp },
   ];

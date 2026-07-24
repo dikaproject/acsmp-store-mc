@@ -19,6 +19,7 @@ import {
   XCircle,
   ChevronDown,
   TrendingUp,
+  Banknote,
   Shield,
   CheckSquare,
   Square,
@@ -34,6 +35,60 @@ import axios from "axios";
 import ProductModal from "../../components/admin/ProductModal";
 import DeleteConfirmModal from "../../components/admin/DeleteConfirmModal";
 import { formatCurrency, getImageUrl } from "../../lib/utils";
+
+const PRODUCT_TYPE_META = {
+  COIN: {
+    label: 'Coin',
+    valueLabel: 'Coins',
+    Icon: Coins,
+    className: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+  },
+  MONEY: {
+    label: 'Money',
+    valueLabel: 'Nominal',
+    Icon: Banknote,
+    className: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+  },
+  FEATURE: {
+    label: 'Feature',
+    valueLabel: 'Permission',
+    Icon: Shield,
+    className: 'bg-purple-500/20 text-purple-400 border-purple-500/30'
+  },
+  RANK: {
+    label: 'Rank',
+    valueLabel: 'Group',
+    Icon: Crown,
+    className: 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+  },
+  BATTLEPASS: {
+    label: 'Battlepass',
+    valueLabel: 'Duration',
+    Icon: Package,
+    className: 'bg-rose-500/20 text-rose-400 border-rose-500/30'
+  }
+};
+
+const ProductTypeBadge = ({ type }) => {
+  const meta = PRODUCT_TYPE_META[type] || PRODUCT_TYPE_META.BATTLEPASS;
+  const TypeIcon = meta.Icon;
+
+  return (
+    <Badge className={meta.className}>
+      <TypeIcon className="w-3 h-3 mr-1" />
+      {meta.label}
+    </Badge>
+  );
+};
+
+const getProductValue = (product) => {
+  if (product.type === 'COIN' || product.type === 'MONEY') {
+    return product.amount.toLocaleString('id-ID');
+  }
+  if (product.type === 'FEATURE') return product.permission || '-';
+  if (product.type === 'RANK') return product.groupName || '-';
+  return `${product.amount.toLocaleString('id-ID')} hari`;
+};
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -189,6 +244,7 @@ const ProductsPage = () => {
     active: products.filter(p => p.isActive).length,
     outOfStock: products.filter(p => p.isOutOfStock).length,
     coins: products.filter(p => p.type === 'COIN').length,
+    money: products.filter(p => p.type === 'MONEY').length,
     features: products.filter(p => p.type === 'FEATURE').length,
     ranks: products.filter(p => p.type === 'RANK').length,
     totalValue: products.reduce((sum, p) => sum + p.price, 0)
@@ -223,7 +279,7 @@ const ProductsPage = () => {
             <h1 className="text-3xl font-bold text-white">Products</h1>
           </div>
           <p className="text-gray-400 ml-13">
-            Manage coins and ranks for all server types
+            Manage coins, money, features, and ranks for all server types
           </p>
         </motion.div>
 
@@ -243,7 +299,7 @@ const ProductsPage = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -256,6 +312,22 @@ const ProductsPage = () => {
                 <Package className="w-4 h-4 text-purple-400" />
               </div>
               <p className="text-2xl font-bold text-white">{stats.total}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+        >
+          <Card className="border-white/\[0.06\] bg-[#111318] hover:border-gray-700 transition-all">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs text-gray-400">Money</p>
+                <Banknote className="w-4 h-4 text-emerald-400" />
+              </div>
+              <p className="text-2xl font-bold text-emerald-400">{stats.money}</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -382,6 +454,7 @@ const ProductsPage = () => {
               >
                 <option value="all">All Types</option>
                 <option value="COIN">Coins</option>
+                <option value="MONEY">Money</option>
                 <option value="FEATURE">Features</option>
                 <option value="RANK">Ranks</option>
               </select>
@@ -572,30 +645,7 @@ const ProductsPage = () => {
                     
                     {/* Type Badge */}
                     <div className="absolute top-2 left-2">
-                      <Badge className={`${
-                        product.type === 'COIN'
-                          ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-                          : product.type === 'FEATURE'
-                          ? 'bg-purple-500/20 text-purple-400 border-purple-500/30'
-                          : 'bg-orange-500/20 text-orange-400 border-orange-500/30'
-                      }`}>
-                        {product.type === 'COIN' ? (
-                          <>
-                            <Coins className="w-3 h-3 mr-1" />
-                            Coin
-                          </>
-                        ) : product.type === 'FEATURE' ? (
-                          <>
-                            <Shield className="w-3 h-3 mr-1" />
-                            Feature
-                          </>
-                        ) : (
-                          <>
-                            <Crown className="w-3 h-3 mr-1" />
-                            Rank
-                          </>
-                        )}
-                      </Badge>
+                      <ProductTypeBadge type={product.type} />
                     </div>
 
                     {/* Status Badge */}
@@ -661,10 +711,10 @@ const ProductsPage = () => {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-gray-400">
-                          {product.type === 'COIN' ? 'Coins' : product.type === 'FEATURE' ? 'Permission' : 'Group'}
+                          {(PRODUCT_TYPE_META[product.type] || PRODUCT_TYPE_META.BATTLEPASS).valueLabel}
                         </span>
                         <span className="text-sm font-medium text-white">
-                          {product.type === 'COIN' ? product.amount.toLocaleString() : product.type === 'FEATURE' ? product.permission : product.groupName}
+                          {getProductValue(product)}
                         </span>
                       </div>
                     </div>
@@ -771,30 +821,7 @@ const ProductsPage = () => {
                         </Badge>
                       </td>
                       <td className="p-4">
-                        <Badge className={`${
-                          product.type === 'COIN'
-                            ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-                            : product.type === 'FEATURE'
-                            ? 'bg-purple-500/20 text-purple-400 border-purple-500/30'
-                            : 'bg-orange-500/20 text-orange-400 border-orange-500/30'
-                        }`}>
-                          {product.type === 'COIN' ? (
-                            <>
-                              <Coins className="w-3 h-3 mr-1" />
-                              Coin
-                            </>
-                          ) : product.type === 'FEATURE' ? (
-                            <>
-                              <Shield className="w-3 h-3 mr-1" />
-                              Feature
-                            </>
-                          ) : (
-                            <>
-                              <Crown className="w-3 h-3 mr-1" />
-                              Rank
-                            </>
-                          )}
-                        </Badge>
+                        <ProductTypeBadge type={product.type} />
                       </td>
                       <td className="p-4">
                         <div className="text-left">
@@ -819,7 +846,7 @@ const ProductsPage = () => {
                       </td>
                       <td className="p-4">
                         <p className="text-sm text-white">
-                          {product.type === 'COIN' ? product.amount.toLocaleString() : product.type === 'FEATURE' ? product.permission : product.groupName}
+                          {getProductValue(product)}
                         </p>
                       </td>
                       <td className="p-4">

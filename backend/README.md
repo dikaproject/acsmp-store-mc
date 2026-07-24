@@ -1,12 +1,12 @@
 # SSSMC Backend API
 
-Backend API untuk website promosi dan coinshop Minecraft Server. Dibangun dengan Node.js, Express, Prisma, dan MySQL.
+Backend API untuk website promosi dan webstore Minecraft Server. Dibangun dengan Node.js, Express, Prisma, dan MySQL.
 
 ## 🚀 Features
 
 - **Authentication & Authorization**: JWT-based auth dengan role ADMIN & VISITOR
 - **Server Type Management**: CRUD server types (RPG, MIX, Skyblock, dll)
-- **Product Management**: Manage coins & ranks dengan pricing
+- **Product Management**: Manage coins, money, features & ranks dengan pricing
 - **Order & Payment**: Integrasi Tripay payment gateway
 - **Command Executor**: Auto-execute command ke Minecraft server panel
 - **Gallery**: Showcase screenshot server
@@ -170,13 +170,18 @@ Authorization: Bearer YOUR_JWT_TOKEN
 3. Customer melakukan pembayaran
 4. Tripay mengirim webhook ke `POST /api/orders/webhook`
 5. Backend update order status & execute command ke Minecraft panel
-6. Command otomatis dijalankan (eco give / lp user parent addtemp)
+6. Command otomatis dijalankan (points give / eco give / lp user parent addtemp)
 
 ## 🎮 Minecraft Command Integration
 
 Commands yang dieksekusi otomatis saat payment success:
 
 **Untuk COIN:**
+```bash
+points give <username> <amount>
+```
+
+**Untuk MONEY:**
 ```bash
 eco give <username> <amount>
 ```
@@ -187,6 +192,7 @@ lp user <username> parent addtemp <group_name> <duration>d
 ```
 
 Example:
+- `points give ZuffyMC 100`
 - `eco give ZuffyMC 100`
 - `lp user ZuffyMC parent addtemp vip 30d`
 
@@ -195,7 +201,7 @@ Example:
 ### Models
 - **User**: Admin & visitor accounts
 - **ServerType**: RPG, MIX, Skyblock, dll
-- **Product**: Coins & Ranks dengan pricing
+- **Product**: Coins, Money, Features & Ranks dengan pricing
 - **Order**: Purchase transactions
 - **OrderItem**: Order details
 - **Gallery**: Screenshot showcase
