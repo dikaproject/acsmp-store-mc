@@ -3,16 +3,16 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles, Play, Zap, Shield, Crown } from "lucide-react";
 import backgroundImage from "../../assets/background-mc.jpg";
 import { useEffect, useMemo, useState } from "react";
-
-const MCSTATUS_API = 'https://api.mcsrvstat.us/bedrock/3/';
-const SERVER_IP = 'amazingcraft.org';
-const SERVER_PORT = 19132;
+import { useServerStatus } from '../../hooks/useServerStatus';
+import { SERVER_IP, SERVER_PORT } from '../../lib/serverStatus';
 
 const HeroSection = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showContent, setShowContent] = useState(false);
-  const [playersOnline, setPlayersOnline] = useState(892);
-  const [isServerOnline, setIsServerOnline] = useState(true);
+  const { serverData, online, error, statusLabel } = useServerStatus();
+  const playersOnline = serverData?.players?.online ?? (online === false ? 0 : 'N/A');
+  const isServerOnline = online === true;
+  const statusUnknown = online === undefined || Boolean(error);
   const shouldReduceMotion = useReducedMotion();
 
   // Preload images
@@ -41,31 +41,6 @@ const HeroSection = () => {
       setIsLoaded(true);
       setShowContent(true);
     }
-  }, []);
-
-  // Fetch live player count from mcsrvstat.us
-  useEffect(() => {
-    const fetchServerStatus = async () => {
-      try {
-        const response = await fetch(`${MCSTATUS_API}${SERVER_IP}`);
-        const data = await response.json();
-        
-        if (data.online) {
-          setIsServerOnline(true);
-          setPlayersOnline(data.players?.online || 0);
-        } else {
-          setIsServerOnline(false);
-          setPlayersOnline(0);
-        }
-      } catch (error) {
-        setIsServerOnline(false);
-        setPlayersOnline(0);
-      }
-    };
-
-    fetchServerStatus();
-    const interval = setInterval(fetchServerStatus, 30000);
-    return () => clearInterval(interval);
   }, []);
 
   const containerVariants = useMemo(() => ({
@@ -189,7 +164,7 @@ const HeroSection = () => {
                   className="grid grid-cols-3 gap-3"
                 >
                   {[
-                    { icon: Zap, label: "Online", value: playersOnline },
+                    { icon: Zap, label: error ? "Players (last known)" : "Online", value: playersOnline },
                     { icon: Shield, label: "Uptime", value: "99.9%" },
                     { icon: Crown, label: "Support", value: "24/7" }
                   ].map((item, index) => (
@@ -234,15 +209,15 @@ const HeroSection = () => {
                 {/* Server Status */}
                 <motion.div variants={itemVariants}>
                   <div className={`inline-flex items-center gap-3 px-4 py-2 border ${
-                    isServerOnline
+                    statusUnknown ? 'bg-ink-elevated border-ink-border' : isServerOnline
                       ? 'bg-arcane/8 border-arcane/30'
                       : 'bg-[hsl(var(--danger))]/5 border-[hsl(var(--danger))]/30'
                   }`}>
                     <div className={`w-1.5 h-1.5 ${
-                      isServerOnline ? 'bg-arcane' : 'bg-[hsl(var(--danger))]'
+                      statusUnknown ? 'bg-bone-subtle' : isServerOnline ? 'bg-arcane' : 'bg-[hsl(var(--danger))]'
                     }`} />
                     <span className="text-[11px] font-medium text-bone uppercase tracking-widest">
-                      {isServerOnline ? 'Online' : 'Offline'}
+                      {statusLabel}
                     </span>
                     <div className="h-3 w-px bg-ink-border" />
                     <span className="text-xs font-mono text-bone-muted">

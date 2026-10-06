@@ -1,42 +1,12 @@
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import { Sparkles, ArrowRight, Zap, Shield, Trophy, Star, Play } from "lucide-react";
-
-const MCSTATUS_API = 'https://api.mcsrvstat.us/bedrock/3/';
-const SERVER_IP = 'amazingcraft.org';
-const SERVER_PORT = 19132;
+import { useServerStatus } from '../../hooks/useServerStatus';
+import { SERVER_IP, SERVER_PORT } from '../../lib/serverStatus';
 
 const CTASection = () => {
-  const [serverData, setServerData] = useState(null);
-  const [playersOnline, setPlayersOnline] = useState(0);
-  const [isOnline, setIsOnline] = useState(true);
-
-  // Fetch server status from mcsrvstat.us
-  useEffect(() => {
-    const fetchServerStatus = async () => {
-      try {
-        const response = await fetch(`${MCSTATUS_API}${SERVER_IP}`);
-        const data = await response.json();
-        
-        if (data.online) {
-          setIsOnline(true);
-          setPlayersOnline(data.players?.online || 0);
-          setServerData(data);
-        } else {
-          setIsOnline(false);
-          setPlayersOnline(0);
-        }
-      } catch (error) {
-        setIsOnline(false);
-        setPlayersOnline(0);
-      }
-    };
-
-    fetchServerStatus();
-    const interval = setInterval(fetchServerStatus, 30000);
-    return () => clearInterval(interval);
-  }, []);
+  const { serverData, online, error, statusLabel } = useServerStatus();
+  const playersOnline = serverData?.players?.online ?? (online === false ? 0 : 'N/A');
+  const statusUnknown = online === undefined || Boolean(error);
 
   const features = [
     { icon: Zap, label: "Instant Delivery" },
@@ -164,9 +134,9 @@ const CTASection = () => {
             transition={{ delay: 0.9 }}
             className="mt-12 inline-flex items-center gap-3 px-5 py-2.5 bg-ink-elevated border border-ink-border"
           >
-            <div className={`w-1.5 h-1.5 ${isOnline ? 'bg-arcane' : 'bg-[hsl(var(--danger))]'}`} />
+            <div className={`w-1.5 h-1.5 ${statusUnknown ? 'bg-bone-subtle' : online ? 'bg-arcane' : 'bg-[hsl(var(--danger))]'}`} />
             <span className="text-bone text-sm">
-              {isOnline ? 'Server Online' : 'Server Offline'} ·
+              {statusLabel} ·
               <span className="ml-1 font-mono">
                 {playersOnline} Players
               </span> · <span className="font-mono">{SERVER_IP}</span>
