@@ -68,6 +68,12 @@ const Navbar = () => {
   // Items yang masuk ke dropdown "Fitur"
   const featureLinks = [
     {
+      name: "Produk Digital",
+      path: "/digital-products",
+      icon: Package,
+      desc: "Katalog & pemesanan produk"
+    },
+    {
       name: "Track Order",
       path: "/track",
       icon: Package,

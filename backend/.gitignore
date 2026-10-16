@@ -36,6 +36,8 @@ prisma/*.db
 /prisma/migrations/*/
 !/prisma/migrations/20260723120000_add_money_product_type/
 !/prisma/migrations/20260723120000_add_money_product_type/migration.sql
+!/prisma/migrations/20261016000000_add_digital_products/
+!/prisma/migrations/20261016000000_add_digital_products/migration.sql
 
 # Build/Deploy
 /dist

@@ -15,6 +15,7 @@ import GuideDetailPage from "./pages/GuideDetailPage";
 import TrackOrderPage from "./pages/TrackOrderPage";
 import VotePage from "./pages/VotePage"; 
 import GalleryPagePublic from "./pages/GalleryPage";
+import DigitalProductsPage from "./pages/DigitalProductsPage";
 
 // User Protected Pages
 import ShopPage from "./pages/ShopPage";
@@ -35,6 +36,7 @@ import SettingsPage from "./pages/admin/SettingsPage";
 import AdminLinktreePage from "./pages/admin/LinktreePage";
 import RconPage from "./pages/admin/RconPage";
 import VouchersPage from "./pages/admin/VouchersPage";
+import DigitalProductsPageAdmin from "./pages/admin/DigitalProductsPage";
 
 // Public standalone pages
 import LinktreePage from "./pages/LinktreePage";
@@ -95,6 +97,7 @@ function App() {
           <Route path="login" element={<LoginPage />} />
           <Route path="vote" element={<VotePage />} />
           <Route path="gallery" element={<GalleryPagePublic />} /> {/* Add this */}
+          <Route path="digital-products" element={<DigitalProductsPage />} />
           <Route path="guides" element={<GuidesPage />} />
           <Route path="guides/:slug" element={<GuideDetailPage />} />
           <Route path="track" element={<TrackOrderPage />} />
@@ -115,6 +118,7 @@ function App() {
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="server-types" element={<ServerTypesPage />} />
           <Route path="products" element={<ProductsPage />} />
+          <Route path="digital-products" element={<DigitalProductsPageAdmin />} />
           <Route path="orders" element={<OrdersPage />} />
           <Route path="guides" element={<GuidesPageAdmin />} />
           <Route path="gallery" element={<GalleryPage />} />

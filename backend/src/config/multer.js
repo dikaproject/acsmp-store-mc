@@ -6,6 +6,7 @@ const uploadDirs = [
     'uploads',
     'uploads/servers',
     'uploads/products',
+    'uploads/digital-products',
     'uploads/gallery',
     'uploads/guides',
     'uploads/linktree',
@@ -25,6 +26,8 @@ const storage = multer.diskStorage({
         
         if (req.baseUrl.includes('/server-types')) {
             uploadPath = 'uploads/servers/';
+        } else if (req.baseUrl.includes('/digital-products')) {
+            uploadPath = 'uploads/digital-products/';
         } else if (req.baseUrl.includes('/products')) {
             uploadPath = 'uploads/products/';
         } else if (req.baseUrl.includes('/gallery')) {
@@ -45,7 +48,16 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const ext = path.extname(file.originalname).toLowerCase();
+        const digitalProductExtensions = {
+            'image/jpeg': '.jpg',
+            'image/jpg': '.jpg',
+            'image/png': '.png',
+            'image/gif': '.gif',
+            'image/webp': '.webp'
+        };
+        const ext = req.baseUrl.includes('/digital-products')
+            ? digitalProductExtensions[file.mimetype]
+            : path.extname(file.originalname).toLowerCase();
         cb(null, uniqueSuffix + ext);
     }
 });

@@ -1,6 +1,7 @@
 import { useEffect, useState, lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import HeroSection from "../components/home/HeroSection";
+import DigitalProductsSection from "../components/DigitalProductsSection";
 
 // Lazy load components yang tidak critical
 const ServerStats = lazy(() => import('../components/ServerStats'));
@@ -49,6 +50,8 @@ const HomePage = () => {
           <Suspense fallback={<SectionSkeleton />}>
             <AboutSection />
           </Suspense>
+
+          <DigitalProductsSection compact />
 
           <Suspense fallback={<SectionSkeleton />}>
             <VoteLinks />

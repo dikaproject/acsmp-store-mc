@@ -106,6 +106,18 @@ model Product {
   @@map("products")
 }
 
+model DigitalProduct {
+  id          String   @id @default(cuid())
+  title       String   @db.VarChar(191)
+  description String   @db.Text
+  imageUrl    String
+  redirectUrl String   @db.VarChar(2048)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("digital_products")
+}
+
 model Order {
   id              String      @id @default(cuid())
   orderCode       String      @unique

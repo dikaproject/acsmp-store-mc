@@ -7,6 +7,7 @@ Backend API untuk website promosi dan webstore Minecraft Server. Dibangun dengan
 - **Authentication & Authorization**: JWT-based auth dengan role ADMIN & VISITOR
 - **Server Type Management**: CRUD server types (RPG, MIX, Skyblock, dll)
 - **Product Management**: Manage coins, money, features & ranks dengan pricing
+- **Produk Digital**: CRUD judul, deskripsi teks biasa, foto, dan tautan pemesanan WhatsApp
 - **Order & Payment**: Integrasi Tripay payment gateway
 - **Command Executor**: Auto-execute command ke Minecraft server panel
 - **Gallery**: Showcase screenshot server
@@ -85,6 +86,10 @@ prisma/
 - `GET /api/products?serverTypeId=xxx&type=COIN` - Filter products
 - `GET /api/products/:id` - Get product by ID
 
+#### Digital Products
+- `GET /api/digital-products` - Daftar produk digital, terbaru lebih dahulu
+- `GET /api/digital-products/:id` - Detail produk digital
+
 #### Orders
 - `POST /api/orders` - Create new order
 - `GET /api/orders/code/:orderCode` - Get order by code
@@ -115,6 +120,37 @@ prisma/
 - `POST /api/products` - Create product
 - `PUT /api/products/:id` - Update product
 - `DELETE /api/products/:id` - Delete product
+
+#### Digital Products
+- `POST /api/digital-products` - Tambah produk digital
+- `PUT /api/digital-products/:id` - Edit produk digital
+- `DELETE /api/digital-products/:id` - Hapus produk digital beserta fotonya
+
+Gunakan `multipart/form-data`: `title` (maksimal 191 karakter), `description`
+(teks biasa, maksimal 10.000 karakter), `redirectUrl` (URL HTTP/HTTPS lengkap,
+maksimal 2.048 karakter), dan file `image` (JPG, PNG, GIF, atau WEBP, maksimal
+5 MB). Semua field wajib saat membuat produk. Saat mengedit, foto lama tetap
+digunakan jika tidak ada file pengganti. Tautan WhatsApp dapat diisi dengan
+`https://wa.me/62...` beserta pesan pada query `text` bila diperlukan.
+Pada form admin cukup isi nomor WhatsApp, misalnya `081222828282`;
+frontend otomatis mengubahnya menjadi `https://wa.me/6281222828282`
+sebelum dikirim sebagai `redirectUrl`. Awalan `62` dan `+62` juga diterima.
+
+Admin mengelola produk di `/admin/digital-products`. Katalog publik tersedia
+di `/digital-products`, menu Fitur, dan section Produk Digital di beranda.
+Produk digital menggunakan tabel sendiri dan tombol pemesanannya membuka
+tautan yang disimpan admin.
+
+Untuk database yang sudah mengikuti riwayat migrasi proyek, jalankan dari
+direktori `backend` sebelum memakai fitur:
+
+```bash
+npx prisma migrate deploy
+npm run prisma:generate
+```
+
+Migrasi `20261016000000_add_digital_products` hanya menambahkan tabel
+`digital_products`. Migrasi belum dijalankan otomatis oleh implementasi ini.
 
 #### Orders
 - `GET /api/orders` - Get all orders (with pagination)
@@ -202,6 +238,7 @@ Example:
 - **User**: Admin & visitor accounts
 - **ServerType**: RPG, MIX, Skyblock, dll
 - **Product**: Coins, Money, Features & Ranks dengan pricing
+- **DigitalProduct**: Judul, deskripsi teks, foto, dan tautan pemesanan
 - **Order**: Purchase transactions
 - **OrderItem**: Order details
 - **Gallery**: Screenshot showcase

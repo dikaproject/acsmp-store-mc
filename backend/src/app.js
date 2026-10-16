@@ -16,6 +16,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const serverTypeRoutes = require('./routes/serverType');
 const productRoutes = require('./routes/product');
+const digitalProductRoutes = require('./routes/digitalProduct');
 const orderRoutes = require('./routes/order');
 const galleryRoutes = require('./routes/gallery');
 const guideRoutes = require('./routes/guide');
@@ -79,6 +80,7 @@ app.get('/', (req, res) => {
       users: '/api/users',
       serverTypes: '/api/server-types',
       products: '/api/products',
+      digitalProducts: '/api/digital-products',
       orders: '/api/orders',
       gallery: '/api/gallery',
       guides: '/api/guides',
@@ -94,6 +96,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/server-types', serverTypeRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/digital-products', digitalProductRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/guides', guideRoutes);

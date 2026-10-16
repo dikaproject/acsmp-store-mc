@@ -48,6 +48,12 @@ const Sidebar = ({ isOpen, onClose }) => {
       path: "/admin/products",
       description: "Manage products"
     },
+    {
+      icon: Package,
+      label: "Produk Digital",
+      path: "/admin/digital-products",
+      description: "Kelola produk digital"
+    },
     { 
       icon: ShoppingCart, 
       label: "Orders", 

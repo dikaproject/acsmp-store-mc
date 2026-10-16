@@ -45,6 +45,7 @@ const Footer = () => {
   const quickLinksCol1 = [
     { name: "Home", path: "/", icon: Home },
     { name: "Shop", path: "/shop", icon: ShoppingBag },
+    { name: "Produk Digital", path: "/digital-products", icon: Package },
     { name: "Vote", path: "/vote", icon: Heart },
   ];
 

@@ -1,5 +1,4 @@
  import axios from "axios";
-import toast from "react-hot-toast";
 import { useAuthStore } from "../store/useAuthStore";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
@@ -71,6 +70,18 @@ export const serverTypeAPI = {
 export const productAPI = {
   getAll: (params) => api.get("/products", { params }),
   getById: (id) => api.get(`/products/${id}`),
+};
+
+export const digitalProductAPI = {
+  getAll: (config) => api.get("/digital-products", config),
+  getById: (id) => api.get(`/digital-products/${id}`),
+  create: (formData) => api.post("/digital-products", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  }),
+  update: (id, formData) => api.put(`/digital-products/${id}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  }),
+  delete: (id) => api.delete(`/digital-products/${id}`),
 };
 
 export const orderAPI = {
