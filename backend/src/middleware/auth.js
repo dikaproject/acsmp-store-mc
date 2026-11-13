@@ -7,9 +7,10 @@ const authenticate = async (req, res, next) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
     if (!token) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         success: false,
-        message: 'Access denied. No token provided.' 
+        code: 'NO_TOKEN',
+        message: 'Access denied. No token provided.'
       });
     }
 
@@ -31,18 +32,29 @@ const authenticate = async (req, res, next) => {
     });
 
     if (!user) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         success: false,
-        message: 'Invalid token.' 
+        code: 'INVALID_TOKEN',
+        message: 'Sesi login tidak valid. Silakan login kembali.'
       });
     }
 
     req.user = user;
     next();
   } catch (error) {
-    res.status(401).json({ 
+    // Tell an expired session apart from a malformed/forged token so the client can react properly
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({
+        success: false,
+        code: 'TOKEN_EXPIRED',
+        message: 'Sesi login kamu sudah berakhir. Silakan login kembali.'
+      });
+    }
+
+    res.status(401).json({
       success: false,
-      message: 'Invalid token.' 
+      code: 'INVALID_TOKEN',
+      message: 'Sesi login tidak valid. Silakan login kembali.'
     });
   }
 };

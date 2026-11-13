@@ -24,25 +24,34 @@ api.interceptors.request.use(
   }
 );
 
+// A 401 on a login request means bad credentials, not an expired session
+const isLoginRequest = (url = "") => url.includes("/auth/login");
+
 // Response interceptor
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && !isLoginRequest(error.config?.url)) {
       localStorage.removeItem("token");
-      const isAdmin = window.location.pathname.startsWith("/admin");
-      // Clear Zustand auth store
+      const { pathname, search } = window.location;
+      const isAdmin = pathname.startsWith("/admin");
+
       if (isAdmin) {
+        // Admin: clear the store and let the global modal (App.jsx) react
         useAuthStore.getState().logout();
+        window.dispatchEvent(
+          new CustomEvent("session:expired", {
+            detail: { isAdmin },
+          })
+        );
       } else {
+        // Player: clear the store and send them to /login, then back to this page
         useAuthStore.getState().logoutUser();
+        if (pathname !== "/login") {
+          const redirect = encodeURIComponent(pathname + search);
+          window.location.assign(`/login?expired=1&redirect=${redirect}`);
+        }
       }
-      // Dispatch a custom event so the global modal can react
-      window.dispatchEvent(
-        new CustomEvent("session:expired", {
-          detail: { isAdmin },
-        })
-      );
     }
     return Promise.reject(error);
   }
@@ -90,6 +99,7 @@ export const orderAPI = {
   getByCode: (code) => api.get(`/orders/code/${code}`),
   getAll: () => api.get("/orders"),
   getMyOrders: (params) => api.get("/orders/my", { params }),
+  getPaymentChannels: () => api.get("/orders/payment-channels"),
 };
 
 // Update galleryAPI

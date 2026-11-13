@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
@@ -27,13 +27,14 @@ import { GridPattern } from "../components/ui/GridPattern";
 import { useCartStore } from "../store/useCartStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { formatCurrency, getImageUrl } from "../lib/utils";
+import { orderAPI, voucherAPI } from "../lib/api";
+import { SESSION_EXPIRED_TOAST_ID } from "../lib/auth";
 import toast from "react-hot-toast";
-import axios from "axios";
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const { items, getTotalPrice, clearCart } = useCartStore();
-  const { minecraftName, logoutUser } = useAuthStore();
+  const { minecraftName, logoutUser, checkPlayerSession } = useAuthStore();
   
   const [loading, setLoading] = useState(false);
   const [paymentChannels, setPaymentChannels] = useState([]);
@@ -48,10 +49,25 @@ const CheckoutPage = () => {
   const [voucher, setVoucher] = useState(null); // { id, code, discount }
   const [voucherLoading, setVoucherLoading] = useState(false);
 
+  // Login flag is stale (JWT expired): log out and send them to /login, back to /checkout afterwards.
+  // The cart lives in its own store, so the items survive the re-login.
+  const handleSessionExpired = useCallback(() => {
+    logoutUser();
+    toast.error("Sesi login kamu sudah berakhir, silakan login ulang dengan nametag Minecraft", {
+      id: SESSION_EXPIRED_TOAST_ID
+    });
+    navigate('/login', { state: { from: { pathname: '/checkout' } } });
+  }, [logoutUser, navigate]);
+
   useEffect(() => {
     if (!minecraftName) {
       toast.error("Anda harus login terlebih dahulu");
       navigate('/login', { state: { from: { pathname: '/checkout' } } });
+      return;
+    }
+
+    if (!checkPlayerSession()) {
+      handleSessionExpired();
       return;
     }
 
@@ -61,13 +77,11 @@ const CheckoutPage = () => {
     }
 
     fetchPaymentChannels();
-  }, [items, navigate, minecraftName]);
+  }, [items, navigate, minecraftName, checkPlayerSession, handleSessionExpired]);
 
   const fetchPaymentChannels = async () => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/orders/payment-channels`
-      );
+      const response = await orderAPI.getPaymentChannels();
       setPaymentChannels(response.data.data || []);
     } catch (error) {
       console.error("Error fetching payment channels:", error);
@@ -88,7 +102,7 @@ const CheckoutPage = () => {
     if (!voucherCode.trim()) return;
     setVoucherLoading(true);
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/vouchers/validate`, { code: voucherCode.trim() });
+      const res = await voucherAPI.validate(voucherCode.trim());
       setVoucher(res.data.data);
       toast.success(`Voucher ${res.data.data.code} berhasil! Diskon ${res.data.data.discount}%`);
     } catch (err) {
@@ -107,6 +121,12 @@ const CheckoutPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Token may have expired while the user was filling in the form
+    if (!checkPlayerSession()) {
+      handleSessionExpired();
+      return;
+    }
+
     if (!contactInfo.whatsapp || !selectedPaymentMethod) {
       toast.error("Lengkapi nomor WhatsApp dan pilih metode pembayaran");
       return;
@@ -121,14 +141,6 @@ const CheckoutPage = () => {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem('token');
-      
-      if (!token) {
-        toast.error("Sesi login berakhir, silakan login kembali");
-        navigate('/login');
-        return;
-      }
-
       const orderData = {
         minecraftName: minecraftName,
         email: contactInfo.email || null,
@@ -144,17 +156,8 @@ const CheckoutPage = () => {
         }))
       };
 
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/orders`,
-        orderData,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-      
+      const response = await orderAPI.create(orderData);
+
       if (response.data.success) {
         const { payment, orderCode } = response.data.data;
         
@@ -176,8 +179,11 @@ const CheckoutPage = () => {
       }
     } catch (error) {
       console.error("Error creating order:", error);
-      toast.error(error.response?.data?.message || "Gagal membuat pesanan");
-      setLoading(false); 
+      // 401 is handled globally by the api interceptor (logout + redirect to /login)
+      if (error.response?.status !== 401) {
+        toast.error(error.response?.data?.message || "Gagal membuat pesanan");
+      }
+      setLoading(false);
     }
   };
 

@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
+import { useAuthStore } from "./store/useAuthStore";
+import { SESSION_EXPIRED_MESSAGE, SESSION_EXPIRED_TOAST_ID } from "./lib/auth";
 import Layout from "./components/layout/Layout";
 import AdminLayout from "./components/admin/AdminLayout";
 import { AdminRoute, UserRoute } from "./components/ProtectedRoute";
@@ -54,6 +56,27 @@ function App() {
       setSessionExpired({ open: true, isAdmin: e.detail?.isAdmin ?? false });
     window.addEventListener("session:expired", handler);
     return () => window.removeEventListener("session:expired", handler);
+  }, []);
+
+  // Clear a stale player login (persisted flag but expired/missing JWT).
+  // Silent on app load; when the user comes back to the tab, tell them why they were logged out.
+  useEffect(() => {
+    useAuthStore.getState().checkPlayerSession();
+
+    const recheck = () => {
+      if (document.visibilityState === "hidden") return;
+      const wasLoggedIn = useAuthStore.getState().isUserLoggedIn;
+      if (!useAuthStore.getState().checkPlayerSession() && wasLoggedIn) {
+        toast(SESSION_EXPIRED_MESSAGE, { id: SESSION_EXPIRED_TOAST_ID });
+      }
+    };
+
+    window.addEventListener("focus", recheck);
+    document.addEventListener("visibilitychange", recheck);
+    return () => {
+      window.removeEventListener("focus", recheck);
+      document.removeEventListener("visibilitychange", recheck);
+    };
   }, []);
 
   return (

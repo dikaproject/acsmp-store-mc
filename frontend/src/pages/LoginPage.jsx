@@ -18,6 +18,7 @@ import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Badge } from "../components/ui/Badge";
 import { useAuthStore } from "../store/useAuthStore";
+import { getSafeRedirectPath, SESSION_EXPIRED_MESSAGE, SESSION_EXPIRED_TOAST_ID } from "../lib/auth";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -51,7 +52,22 @@ const LoginPage = () => {
   const [serverTypesLoading, setServerTypesLoading] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const from = location.state?.from?.pathname || '/shop';
+  // Return path: router state (UserRoute / pages) first, then ?redirect= (set by the api interceptor)
+  const searchParams = new URLSearchParams(location.search);
+  const from = location.state?.from?.pathname
+    || getSafeRedirectPath(searchParams.get('redirect'))
+    || '/shop';
+
+  // Redirected here because the session expired (?expired=1)
+  const sessionExpired = searchParams.get('expired') === '1';
+  useEffect(() => {
+    if (sessionExpired) {
+      toast(SESSION_EXPIRED_MESSAGE, {
+        id: SESSION_EXPIRED_TOAST_ID,
+        icon: <Info className="w-5 h-5 text-arcane" />,
+      });
+    }
+  }, [sessionExpired]);
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_API_URL}/server-types?isActive=true`)

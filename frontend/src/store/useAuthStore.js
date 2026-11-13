@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { isTokenExpired } from "../lib/auth";
 
 export const useAuthStore = create(
   persist(
@@ -58,6 +59,19 @@ export const useAuthStore = create(
           isUserLoggedIn: false,
           currentRank: null,
         });
+      },
+
+      // Validate the persisted player login against the JWT. The persisted flag
+      // outlives the token (7d), so clear it when the token is missing/expired.
+      // Returns true only when a valid player session exists.
+      checkPlayerSession: () => {
+        if (!get().isUserLoggedIn) return false;
+
+        if (isTokenExpired(localStorage.getItem("token"))) {
+          get().logoutUser();
+          return false;
+        }
+        return true;
       },
 
       // Check if admin

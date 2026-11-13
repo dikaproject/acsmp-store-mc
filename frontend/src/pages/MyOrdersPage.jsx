@@ -160,7 +160,10 @@ const MyOrdersPage = () => {
       setTotalPages(res.data.pagination.totalPages);
       setTotal(res.data.pagination.total);
     } catch (err) {
-      toast.error("Gagal memuat riwayat pesanan");
+      // 401 is handled globally by the api interceptor (logout + redirect to /login)
+      if (err.response?.status !== 401) {
+        toast.error("Gagal memuat riwayat pesanan");
+      }
     } finally {
       setLoading(false);
     }
