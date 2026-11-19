@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import PageSuspense from "../PageSuspense";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import Sidebar from "./Sidebar";
@@ -23,7 +24,9 @@ const AdminLayout = () => {
 
         {/* Page Content */}
         <main className="flex-1 p-6">
+          <PageSuspense>
           <Outlet />
+        </PageSuspense>
         </main>
 
         {/* Footer Component */}

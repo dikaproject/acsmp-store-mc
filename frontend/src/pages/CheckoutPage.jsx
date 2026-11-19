@@ -17,7 +17,22 @@ import {
   Tag,
   X
 } from "lucide-react";
-import Flag from "react-world-flags";
+// Inline Malaysia flag: replaces react-world-flags, which bundled every
+// country's flag (megabytes of JS) just to show this one.
+const MalaysiaFlag = ({ className = "" }) => (
+  <svg viewBox="0 0 28 14" className={className} role="img" aria-label="Bendera Malaysia" preserveAspectRatio="xMidYMid slice">
+    {Array.from({ length: 14 }, (_, i) => (
+      <rect key={i} y={i} width="28" height="1" fill={i % 2 === 0 ? "#CC0001" : "#FFFFFF"} />
+    ))}
+    <rect width="14" height="8" fill="#010066" />
+    <circle cx="5.2" cy="4" r="3" fill="#FFCC00" />
+    <circle cx="6" cy="4" r="2.5" fill="#010066" />
+    <path
+      d="M10 1.8l.42 1.37 1.2-.78-.5 1.34 1.43.1-1.2.78 1 1.03-1.4-.3.05 1.43L10 5.8l-.98 1.12.05-1.43-1.4.3 1-1.03-1.2-.78 1.43-.1-.5-1.34 1.2.78z"
+      fill="#FFCC00"
+    />
+  </svg>
+);
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/Card";
@@ -339,7 +354,7 @@ const CheckoutPage = () => {
                   <div className="mb-6 p-4 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-xl">
                     <div className="flex items-start gap-3">
                       <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center border border-blue-500/30 flex-shrink-0 overflow-hidden">
-                        <Flag code="MY" className="w-8 h-8 object-cover" />
+                        <MalaysiaFlag className="w-8 h-8" />
                       </div>
                       <div className="flex-1">
                         <h4 className="text-sm font-bold text-blue-400 mb-1">

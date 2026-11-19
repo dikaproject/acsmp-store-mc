@@ -8,21 +8,54 @@ import { skinAPI } from "../lib/api";
 import toast from "react-hot-toast";
 
 // ─── 3D Preview component ─────────────────────────────────────────────────────
-// skinview3d is loaded via <script> in index.html → window.skinview3d is always available
+// skinview3d (three.js inside, ~1MB) is only needed on this page, so it is
+// loaded on demand instead of as a render-blocking <script> on every page.
+const SKINVIEW3D_URL = "https://cdn.jsdelivr.net/npm/skinview3d@3/bundles/skinview3d.bundle.js";
+let skinview3dPromise = null;
+
+function loadSkinview3d() {
+  if (window.skinview3d) return Promise.resolve(window.skinview3d);
+  if (!skinview3dPromise) {
+    skinview3dPromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = SKINVIEW3D_URL;
+      script.async = true;
+      script.onload = () => (window.skinview3d ? resolve(window.skinview3d) : reject(new Error("skinview3d missing")));
+      script.onerror = () => {
+        skinview3dPromise = null; // allow a retry on the next preview
+        script.remove();
+        reject(new Error("Failed to load skinview3d"));
+      };
+      document.head.appendChild(script);
+    });
+  }
+  return skinview3dPromise;
+}
+
 function SkinPreview3D({ source, model }) {
   const canvasRef = useRef(null);
   const viewerRef = useRef(null);
   const [status, setStatus] = useState("loading"); // loading | ready | error
+  const [lib, setLib] = useState(() => window.skinview3d || null);
+
+  // Start downloading the 3D library as soon as a preview is shown
+  useEffect(() => {
+    if (lib) return;
+    let cancelled = false;
+    loadSkinview3d()
+      .then((loaded) => !cancelled && setLib(loaded))
+      .catch((e) => {
+        console.error(e);
+        if (!cancelled) setStatus("error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [lib]);
 
   useEffect(() => {
-    if (!source || !canvasRef.current) return;
+    if (!source || !canvasRef.current || !lib) return;
     setStatus("loading");
-
-    if (!window.skinview3d) {
-      console.error("skinview3d not loaded");
-      setStatus("error");
-      return;
-    }
 
     let objectUrl = null;
     const skinSrc = typeof source === "string"
@@ -31,7 +64,7 @@ function SkinPreview3D({ source, model }) {
 
     try {
       if (viewerRef.current) { viewerRef.current.dispose(); viewerRef.current = null; }
-      const viewer = new window.skinview3d.SkinViewer({
+      const viewer = new lib.SkinViewer({
         canvas: canvasRef.current,
         width: 220,
         height: 340,
@@ -39,7 +72,7 @@ function SkinPreview3D({ source, model }) {
         model: model === "slim" ? "slim" : "default",
       });
       // skinview3d v3 API: viewer.animation (singular), not viewer.animations.add()
-      viewer.animation = new window.skinview3d.WalkingAnimation();
+      viewer.animation = new lib.WalkingAnimation();
       viewer.animation.speed = 0.5;
       viewer.autoRotate = true;
       viewer.autoRotateSpeed = 1.2;
@@ -54,7 +87,7 @@ function SkinPreview3D({ source, model }) {
       if (objectUrl) URL.revokeObjectURL(objectUrl);
       if (viewerRef.current) { viewerRef.current.dispose(); viewerRef.current = null; }
     };
-  }, [source, model]);
+  }, [source, model, lib]);
 
   return (
     <div className="relative flex items-center justify-center" style={{ minHeight: 340 }}>

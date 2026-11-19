@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/useAuthStore";
 import { SESSION_EXPIRED_MESSAGE, SESSION_EXPIRED_TOAST_ID } from "./lib/auth";
@@ -8,43 +8,47 @@ import AdminLayout from "./components/admin/AdminLayout";
 import { AdminRoute, UserRoute } from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import SessionExpiredModal from "./components/SessionExpiredModal";
+import PageSuspense from "./components/PageSuspense";
+
+// Pages are code-split: each route downloads only its own JS (and heavy
+// libs like TinyMCE, Recharts, three.js stay out of the public pages).
+const HomePage = lazy(() => import("./pages/HomePage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const GuidesPage = lazy(() => import("./pages/GuidesPage"));
+const GuideDetailPage = lazy(() => import("./pages/GuideDetailPage"));
+const TrackOrderPage = lazy(() => import("./pages/TrackOrderPage"));
+const VotePage = lazy(() => import("./pages/VotePage"));
+const GalleryPagePublic = lazy(() => import("./pages/GalleryPage"));
+const DigitalProductsPage = lazy(() => import("./pages/DigitalProductsPage"));
+const ShopPage = lazy(() => import("./pages/ShopPage"));
+const CartPage = lazy(() => import("./pages/CartPage"));
+const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
+const MyOrdersPage = lazy(() => import("./pages/MyOrdersPage"));
+const AdminLoginPage = lazy(() => import("./pages/admin/AdminLoginPage"));
+const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
+const ServerTypesPage = lazy(() => import("./pages/admin/ServerTypesPage"));
+const ProductsPage = lazy(() => import("./pages/admin/ProductsPage"));
+const OrdersPage = lazy(() => import("./pages/admin/OrdersPage"));
+const GuidesPageAdmin = lazy(() => import("./pages/admin/GuidesPage"));
+const GalleryPage = lazy(() => import("./pages/admin/GalleryPage"));
+const UsersPage = lazy(() => import("./pages/admin/UsersPage"));
+const SettingsPage = lazy(() => import("./pages/admin/SettingsPage"));
+const AdminLinktreePage = lazy(() => import("./pages/admin/LinktreePage"));
+const RconPage = lazy(() => import("./pages/admin/RconPage"));
+const VouchersPage = lazy(() => import("./pages/admin/VouchersPage"));
+const AdminLeaderboardPage = lazy(() => import("./pages/admin/LeaderboardPage"));
+const DigitalProductsPageAdmin = lazy(() => import("./pages/admin/DigitalProductsPage"));
+const LinktreePage = lazy(() => import("./pages/LinktreePage"));
+const SkinPage = lazy(() => import("./pages/SkinPage"));
+const LeaderboardPage = lazy(() => import("./pages/LeaderboardPage"));
 
 // Public Pages
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import GuidesPage from "./pages/GuidesPage";
-import GuideDetailPage from "./pages/GuideDetailPage";
-import TrackOrderPage from "./pages/TrackOrderPage";
-import VotePage from "./pages/VotePage"; 
-import GalleryPagePublic from "./pages/GalleryPage";
-import DigitalProductsPage from "./pages/DigitalProductsPage";
 
 // User Protected Pages
-import ShopPage from "./pages/ShopPage";
-import CartPage from "./pages/CartPage";
-import CheckoutPage from "./pages/CheckoutPage";
-import MyOrdersPage from "./pages/MyOrdersPage";
 
 // Admin Pages
-import AdminLoginPage from "./pages/admin/AdminLoginPage";
-import DashboardPage from "./pages/admin/DashboardPage";
-import ServerTypesPage from "./pages/admin/ServerTypesPage";
-import ProductsPage from "./pages/admin/ProductsPage";
-import OrdersPage from "./pages/admin/OrdersPage";
-import GuidesPageAdmin from "./pages/admin/GuidesPage";
-import GalleryPage from "./pages/admin/GalleryPage";
-import UsersPage from "./pages/admin/UsersPage";
-import SettingsPage from "./pages/admin/SettingsPage";
-import AdminLinktreePage from "./pages/admin/LinktreePage";
-import RconPage from "./pages/admin/RconPage";
-import VouchersPage from "./pages/admin/VouchersPage";
-import AdminLeaderboardPage from "./pages/admin/LeaderboardPage";
-import DigitalProductsPageAdmin from "./pages/admin/DigitalProductsPage";
 
 // Public standalone pages
-import LinktreePage from "./pages/LinktreePage";
-import SkinPage from "./pages/SkinPage";
-import LeaderboardPage from "./pages/LeaderboardPage";
 
 function App() {
   const [sessionExpired, setSessionExpired] = useState({
@@ -113,7 +117,7 @@ function App() {
       />
       <Routes>
         {/* Standalone pages (no Layout wrapper) */}
-        <Route path="/link" element={<LinktreePage />} />
+        <Route path="/link" element={<PageSuspense><LinktreePage /></PageSuspense>} />
 
         {/* Public Routes */}
         <Route path="/" element={<Layout />}>
@@ -136,7 +140,7 @@ function App() {
         </Route>
 
         {/* Admin Routes */}
-        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route path="/admin/login" element={<PageSuspense><AdminLoginPage /></PageSuspense>} />
         <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
           <Route index element={<DashboardPage />} />
           <Route path="dashboard" element={<DashboardPage />} />

@@ -8,7 +8,19 @@ import { leaderboardAPI } from "../lib/api";
 import { getBustUrls, getHeadUrls } from "../lib/minecraftSkin";
 import SkinImage from "../components/leaderboard/SkinImage";
 import { GridPattern } from "../components/ui/GridPattern";
-import { AnimatedGradientText } from "../components/ui/AnimatedGradientText";
+
+// Open connections to the skin render hosts as soon as this page's code loads,
+// in parallel with the leaderboard API call that decides which skins to fetch.
+if (typeof document !== "undefined") {
+  for (const href of ["https://nmsr.nickac.dev", "https://mc-heads.net"]) {
+    if (!document.querySelector(`link[rel="preconnect"][href="${href}"]`)) {
+      const link = document.createElement("link");
+      link.rel = "preconnect";
+      link.href = href;
+      document.head.appendChild(link);
+    }
+  }
+}
 
 const formatIDR = (amount) =>
   new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(amount);
@@ -126,6 +138,10 @@ function PodiumSpot({ donor, place, order }) {
               <SkinImage
                 sources={getBustUrls(donor.minecraftName)}
                 alt={`Skin ${donor.minecraftName}`}
+                loading="eager"
+                fetchPriority={place === 1 ? "high" : "auto"}
+                width={512}
+                height={512}
                 className="h-full w-full object-contain select-none"
                 style={{
                   maskImage: "linear-gradient(to bottom, #000 72%, transparent 100%)",
@@ -356,35 +372,18 @@ export default function LeaderboardPage() {
             <Sparkles className="w-4 h-4 text-arcane" />
           </motion.div>
 
+          {/* Heading + intro render visible immediately (they are the LCP text);
+              static gradient instead of a JS-driven infinite animation. */}
           <h1 className="text-4xl sm:text-6xl font-bold mb-4">
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-white"
-            >
-              Leaderboard{" "}
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, type: "spring" }}
-              className="inline-block"
-            >
-              <AnimatedGradientText gradient="from-yellow-300 via-amber-200 to-yellow-400">
-                Donatur
-              </AnimatedGradientText>
-            </motion.span>
+            <span className="text-white">Leaderboard </span>
+            <span className="inline-block bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-400 bg-clip-text text-transparent">
+              Donatur
+            </span>
           </h1>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.35 }}
-            className="text-bone-muted text-sm sm:text-base max-w-lg mx-auto"
-          >
+          <p className="text-bone-muted text-sm sm:text-base max-w-lg mx-auto">
             Terima kasih untuk para pendukung yang bikin server tetap hidup. Ini dia pahlawan AmazingCraft!
-          </motion.p>
+          </p>
 
           {/* Period */}
           <motion.div
