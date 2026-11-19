@@ -38,6 +38,7 @@ import SettingsPage from "./pages/admin/SettingsPage";
 import AdminLinktreePage from "./pages/admin/LinktreePage";
 import RconPage from "./pages/admin/RconPage";
 import VouchersPage from "./pages/admin/VouchersPage";
+import AdminLeaderboardPage from "./pages/admin/LeaderboardPage";
 import DigitalProductsPageAdmin from "./pages/admin/DigitalProductsPage";
 
 // Public standalone pages
@@ -149,6 +150,7 @@ function App() {
           <Route path="linktree" element={<AdminLinktreePage />} />
           <Route path="rcon" element={<RconPage />} />
           <Route path="vouchers" element={<VouchersPage />} />
+          <Route path="leaderboard" element={<AdminLeaderboardPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>

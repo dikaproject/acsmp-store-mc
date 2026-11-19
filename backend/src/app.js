@@ -25,6 +25,7 @@ const linktreeRoutes = require('./routes/linktree');
 const rconRoutes = require('./routes/rcon');
 const skinRoutes = require('./routes/skin');
 const voucherRoutes = require('./routes/voucher');
+const leaderboardEntryRoutes = require('./routes/leaderboardEntry');
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -105,6 +106,7 @@ app.use('/api/linktree', linktreeRoutes);
 app.use('/api/rcon', rconRoutes);
 app.use('/api/skin', skinRoutes);
 app.use('/api/vouchers', voucherRoutes);
+app.use('/api/leaderboard-entries', leaderboardEntryRoutes);
 app.use(errorHandler);
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

@@ -13,7 +13,8 @@ import {
   ChevronRight,
   Link2,
   Terminal,
-  Ticket
+  Ticket,
+  Trophy
 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -89,6 +90,12 @@ const Sidebar = ({ isOpen, onClose }) => {
       label: "Vouchers", 
       path: "/admin/vouchers",
       description: "Kode promo & diskon"
+    },
+    { 
+      icon: Trophy, 
+      label: "Leaderboard", 
+      path: "/admin/leaderboard",
+      description: "Donasi manual & ranking"
     },
     { 
       icon: Settings, 

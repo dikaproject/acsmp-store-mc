@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { getDonorTotals, getPeriodRange, orderDateFilter } = require('../services/leaderboardService');
 const prisma = new PrismaClient();
 const tripayService = require('../services/tripayService');
 const commandService = require('../services/commandService');
@@ -654,29 +655,16 @@ exports.getStats = async (req, res, next) => {
 
 exports.getLeaderboard = async (req, res, next) => {
   try {
-    // Names excluded from leaderboard (e.g. owner accounts)
-    // Set LEADERBOARD_EXCLUDED env var as comma-separated list to override
-    const excluded = process.env.LEADERBOARD_EXCLUDED
-      ? process.env.LEADERBOARD_EXCLUDED.split(',').map(s => s.trim()).filter(Boolean)
-      : ['MasWisnu', '.MasWisnu'];
+    // ?period=all|year|month (calendar, WIB). Unknown values fall back to all-time.
+    const period = getPeriodRange(req.query.period);
 
-    // Top donors: group COMPLETED orders by minecraftName, sum totalAmount
-    const topDonors = await prisma.order.groupBy({
-      by: ['minecraftName'],
-      where: {
-        status: 'COMPLETED',
-        NOT: { minecraftName: { in: excluded } }
-      },
-      _sum: { totalAmount: true },
-      _count: { _all: true },
-      orderBy: { _sum: { totalAmount: 'desc' } },
-      take: 10
-    });
+    // Top donors: real COMPLETED order totals merged with admin manual entries
+    const topDonors = (await getDonorTotals({ from: period.from })).slice(0, 10);
 
-    // Top products: sum quantities sold across COMPLETED orders
+    // Top products: sum quantities sold across COMPLETED orders in the same period
     const topProductsRaw = await prisma.orderItem.groupBy({
       by: ['productId'],
-      where: { order: { status: 'COMPLETED' } },
+      where: { order: { status: 'COMPLETED', ...orderDateFilter(period.from) } },
       _sum: { quantity: true },
       orderBy: { _sum: { quantity: 'desc' } },
       take: 10
@@ -691,11 +679,12 @@ exports.getLeaderboard = async (req, res, next) => {
     res.json({
       success: true,
       data: {
+        period: { key: period.key, from: period.from },
         topDonors: topDonors.map((d, i) => ({
           rank: i + 1,
           minecraftName: d.minecraftName,
-          totalAmount: d._sum.totalAmount || 0,
-          orderCount: d._count._all
+          totalAmount: d.totalAmount,
+          orderCount: d.orderCount
         })),
         topProducts: topProductsRaw.map((item, i) => {
           const product = productMap[item.productId];

@@ -168,7 +168,16 @@ export const skinAPI = {
 };
 
 export const leaderboardAPI = {
-  get: () => api.get("/orders/leaderboard"),
+  // period: "all" | "year" | "month"
+  get: (period = "all") => api.get("/orders/leaderboard", { params: { period } }),
+};
+
+// Admin: manual donation entries merged into the public leaderboard
+export const leaderboardEntryAPI = {
+  getAll: (period = "all") => api.get("/leaderboard-entries", { params: { period } }),
+  create: (data) => api.post("/leaderboard-entries", data),
+  update: (id, data) => api.put(`/leaderboard-entries/${id}`, data),
+  delete: (id) => api.delete(`/leaderboard-entries/${id}`),
 };
 
 export const voucherAPI = {

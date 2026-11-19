@@ -249,3 +249,19 @@ model Voucher {
 
   @@map("vouchers")
 }
+
+// Manual donation adjustments added by admin (merged into the public leaderboard).
+// `amount` is added on top of the player's real COMPLETED order total; negative values correct it down.
+model LeaderboardEntry {
+  id            String   @id @default(cuid())
+  minecraftName String
+  amount        Int
+  note          String?  @db.VarChar(200)
+  donatedAt     DateTime @default(now()) // which month/year period the donation counts toward
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([minecraftName])
+  @@index([donatedAt])
+  @@map("leaderboard_entries")
+}
