@@ -15,13 +15,13 @@ export const getHeadUrls = (name, size = 64) =>
     ? [`https://mc-heads.net/avatar/${enc(name)}/${size}`, `https://mc-heads.net/avatar/MHF_Steve/${size}`]
     : [`https://mc-heads.net/avatar/MHF_Steve/${size}`];
 
-// Real 3D full-body render (NMSR, transparent PNG, cached 4h), then an
-// isometric body from mc-heads, then default Steve.
-export const getBodyUrls = (name) =>
+// Real 3D half-body (bust) render for the podium (NMSR, transparent square
+// PNG ~30KB, cached 4h), then default Steve, then a flat head as last resort.
+export const getBustUrls = (name) =>
   isJavaName(name)
     ? [
-        `https://nmsr.nickac.dev/fullbody/${enc(name)}`,
-        `https://mc-heads.net/body/${enc(name)}/240`,
-        `https://nmsr.nickac.dev/fullbody/MHF_Steve`,
+        `https://nmsr.nickac.dev/bust/${enc(name)}`,
+        `https://nmsr.nickac.dev/bust/MHF_Steve`,
+        `https://mc-heads.net/avatar/${enc(name)}/256`,
       ]
-    : [`https://nmsr.nickac.dev/fullbody/MHF_Steve`, `https://mc-heads.net/body/MHF_Steve/240`];
+    : [`https://nmsr.nickac.dev/bust/MHF_Steve`, `https://mc-heads.net/avatar/MHF_Steve/256`];

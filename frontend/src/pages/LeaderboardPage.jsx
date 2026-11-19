@@ -2,12 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import {
-  Trophy, Medal, Crown, Award, TrendingUp, Package, ShoppingBag,
-  AlertCircle, Users, Sparkles, Heart, ArrowRight, CalendarDays, Timer, Loader2,
+  Trophy, Crown, AlertCircle, Users, Sparkles, Heart, ArrowRight, CalendarDays, Timer, Loader2,
 } from "lucide-react";
 import { leaderboardAPI } from "../lib/api";
-import { getImageUrl } from "../lib/utils";
-import { getBodyUrls, getHeadUrls } from "../lib/minecraftSkin";
+import { getBustUrls, getHeadUrls } from "../lib/minecraftSkin";
 import SkinImage from "../components/leaderboard/SkinImage";
 import { GridPattern } from "../components/ui/GridPattern";
 import { AnimatedGradientText } from "../components/ui/AnimatedGradientText";
@@ -18,50 +16,35 @@ const formatIDR = (amount) =>
 // Visual theme per podium place
 const PLACES = {
   1: {
-    icon: Crown,
     text: "text-yellow-300",
-    accent: "text-yellow-400",
     glow: "rgba(250, 204, 21, 0.32)",
     border: "border-yellow-400/40",
     face: "from-yellow-400/25 via-amber-500/10 to-amber-900/5",
     top: "bg-gradient-to-r from-yellow-300/50 via-amber-200/60 to-yellow-300/50",
-    stage: "h-52 sm:h-80",
+    stage: "h-36 sm:h-56",
     block: "h-24 sm:h-36",
     delay: "",
   },
   2: {
-    icon: Medal,
     text: "text-slate-200",
-    accent: "text-slate-300",
     glow: "rgba(203, 213, 225, 0.22)",
     border: "border-slate-300/30",
     face: "from-slate-300/20 via-slate-400/10 to-slate-900/5",
     top: "bg-gradient-to-r from-slate-300/35 via-slate-100/45 to-slate-300/35",
-    stage: "h-44 sm:h-64",
+    stage: "h-32 sm:h-48",
     block: "h-16 sm:h-24",
     delay: "lb-float-delay",
   },
   3: {
-    icon: Award,
     text: "text-orange-300",
-    accent: "text-orange-400",
     glow: "rgba(251, 146, 60, 0.22)",
     border: "border-orange-400/30",
     face: "from-orange-400/20 via-orange-500/10 to-orange-900/5",
     top: "bg-gradient-to-r from-orange-300/35 via-orange-200/45 to-orange-300/35",
-    stage: "h-40 sm:h-56",
+    stage: "h-28 sm:h-44",
     block: "h-12 sm:h-20",
     delay: "lb-float-delay-2",
   },
-};
-
-const TYPE_BADGE = {
-  RANK: { label: "Rank", cls: "bg-arcane/15 text-arcane-glow border-arcane/30" },
-  COIN: { label: "Coin", cls: "bg-yellow-500/15 text-yellow-300 border-yellow-500/30" },
-  MONEY: { label: "Money", cls: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30" },
-  FEATURE: { label: "Feature", cls: "bg-cyan-500/15 text-cyan-300 border-cyan-500/30" },
-  BATTLEPASS: { label: "Battlepass", cls: "bg-rose-500/15 text-rose-300 border-rose-500/30" },
-  UNKNOWN: { label: "Lainnya", cls: "bg-white/5 text-bone-muted border-white/10" },
 };
 
 // Pointer tilt only on real mouse devices without reduced-motion: phones get
@@ -111,7 +94,6 @@ const Head = ({ name, size = 36, className = "" }) => (
 
 function PodiumSpot({ donor, place, order }) {
   const theme = PLACES[place];
-  const Icon = theme.icon;
   const tilt = useTilt();
 
   return (
@@ -127,8 +109,11 @@ function PodiumSpot({ donor, place, order }) {
           className="absolute inset-x-0 bottom-0 top-[15%] pointer-events-none"
           style={{ background: `radial-gradient(closest-side, ${theme.glow}, transparent)` }}
         />
-        {place === 1 && (
-          <Sparkles className="absolute top-[8%] right-[12%] w-4 h-4 sm:w-5 sm:h-5 text-yellow-300/70" />
+        {place === 1 && donor && (
+          <>
+            <Crown className="absolute z-10 left-1/2 -translate-x-1/2 -top-1 sm:-top-2 w-6 h-6 sm:w-8 sm:h-8 text-yellow-300 drop-shadow-[0_0_10px_rgba(250,204,21,0.6)]" />
+            <Sparkles className="absolute top-[10%] right-[12%] w-4 h-4 sm:w-5 sm:h-5 text-yellow-300/70" />
+          </>
         )}
 
         <motion.div
@@ -136,29 +121,29 @@ function PodiumSpot({ donor, place, order }) {
           className="relative h-full w-full flex items-end justify-center"
         >
           {donor ? (
-            <div className={`lb-float ${theme.delay} relative h-[90%] flex items-end justify-center`}>
+            // Half-body render; the bottom fades out so it "sinks" into the podium
+            <div className={`lb-float ${theme.delay} relative h-[92%] aspect-square max-w-full flex items-end justify-center`}>
               <SkinImage
-                sources={getBodyUrls(donor.minecraftName)}
+                sources={getBustUrls(donor.minecraftName)}
                 alt={`Skin ${donor.minecraftName}`}
-                className="h-full w-auto max-w-full object-contain select-none"
+                className="h-full w-full object-contain select-none"
+                style={{
+                  maskImage: "linear-gradient(to bottom, #000 72%, transparent 100%)",
+                  WebkitMaskImage: "linear-gradient(to bottom, #000 72%, transparent 100%)",
+                }}
                 fallback={<Users className="w-16 h-16 text-white/10" />}
               />
             </div>
           ) : (
-            <div className="h-[70%] w-[55%] rounded-2xl border border-dashed border-white/10 flex items-center justify-center mb-4">
+            <div className="h-[75%] aspect-square rounded-2xl border border-dashed border-white/10 flex items-center justify-center mb-2">
               <Users className="w-8 h-8 text-white/10" />
             </div>
           )}
-          <div className={`lb-shadow ${theme.delay} absolute bottom-0 left-[28%] right-[28%] h-2.5 sm:h-3 rounded-[50%] bg-black/70`} />
         </motion.div>
       </div>
 
       {/* Name plate */}
-      <div className="w-full text-center px-1 mt-3 mb-3">
-        <div className={`inline-flex items-center gap-1 ${theme.accent} mb-1`}>
-          <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">Juara {place}</span>
-        </div>
+      <div className="w-full text-center px-1 mt-2 mb-3">
         <p className={`font-mono font-bold text-xs sm:text-base truncate ${donor ? theme.text : "text-white/20"}`}>
           {donor?.minecraftName ?? "Belum ada"}
         </p>
@@ -261,52 +246,6 @@ function DonorRow({ donor, topAmount, index }) {
   );
 }
 
-function ProductRow({ product, topQty, index }) {
-  const badge = TYPE_BADGE[product.productType] ?? TYPE_BADGE.UNKNOWN;
-  const pct = topQty ? Math.max(4, (product.totalQuantity / topQty) * 100) : 0;
-  const placeColor = PLACES[product.rank]?.accent ?? "text-bone-subtle";
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.04 }}
-      className="flex items-center gap-3 sm:gap-4 px-4 sm:px-5 py-3.5 hover:bg-white/[0.025] transition-colors"
-    >
-      <span className={`w-7 text-sm font-bold tabular-nums ${placeColor}`}>#{product.rank}</span>
-      <div className="w-11 h-11 rounded-lg overflow-hidden bg-white/5 ring-1 ring-white/10 shrink-0 flex items-center justify-center">
-        <SkinImage
-          sources={product.imageUrl ? [getImageUrl(product.imageUrl)] : []}
-          alt={product.productName}
-          className="w-full h-full object-cover"
-          fallback={<Package className="w-5 h-5 text-bone-subtle" />}
-        />
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 min-w-0">
-            <p className="font-semibold text-sm text-bone truncate">{product.productName}</p>
-            <span className={`hidden sm:inline-block text-[10px] font-medium px-2 py-0.5 rounded-full border ${badge.cls}`}>
-              {badge.label}
-            </span>
-          </div>
-          <p className="text-sm font-bold tabular-nums text-bone shrink-0">
-            {product.totalQuantity.toLocaleString("id-ID")}
-            <span className="text-xs font-normal text-bone-subtle ml-1">terjual</span>
-          </p>
-        </div>
-        <div className="mt-2 h-1.5 rounded-full bg-white/5 overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${pct}%` }}
-            transition={{ duration: 0.8, delay: 0.1 + index * 0.04, ease: "easeOut" }}
-            className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-300"
-          />
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 function EmptyState({ icon: Icon, text }) {
   return (
     <div className="flex flex-col items-center gap-2 py-14 text-bone-subtle">
@@ -317,11 +256,6 @@ function EmptyState({ icon: Icon, text }) {
 }
 
 /* ─────────────────────────── Page ─────────────────────────── */
-
-const TABS = [
-  { id: "donors", label: "Top Donatur", icon: Trophy },
-  { id: "products", label: "Produk Terlaris", icon: TrendingUp },
-];
 
 // Calendar periods in WIB; must match backend getPeriodRange()
 const PERIODS = [
@@ -365,7 +299,6 @@ export default function LeaderboardPage() {
   const [loading, setLoading] = useState(true); // first load only: skeletons
   const [switching, setSwitching] = useState(false); // period change: keep old data, dim it
   const [error, setError] = useState(null);
-  const [tab, setTab] = useState("donors");
   const [period, setPeriod] = useState("all");
   const cache = useRef({}); // period -> data, so switching back is instant
 
@@ -399,7 +332,6 @@ export default function LeaderboardPage() {
   const info = periodInfo(period);
 
   const donors = data?.topDonors ?? [];
-  const products = data?.topProducts ?? [];
   const rest = donors.slice(3);
 
   return (
@@ -454,60 +386,36 @@ export default function LeaderboardPage() {
             Terima kasih untuk para pendukung yang bikin server tetap hidup. Ini dia pahlawan AmazingCraft!
           </motion.p>
 
-          {/* Tabs */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="mt-8 inline-flex p-1 rounded-xl bg-white/[0.04] border border-white/10"
-            role="tablist"
-          >
-            {TABS.map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                role="tab"
-                aria-selected={tab === id}
-                onClick={() => setTab(id)}
-                className={`relative px-4 sm:px-5 py-2 text-sm font-medium rounded-lg transition-colors ${
-                  tab === id ? "text-white" : "text-bone-subtle hover:text-bone"
-                }`}
-              >
-                {tab === id && (
-                  <motion.span
-                    layoutId="lb-tab"
-                    className="absolute inset-0 rounded-lg bg-arcane/25 border border-arcane/40"
-                    transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                  />
-                )}
-                <span className="relative inline-flex items-center gap-2">
-                  <Icon className="w-4 h-4" />
-                  {label}
-                </span>
-              </button>
-            ))}
-          </motion.div>
-
           {/* Period */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mt-4 flex flex-col items-center gap-2.5"
+            transition={{ delay: 0.4 }}
+            className="mt-8 flex flex-col items-center gap-3"
           >
-            <div className="flex items-center gap-1.5 sm:gap-2" role="radiogroup" aria-label="Periode leaderboard">
+            <div
+              className="inline-flex p-1 rounded-xl bg-white/[0.04] border border-white/10"
+              role="radiogroup"
+              aria-label="Periode leaderboard"
+            >
               {PERIODS.map(({ id, label }) => (
                 <button
                   key={id}
                   role="radio"
                   aria-checked={period === id}
                   onClick={() => setPeriod(id)}
-                  className={`px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium border transition-all ${
-                    period === id
-                      ? "bg-yellow-400/10 border-yellow-400/40 text-yellow-300 shadow-[0_0_20px_-6px_rgba(250,204,21,0.5)]"
-                      : "bg-transparent border-white/10 text-bone-subtle hover:text-bone hover:border-white/20"
+                  className={`relative px-3.5 sm:px-5 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors ${
+                    period === id ? "text-yellow-200" : "text-bone-subtle hover:text-bone"
                   }`}
                 >
-                  {label}
+                  {period === id && (
+                    <motion.span
+                      layoutId="lb-period"
+                      className="absolute inset-0 rounded-lg bg-yellow-400/10 border border-yellow-400/40 shadow-[0_0_20px_-6px_rgba(250,204,21,0.5)]"
+                      transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                    />
+                  )}
+                  <span className="relative">{label}</span>
                 </button>
               ))}
             </div>
@@ -539,7 +447,7 @@ export default function LeaderboardPage() {
             <AlertCircle className="w-10 h-10 text-red-400/60" />
             <p className="text-bone-muted">{error}</p>
           </div>
-        ) : tab === "donors" ? (
+        ) : (
           <>
             {/* Podium */}
             <div className="mb-10 sm:mb-14">
@@ -573,24 +481,6 @@ export default function LeaderboardPage() {
               </div>
             )}
           </>
-        ) : (
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-            <div className="flex items-center gap-2 px-4 sm:px-5 py-3.5 border-b border-white/10">
-              <ShoppingBag className="w-4 h-4 text-emerald-400" />
-              <h2 className="text-sm font-semibold text-white">Produk Terlaris</h2>
-            </div>
-            <div className="divide-y divide-white/5">
-              {loading ? (
-                Array.from({ length: 5 }).map((_, i) => <RowSkeleton key={i} />)
-              ) : products.length === 0 ? (
-                <EmptyState icon={ShoppingBag} text="Belum ada produk terjual di periode ini" />
-              ) : (
-                products.map((p, i) => (
-                  <ProductRow key={p.productId} product={p} topQty={products[0]?.totalQuantity} index={i} />
-                ))
-              )}
-            </div>
-          </div>
         )}
 
         {/* CTA */}
